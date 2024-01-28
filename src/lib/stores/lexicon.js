@@ -3,12 +3,10 @@ import { writable } from 'svelte/store';
 export const lexicon = (() => {
   const { subscribe, update, set } = writable([]);
 
-  // Méthode pour ajouter une nouvelle tâche
-  const url = import.meta.env.VITE_API_URL;
 
   const get = async () => {
     try {
-      const response = await fetch(`http://${url}/api/lexicon`);
+      const response = await fetch('/api/lexicon');
       if (response.ok) {
         const data = await response.json();
         update(() => data);
@@ -20,15 +18,15 @@ export const lexicon = (() => {
     }
   };
 
-  const add = async (description) => {
+  const add = async (data) => {
     try {
       // Envoyer la description à la BDD pour créer un nouveau lexicon
-      const response = await fetch(`http://${url}/api/lexicon`, {
+      const response = await fetch('/api/lexicon', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ ...description }),
+        body: JSON.stringify({ data }),
       });
 
       if (response.ok) {
@@ -44,16 +42,16 @@ export const lexicon = (() => {
   };
 
   // Méthode pour supprimer une tâche
-  const remove = async (lexical) => {
+  const remove = async (id) => {
     try {
       // Envoyer la demande de suppression à la BDD
-      const response = await fetch(`http://${url}/api/lexicon/${lexical.id}`, {
+      const response = await fetch('/api/lexicon', {
         method: 'DELETE',
       });
 
       if (response.ok) {
         // Mettre à jour le store en excluant la tâche supprimée
-        update(($words) => $words.filter((t) => t.id !== lexical.id));
+        update(($words) => $words.filter((t) => t.id !== id));
       } else {
         console.error(`Error removing lexicon: ${response.status}`);
       }
@@ -64,7 +62,7 @@ export const lexicon = (() => {
 
   const mark = async (lexical) => {
     try {
-      const response = await fetch(`http://${url}/api/lexicon/${lexical.id}`, {
+      const response = await fetch('/ami/lexicon', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

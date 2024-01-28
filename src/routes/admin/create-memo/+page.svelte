@@ -16,6 +16,7 @@
   let memoCategory;
   let categoryId;
   let memotags = [];
+  let tagsIds = [];
   let memotitle = "";
   let memoIsDeleted = false;
   import { link } from '$lib/stores/link.js';
@@ -34,7 +35,10 @@
       memotitle = $currentMemo.title
       memoId = $currentMemo.id
       memoCategory = $currentMemo.category.id
-      if($currentMemo.tags) memotags = $currentMemo.tags.forEach(tag => memotags.push(tag.id))
+      if($currentMemo.tags) {
+        console.log("currentMemo.tags", $currentMemo.tags)
+        memotags = $currentMemo.tags.forEach(tag => memotags.push(tag.id))
+      }
       $currentMemo.contents.sort((a, b) => a.position -b.position);
       $currentMemo.contents.forEach(item => {
         memoItems.update(items => [...items, item]);       
@@ -71,10 +75,6 @@
   }
   
   
-  
-  
-  
-  let tagsIds = [];
   const contentTypeElem = data.contents
   const styles = data.styles;
   
@@ -98,6 +98,7 @@
     }
     memoItems.set([])
     memoId = undefined;
+    memotags = [];
     memoIsDeleted = true;
     reloadNeeded.set(true)
   }
@@ -122,12 +123,14 @@
     if (memoId) {
       if(categoryId === undefined){
         categoryId = memoCategory
-      }if(tagsIds.length === 0){
+      }if(tagsIds === undefined){
         tagsIds = memotags
       }if($title === ""){
         $title = memotitle
       }
-      const newMemo = await memos.mark({ title : $title , contents: itemsToSave, categoryId, tagsIds }, memoId);
+      const data = { title: $title, contents: itemsToSave, categoryId, tagsIds , id: memoId};
+      const newMemo = await memos.mark( data );
+      memotags = newMemo.tags;
       if (newMemo) { 
         alert(`le memo a été bien été modifié`);
         memoCategory = newMemo.category_id;
@@ -135,12 +138,14 @@
       }
     } else{
       if(categoryId === undefined) return alert('choose a category') 
-      const newMemo = await memos.add({ title: $title, contents: itemsToSave, categoryId, tagsIds });
+      const data = { title: $title, contents: itemsToSave, categoryId, tagsIds };
+      const newMemo = await memos.add( data);
       if (newMemo) {
         alert(`create${JSON.stringify(newMemo)}`);
         memoId = newMemo.id;
         memoCategory = newMemo.category_id;
         memotags = newMemo.tags;
+        memotitle = newMemo.title;
       }
       
       
@@ -152,6 +157,9 @@
     
     reloadNeeded.set(true)
   }
+
+
+
   
 
   

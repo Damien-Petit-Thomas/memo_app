@@ -2,12 +2,10 @@ import { writable } from 'svelte/store';
 
 export const fullmemos = (() => {
   const { subscribe, set, update } = writable([]);
-  const url = import.meta.env.VITE_API_URL;
-
 
   const get = async () => {
     try {
-      const response = await fetch(`http://${url}/api/memo`);
+      const response = await fetch('/api/fullmemos');
       if (response.ok) {
         const data = await response.json();
         update(() => data);

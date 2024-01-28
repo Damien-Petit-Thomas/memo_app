@@ -7,6 +7,7 @@
   let showStylesSelection = false;
   let availableStyle = [];
   let currentItem;
+
   function showStyles(item) {
     availableStyle = styles.filter((style) =>
       item.available_style.includes(style.id),

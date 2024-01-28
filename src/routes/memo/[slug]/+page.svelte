@@ -29,10 +29,17 @@
   let lexicon;
   let isDataReady = false;
   let currentMemoIdx;
+
+
+const getFullMemo = async () => {
+  const  response = await fetch('/api/fullmemo')
+  return response.json();
+}
+
   page.subscribe(async ($page) => {
     
     if ($fullmemos.length === 0) {
-      await fullmemos.get();
+      await fullmemos.set(await getFullMemo());
       
     }
     

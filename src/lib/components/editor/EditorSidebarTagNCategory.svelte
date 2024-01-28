@@ -1,14 +1,4 @@
-  <!-- if (originalCategoryId !== null) {
-    dispatch('selectedCategory', originalCategoryId)
-  
-  
-    const categories = document.querySelectorAll(".category-button")
-    categories.forEach(category => {
-      if (category.id === originalCategoryId) {
-        category.style.width="100%"
-      }
-    })
-  } -->
+
   <script>
     import { categories } from '$lib/stores/category.js';
     import { tags } from '$lib/stores/tag.js';
@@ -24,21 +14,32 @@
     onMount(async () => {
   if ($categories.length === 0) {
 
-    await categories.get();
+    await categories.set(await getCategory());
 
     if ($categories.length > 0) {
         selectedCategoryId = $categories[0].id;
       dispatch('selectedCategory', selectedCategoryId);
     }
   }  if ($tags.length === 0) {
-    tags.get();
+    tags.set(await getTags());
   } else {
         selectedCategoryId = $categories[0].id;
     dispatch('selectedCategory', selectedCategoryId);
   }
 });
 
-  
+const getCategory = async () => {
+	const  response = await fetch('/api/category')
+  return response.json();
+}
+
+const getTags = async () => {
+  const response = await fetch('/api/tag');
+  return response.json();
+}
+
+
+
   function  handleCategoryChange(e) {
     selectedCategoryId = e.target.value;
       dispatch('selectedCategory', e.target.value);

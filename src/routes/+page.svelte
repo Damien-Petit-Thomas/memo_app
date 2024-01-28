@@ -10,10 +10,13 @@
 	import { link } from '$lib/stores/link.js'
 	import Main from '../lib/components/main/Main.svelte';
 	import {onMount} from 'svelte';
+	import { test } from '$lib/stores/test.js';
   export let data;
 	let linkList = [];
 	// on rempli les stores
+
 	onMount(() => {
+		test.get()
 		fullmemos.set(data.fullmemos);
 		categories.set(data.categories);
 		tags.set(data.tags);
@@ -21,17 +24,23 @@
 		todos.set(data.todos);
 		lexicon.set(data.lexicon);
 		link.set(data.links);
+		if (linkList.length > 0) {
+			linkList = [];
+		}
 		$link.forEach((link) => linkList.push(link.url))
-
+		
+		
 	});
 	let selectedCategory;
 	function showMemos(e) {
-    selectedCategory = e.detail;
+		selectedCategory = e.detail;
 	}
-
-
-
 	
+
+
+
+
+
 
 				</script>
 
@@ -39,9 +48,8 @@
 
 
 
-
 <div class="container">
-		<Sidebar on:showMemos={showMemos}/>
+		<Sidebar  on:showMemos={showMemos}/>
 		<Main  {selectedCategory}/>
 </div>
 

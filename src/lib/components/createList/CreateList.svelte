@@ -64,7 +64,7 @@ function handleRemove(item) {
           {item.name}
         </div>      
         <button class="remove"
-        on:click={handleRemove(item)}
+        on:click={handleRemove(item.id)}
         aria-label="Remove" 
 
         />

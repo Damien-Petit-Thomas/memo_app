@@ -1,7 +1,8 @@
 import { writable } from 'svelte/store';
 
-export const categories = (() => {
+export const test = (() => {
   const { subscribe, update, set } = writable([]);
+  const url = import.meta.env.VITE_API_URL;
   const get = async () => {
     try {
       const response = await fetch('/api/category');
@@ -16,15 +17,15 @@ export const categories = (() => {
     }
   };
 
-  const add = async (data) => {
+  const add = async (description) => {
     try {
       // Envoyer la description à la BDD pour créer un nouveau category
-      const response = await fetch('/api/category', {
+      const response = await fetch(`http://${url}/api/category`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ data }),
+        body: JSON.stringify({ ...description }),
       });
 
       if (response.ok) {
@@ -40,20 +41,16 @@ export const categories = (() => {
   };
 
   // Méthode pour supprimer une tâche
-  const remove = async (id) => {
+  const remove = async (category) => {
     try {
     // Envoyer la demande de suppression à la BDD
-      const response = await fetch('/api/category', {
+      const response = await fetch(`http://${url}/api/category/${category.id}`, {
         method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id }),
       });
 
       if (response.ok) {
         // Mettre à jour le store en excluant la tâche supprimée
-        update(($categories) => $categories.filter((t) => t.id !== id));
+        update(($categories) => $categories.filter((t) => t.id !== category.id));
       } else {
         console.error(`Error removing category: ${response.status}`);
       }
@@ -67,7 +64,7 @@ export const categories = (() => {
     const data = { description };
 
     try {
-      const response = await fetch('/api/category', {
+      const response = await fetch(`http://${url}/api/category/${category.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

@@ -2,9 +2,10 @@
   import { lexicon } from '$lib/stores/lexicon.js';
   import { onMount } from 'svelte';
   export let categoryId;
-  onMount(() => {
+    
+  onMount(async () => {
     if ($lexicon.length === 0) {
-      lexicon.get();
+      await lexicon.get();
     }
   });
 
@@ -15,7 +16,6 @@
     lexicon.add(data)
   }
   
-
 </script>
 
 <details>

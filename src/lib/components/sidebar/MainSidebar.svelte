@@ -1,26 +1,18 @@
 <!-- Sidebar.svelte -->
 
 <script>
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, onMount } from 'svelte';
   import { fade } from 'svelte/transition';
-  import { categories } from '$lib/stores/category.js';
   import { memos} from '$lib/stores/memo.js';
-  import { onMount } from 'svelte';
+  import { categories } from '$lib/stores/category.js';
   let categoryStates = {};
-
   const dispatch = new createEventDispatcher();
-
-
-
-
-
-
-  onMount(() => {
+  onMount(async () => {
     if ($categories.length === 0) {
-      categories.get();
+      await categories.get();
     }
     if ($memos.length === 0) {
-      memos.get();
+      memos.set(await getMemos());
     }
     $categories.forEach((category) => {
       categoryStates[category.id] = false;
@@ -28,7 +20,12 @@
   });
   
   
-  
+ 
+  const getMemos = async () => {
+    const response = await fetch('/api/memo');
+    return response.json();
+  };
+
   function toggleMemo(category) {
     categoryStates[category.id] = !categoryStates[category.id];
     dispatch('showMemos', category  );

@@ -39,6 +39,7 @@
     "highlightjs-badge": "^0.1.9",
     "markdown-it": "^14.0.0",
     "marked": "^10.0.0",
+    "pg": "^8.11.3",
     "preprocess": "^3.2.0",
     "simplemde": "^1.11.2",
     "svelte": "^4.2.8",

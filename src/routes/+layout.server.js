@@ -1,78 +1,53 @@
-export const load = async ({ fetch }) => {
-  const url = import.meta.env.VITE_BACK_CONTAINER_NAME;
+import db from '$lib/db';
+
+export async function load({ cookies }) {
+  cookies.set('test', 'test', { path: '/' });
+  let fullmemos = [];
   try {
     const [
-      cateoriesResponse,
-      todosResponse,
-      tagResponse,
-      memoResponse,
-      allMemmo,
-      lexicons,
-      linksResponse,
-      styleResponse,
+      todos,
+      categories,
+      tags,
+      memos,
+      lexicon,
+      links,
+      styles,
+      fullmemosResult,
     ] = await Promise.all([
-      fetch(
-        `http://${url}/api/category`,
-      ),
-      fetch(
-        `http://${url}/api/todo`,
-      ),
-      fetch(
-        `http://${url}/api/tag`,
-      ),
-      fetch(
-        `http://${url}/api/memo`,
-      ),
-      fetch(
-        `http://${url}/api/memo/all`,
-      ),
-
-      fetch(
-        `http://${url}/api/lexicon`,
-      ),
-      fetch(
-        `http://${url}/api/link`,
-      ),
-      fetch(
-        `http://${url}/api/style`,
-      ),
+      db.query('SELECT * FROM todo').then((res) => res.rows),
+      db.query('SELECT * FROM category').then((res) => res.rows),
+      db.query('SELECT * FROM tag').then((res) => res.rows),
+      db.query('SELECT * FROM memo').then((res) => res.rows),
+      db.query('SELECT * FROM lexicon').then((res) => res.rows),
+      db.query('SELECT * FROM link').then((res) => res.rows),
+      db.query('SELECT * FROM style').then((res) => res.rows),
+      db.query('SELECT * FROM getAllMemos()').then((res) => res.rows),
     ]);
-    if (!cateoriesResponse.ok) {
-      throw new Error(`HTTP error: ${cateoriesResponse.status}`);
+
+    if (fullmemosResult[0].getallmemos?.length > 0) {
+      fullmemos = fullmemosResult[0].getallmemos.sort((a, b) => {
+        if (a.category.name < b.category.name) {
+          return 1;
+        }
+        if (a.category.name > b.category.name) {
+          return -1;
+        }
+        return 0;
+      });
     }
-    if (!todosResponse.ok) {
-      throw new Error(`HTTP error: ${todosResponse.status}`);
-    }
-    if (!tagResponse.ok) {
-      throw new Error(`HHTP error ${tagResponse.status}`);
-    }
-    if (!memoResponse.ok) {
-      throw new Error(`HHTP error ${tagResponse.status}`);
-    }
-    if (!allMemmo.ok) {
-      throw new Error(`HHTP error ${tagResponse.status}`);
-    }
-    if (!lexicons.ok) {
-      throw new Error(`HHTP error ${tagResponse.status}`);
-    }
-    if (!linksResponse.ok) {
-      throw new Error(`HHTP error ${tagResponse.status}`);
-    }
-    if (!styleResponse.ok) {
-      throw new Error(`HHTP error ${tagResponse.status}`);
-    }
-    const tags = await tagResponse.json();
-    const memos = await memoResponse.json();
-    const categories = await cateoriesResponse.json();
-    const todos = await todosResponse.json();
-    const fullmemos = await allMemmo.json();
-    const lexicon = await lexicons.json();
-    const links = await linksResponse.json();
-    const styles = await styleResponse.json();
+
     return {
-      tags, categories, todos, memos, fullmemos, lexicon, links, styles,
+      todos,
+      categories,
+      tags,
+      memos,
+      fullmemos,
+      lexicon,
+      links,
+      styles,
     };
   } catch (error) {
-    return { error: 'Unable to fetch currencies' };
+    console.error('Erreur lors de la récupération des données :', error.message);
+    throw error;
   }
-};
+}

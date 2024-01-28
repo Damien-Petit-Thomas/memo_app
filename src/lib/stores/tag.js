@@ -4,12 +4,11 @@ export const tags = (() => {
   const { subscribe, set, update } = writable([]);
   const url = import.meta.env.VITE_API_URL;
 
-
   // Méthode pour ajouter une nouvelle tâche
 
   const get = async () => {
     try {
-      const response = await fetch(`http://${url}/api/tag`);
+      const response = await fetch('/api/tag');
       if (response.ok) {
         const data = await response.json();
         update(() => data);
@@ -21,15 +20,15 @@ export const tags = (() => {
     }
   };
 
-  const add = async (description) => {
+  const add = async (data) => {
     try {
       // Envoyer la description à la BDD pour créer un nouveau tag
-      const response = await fetch(`http://${url}/api/tag`, {
+      const response = await fetch('/api/tag', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ ...description }),
+        body: JSON.stringify({ data }),
       });
 
       if (response.ok) {
@@ -45,16 +44,20 @@ export const tags = (() => {
   };
 
   // Méthode pour supprimer une tâche
-  const remove = async (tag) => {
+  const remove = async (id) => {
     try {
       // Envoyer la demande de suppression à la BDD
-      const response = await fetch(`http://${url}/api/tag/${tag.id}`, {
+      const response = await fetch('/api/tag', {
         method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id }),
       });
 
       if (response.ok) {
         // Mettre à jour le store en excluant la tâche supprimée
-        update(($tags) => $tags.filter((t) => t.id !== tag.id));
+        update(($tags) => $tags.filter((t) => t.id !== id));
       } else {
         console.error(`Error removing tag: ${response.status}`);
       }

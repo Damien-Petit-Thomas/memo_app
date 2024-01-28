@@ -1,8 +1,9 @@
-export const load = async ({ fetch }) => {
+import db from '$lib/db';
+
+export const load = async () => {
   try {
-    const url = import.meta.env.VITE_BACK_CONTAINER_NAME;
-    const content = await fetch(`http://${url}/api/contentType`);
-    const contents = await content.json();
+    const content = await db.query('SELECT * FROM content_type');
+    const contents = await content.rows;
     return { contents };
   } catch (error) {
     return { error: 'Unable to fetch currencies' };

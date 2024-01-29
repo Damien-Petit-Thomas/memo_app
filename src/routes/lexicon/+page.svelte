@@ -1,26 +1,61 @@
 <script>
+  import {onMount} from 'svelte';
   import { lexicon } from '$lib/stores/lexicon.js';
-
+let sortedLexicon = [];
+let groupedLexicon = {};
   // Tri du lexicon par ordre alphabétique
-  let sortedLexicon = $lexicon.slice().sort((a, b) => a.word.localeCompare(b.word));
+
+onMount(async () => {
+  if ($lexicon.length === 0) {
+    await lexicon.get();
+  }
+});
+
+
+
+  $: console.log($lexicon)
+  $:  sortedLexicon = $lexicon.slice().sort((a, b) => a.word.localeCompare(b.word));
+  $: console.log("aaaaaaaaaaaaaaaaa", sortedLexicon)
 
   // Grouper les mots par la première lettre
-  let groupedLexicon = {};
-  sortedLexicon.forEach(({ word, definition }) => {
+  $: {
+  groupedLexicon = {}; // Create a new object to trigger reactivity
+
+  sortedLexicon.forEach(({ word, definition, id }) => {
     const firstLetter = word.charAt(0).toUpperCase();
     groupedLexicon[firstLetter] = groupedLexicon[firstLetter] || [];
-    groupedLexicon[firstLetter].push({ word, definition });
+    if (groupedLexicon[firstLetter].some((item) => item.id === id)) {
+      return;
+    }
+    groupedLexicon[firstLetter].push({ word, definition, id });
   });
+}
+
+const handleRemove = async (id) => {
+  const userConfirm = confirm('êtes-vous sûr de vouloir poursuivre cette action ?');
+  if (userConfirm) {
+    await lexicon.remove(id);
+  }
+  return ;
+}
+
+
+
 </script>
 
 <div class="lexicon">
   
     {#each Object.keys(groupedLexicon).sort() as firstLetter}
           <h2>{firstLetter}</h2>
-        {#each groupedLexicon[firstLetter] as { word, definition }}
+        {#each groupedLexicon[firstLetter] as { word, definition,  id }}
             <div class="word">
               <div class="word-word">{word}</div>
               <div class="definition">{definition}</div>
+              <button class="remove"
+              on:click={() => handleRemove(id)}
+              aria-label="Remove" 
+      
+              />
             </div>
         {/each}
     {/each}
@@ -31,6 +66,15 @@
 
 
     <style>
+
+.remove {
+    background-image: url($lib/assets/remove.svg);
+    background-repeat:no-repeat;
+    background-position: center;
+    background-color: transparent;
+    width: 2px;
+    height: 2px;
+  }
 
     .lexicon {
       display: flex;

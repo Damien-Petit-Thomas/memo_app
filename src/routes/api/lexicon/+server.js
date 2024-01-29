@@ -27,10 +27,11 @@ export async function PATCH({ request }) {
 }
 
 export async function DELETE({ request }) {
-  const { itemId } = await request.json();
-  const response = await lexic.delete(itemId);
+  const { id } = await request.json();
+  console.log(id);
+  const response = await lexic.delete(id);
   if (response) {
-    return json(itemId, { status: 200 });
+    return json(id, { status: 200 });
   }
   return json(null, { status: 404 });
 }

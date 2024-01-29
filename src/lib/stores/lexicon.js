@@ -3,7 +3,6 @@ import { writable } from 'svelte/store';
 export const lexicon = (() => {
   const { subscribe, update, set } = writable([]);
 
-
   const get = async () => {
     try {
       const response = await fetch('/api/lexicon');
@@ -47,6 +46,10 @@ export const lexicon = (() => {
       // Envoyer la demande de suppression à la BDD
       const response = await fetch('/api/lexicon', {
         method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id }),
       });
 
       if (response.ok) {

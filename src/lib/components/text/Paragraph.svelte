@@ -76,5 +76,4 @@ class:isEditable={isEditable}
 
 
 
-
 </style>

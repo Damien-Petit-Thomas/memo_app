@@ -13,9 +13,7 @@ onMount(async () => {
 
 
 
-  $: console.log($lexicon)
   $:  sortedLexicon = $lexicon.slice().sort((a, b) => a.word.localeCompare(b.word));
-  $: console.log("aaaaaaaaaaaaaaaaa", sortedLexicon)
 
   // Grouper les mots par la première lettre
   $: {

@@ -294,3 +294,8 @@ table tr:nth-child(even) td {
 	border-left: 4px solid var(--color-orange);
 	}
 }
+
+
+.content a{
+  color : rgb(0, 38, 255);
+}

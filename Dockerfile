@@ -9,35 +9,34 @@ RUN npm install
 VOLUME /app
 
 
-# Force production mode for better DNS resolution
-CMD ["npm", "run", "dev", "--", "--host", "--mode", "producton"]
+CMD ["npm", "run", "dev", "--", "--host"]
 
-# # Build Stage
-# FROM node:lts-slim as build
+# Build Stage
+FROM node:lts-slim as build
 
-# WORKDIR /app
-# COPY . .
+WORKDIR /app
+COPY . .
 
-# # Install dependencies
-# RUN npm install
+# Install dependencies
+RUN npm install
 
-# # Build the application
-# RUN npm run build
-
-
-# # Prod Stage
-# FROM node:lts-slim as prod
-
-# WORKDIR /app
-
-# COPY --from=build /app/build ./build
-# COPY --from=build /app/package.json ./package.json
-# COPY --from=build /app/my-server.js ./my-server.js
+# Build the application
+RUN npm run build
 
 
-# RUN npm install --omit=dev
-# USER node
+# Prod Stage
+FROM node:lts-slim as prod
 
-# EXPOSE 8088
+WORKDIR /app
 
-# CMD ["npm", "run", "start"]
+COPY --from=build /app/build ./build
+COPY --from=build /app/package.json ./package.json
+COPY --from=build /app/my-server.js ./my-server.js
+
+
+RUN npm install --omit=dev
+USER node
+
+EXPOSE 8088
+
+CMD ["npm", "run", "start"]

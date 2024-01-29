@@ -17,9 +17,9 @@ export async function POST({ request }) {
 }
 
 export async function PATCH({ request }) {
-  const { todo } = await request.json();
-  const done = !todo.done;
-  const response = await tod.update(todo.id, { done });
+  const { data } = await request.json();
+  const { id, done } = data;
+  const response = await tod.update(id, {done});
   if (response) {
     return json(response);
   }
@@ -28,10 +28,10 @@ export async function PATCH({ request }) {
 }
 
 export async function DELETE({ request }) {
-  const { todoId } = await request.json();
-  const response = await tod.delete(todoId);
+  const { id } = await request.json();
+  const response = await tod.delete(id);
   if (response) {
-    return json(todoId, { status: 200 });
+    return json(id, { status: 200 });
   }
   return json(null, { status: 404 });
 }

@@ -27,7 +27,7 @@
   };
 
 function handleRemove(item) {
- const userConfirm = confirm('êtes-vous sûr? cette action supprimera tout les memo associés à cette catégorie');
+ const userConfirm = confirm('êtes-vous sûr de vouloir poursuivre cette action ?');
   if (userConfirm) {
     store.remove(item);
     reloadNeeded.set(true)

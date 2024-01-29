@@ -32,7 +32,7 @@ onNavigate((navigation) => {
 
 
 <style>
-
+  
 
   main {
     display: flex;

@@ -1,4 +1,5 @@
 <script>
+  import hljs from 'highlight.js';
   import markdownit from 'markdown-it';
   import MainSidebar from '$lib/components/sidebar/MainSidebar.svelte';
   import Code from '$lib/components/text/Code.svelte';
@@ -12,8 +13,24 @@
   import  {currentMemo} from '$lib/stores/currentMemo.js';
   import  NextBar  from '$lib/components/nextBar/NextBar.svelte';
   let isEditable = false;
+  let color= 'red';
   // Actual default values
-  const md = markdownit();
+  const md = markdownit(
+    {
+      html: true,
+      linkify: true,
+      typographer: true,
+      breaks: true,
+      highlight: function (str, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+          try {
+            return `<pre class="hljs"><code>${hljs.highlight(lang, str, true).value}</code></pre>`;
+          } catch (__) {}
+        }
+        return `<pre class="hljs"><code>${md.utils.escapeHtml(str)}</code></pre>`;
+      }
+    }
+  );
   
   const components = {
     noteCard: NoteCard,
@@ -46,6 +63,7 @@ const getFullMemo = async () => {
     pageSlug = $page.params.slug;
     memo = $fullmemos.find((m) => m.slug === pageSlug);
     if (memo) {
+      color = memo.category.color;
       currentMemoIdx= $fullmemos.findIndex((m) => m.slug === pageSlug);
       copyMemo = JSON.parse(JSON.stringify(memo));
       if (copyMemo.contents){
@@ -79,8 +97,8 @@ const getFullMemo = async () => {
       const headerTag = match[1];
       const headerContent = match[2];
       const id = `${headerContent.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
-      const anchor = `<a name="${id}"></a>`;
-      modifiedLines.push(markdownRenderedContent.substring(lastIndex, match.index) + `<${headerTag} id="${id}">${anchor}${headerContent}</${headerTag}>`);
+      const anchor = `<a name="  ${id}"></a>`;
+      modifiedLines.push(markdownRenderedContent.substring(lastIndex, match.index) + `<${headerTag} style="color : ${color}" id="${id}">${anchor}${headerContent}</${headerTag}>`);
       lastIndex = match.index + match[0].length;
     }
     
@@ -155,8 +173,10 @@ const getFullMemo = async () => {
 
 <style>
 
-
-
+h2{
+  text-align: center;
+  color: #bd9918;
+}
 
   .container {
     display: flex;
@@ -174,6 +194,7 @@ const getFullMemo = async () => {
     border: 1px solid #818181;
   }
   .container_main {
+    
     display: flex;
     flex-direction: column;
     justify-content: space-between ;
@@ -181,23 +202,22 @@ const getFullMemo = async () => {
     height: 100%;
     width: 100%;
   }
-
+  
   
   .content {
-    border-left : 1px solid #818181;
-    border-right : 1px solid #818181;
+    border-left : 1px solid #94d2bd;
+    border-right : 1px solid #94d2bd;
     display: flex;
+    color:var(--color-primary-5);
     flex-direction: column;
     padding: 20px;
     min-width: 100%;
     min-height: 95vh;
     widows: 15%;
     height: fit-content;
-    background-color: rgb(29, 32, 32);
+    background-color: var(--color-primary-2);
 
   }
   
-  h2 {
-    text-align: center;
-  }
+
 </style>

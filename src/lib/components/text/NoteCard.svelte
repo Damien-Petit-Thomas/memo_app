@@ -77,7 +77,6 @@
     border: 1px solid #696969;
     border-left: 4px solid #5E9EFF;
     border-radius: .25rem;
-    font-family: Roboto Slab;
     padding: 1rem 1rem 1rem 1.5rem;
     margin: 0 auto; 
     min-height: 2rem;

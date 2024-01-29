@@ -152,7 +152,7 @@
     }
     await  fullmemos.get();
     itemsToSave.forEach(item => {
-      saveLinks(item.content, linkList, memoId, categoryId)
+      saveLinks(item.content, linkList, memoId, categoryId, memotitle)
     })
     
     reloadNeeded.set(true)

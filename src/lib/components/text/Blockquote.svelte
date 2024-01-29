@@ -65,7 +65,6 @@ blockquote.isEditable {
 	background: rgb(53, 48, 48);
 	border-left: 4px solid var(--color-orange);
 	border-right: 4px solid var(--color-orange);
-	font-family: Roboto Slab;
 	padding: 2.4rem;
 	margin: 0 auto;
   width: 90%;

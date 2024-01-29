@@ -75,10 +75,8 @@ pour fonctionner l'application necessite
 
 - un container sveltkit (architecture backend hybride puisque j'utilise également un container node pour le back)
 - un container de BDD : postgresql
-- un container backend : Node.js
-- un container server : apche : reverse proxy offloading
 
-pour utiliser l'application : aller au répo [memo_db_compose](https://github.com/Damien-Petit-Thomas/memo_db_compose) qui contient les dockerfiles pour le container de la bdd , de Caddy et de Node.js  et le docker-compose.yml pour lancer l'application en local ou pour un deploiement sur un serveur.
+pour utiliser l'application : aller au répo [memo_db_compose](https://github.com/Damien-Petit-Thomas/memo_db_compose) qui contient les dockerfiles pour le container de la bdd , de Caddy   et le docker-compose.yml pour lancer l'application en local ou pour un deploiement sur un serveur.
 
 ![Automated Upload](https://github.com/Damien-Petit-Thomas/memo-front/actions/workflows/container.yml/badge.svg)
 # memo_app

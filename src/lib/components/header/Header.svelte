@@ -26,7 +26,7 @@
         <a href="/">Tags</a>
         <a href="/">Favoris</a>
         <a href="/">A propos</a>
-        <a href="/">Contact</a>
+        <a href="/">Contact</a> 
     </nav>
 </header>
 

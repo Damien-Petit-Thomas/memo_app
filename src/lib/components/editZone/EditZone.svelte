@@ -20,7 +20,6 @@
     color: black;
     padding: 0;
     margin: 0;
-    overflow: hidden;
     text-align: center;
     position: absolute;
     top: 0;

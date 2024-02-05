@@ -194,13 +194,12 @@ h2{
     border: 1px solid #818181;
   }
   .container_main {
-    
     display: flex;
     flex-direction: column;
     justify-content: space-between ;
     align-items: center;
+    min-width: 65%;
     height: 100%;
-    width: 100%;
   }
   
   
@@ -216,6 +215,7 @@ h2{
     widows: 15%;
     height: fit-content;
     background-color: var(--color-primary-2);
+    max-width: 80%;
 
   }
   

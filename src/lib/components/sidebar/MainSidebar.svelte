@@ -88,7 +88,6 @@
     border-right: 1px solid #565656;
     min-width: 15%;
     padding-top: 20px;
-    overflow-x: hidden;
     height: 100vh;
   }
 
@@ -108,7 +107,6 @@
 
   .memo {
     padding-left: 16px;
-    overflow: hidden;
     max-height: 0;
     transition: max-height 0.4s ease-in-out;
   }

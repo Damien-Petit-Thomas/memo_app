@@ -106,7 +106,6 @@
     flex-direction: column;
     min-width: 70%;
     background-color: rgb(29, 32, 32);
-    overflow-y: auto; 
     padding-bottom: 1rem;
   }
   .editor {
@@ -114,7 +113,6 @@
     display: flex;
     flex-direction: column;
     min-width: 70%;
-    overflow: scroll;
     background-color: rgb(29, 32, 32);
     
   }

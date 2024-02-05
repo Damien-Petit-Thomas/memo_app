@@ -15,6 +15,7 @@
       (memo) => memo.category.id === selectedCategory?.id,
     );
   }
+
 </script>
 
 <div class="container_main">
@@ -66,6 +67,7 @@
   }
 
   .container_main {
+    overflow: auto;
     display: flex;
     flex-direction: column;
     justify-content: space-between ;

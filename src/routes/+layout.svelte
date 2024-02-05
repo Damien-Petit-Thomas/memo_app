@@ -19,7 +19,12 @@ onNavigate((navigation) => {
 });
  
   import "../styles/global.css";
+
+
+
 </script>
+
+
 
 <main>
   <Header />

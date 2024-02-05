@@ -10,13 +10,11 @@
 	import { link } from '$lib/stores/link.js'
 	import Main from '../lib/components/main/Main.svelte';
 	import {onMount} from 'svelte';
-	import { test } from '$lib/stores/test.js';
   export let data;
 	let linkList = [];
 	// on rempli les stores
 
 	onMount(() => {
-		test.get()
 		fullmemos.set(data.fullmemos);
 		categories.set(data.categories);
 		tags.set(data.tags);
@@ -50,7 +48,7 @@
 
 <div class="container">
 		<Sidebar  on:showMemos={showMemos}/>
-		<Main  {selectedCategory}/>
+		<Main on:scroll {selectedCategory}/>
 </div>
 
 

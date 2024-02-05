@@ -330,3 +330,14 @@ table tr:nth-child(even) td {
 .content a{
   color : rgb(0, 38, 255);
 }
+
+
+#lexical {
+  color : inherit;
+  font-weight: bold;
+}
+
+#lexical:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}

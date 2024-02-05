@@ -113,9 +113,8 @@ const getFullMemo = async () => {
     lexicon.forEach(wordObj => {
       const word = wordObj.word;
       const regex = new RegExp(`\\b${word}\\b`, 'g');
-      // il faut que le mot soit entouré d'espace pour être remplacé
       if (item.content.match(regex)) {
-        item.content = item.content.replace(regex, `<span class="lexical" style="color:gold">${word}</span>`);
+        item.content = item.content.replace(regex, `<a href="/lexicon" id="lexical">${word}</a>`);
       }
     });
   }

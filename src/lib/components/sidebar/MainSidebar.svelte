@@ -31,35 +31,37 @@
     dispatch('showMemos', category  );
   }
 </script>
-<section class="sidebar">
-  {#each $categories as category (category)}
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <div 
-    class="category" 
-    on:click={() => toggleMemo(category)} 
-    style="border-left: {category.color} solid 6px;"
-    >
-      <h2>
-        {category.name}
-        <button class:expanded={categoryStates[category.id]} >
-          ▶
-        </button>
-        
-      </h2>
-      {#if categoryStates[category.id]}
-      <div transition:fade class="memo" class:expanded={categoryStates[category.id]}  >
-        {#each $memos.filter(memo => memo.category_id === category.id) as memo}
-          <div>
-            <a href="/memo/{memo.slug}">{memo.title}</a>
-          </div>
-        {/each}
+<div class="wrapper">
+  <section class="sidebar">
+    {#each $categories as category (category)}
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <!-- svelte-ignore a11y-no-static-element-interactions -->
+      <div
+      class="category"
+      on:click={() => toggleMemo(category)}
+      style="border-left: {category.color} solid 6px;"
+      >
+        <h2>
+          {category.name}
+          <button class:expanded={categoryStates[category.id]} >
+            ▶
+          </button>
+  
+        </h2>
+        {#if categoryStates[category.id]}
+        <div transition:fade class="memo" class:expanded={categoryStates[category.id]}  >
+          {#each $memos.filter(memo => memo.category_id === category.id) as memo}
+            <div>
+              <a href="/memo/{memo.slug}">{memo.title}</a>
+            </div>
+          {/each}
+        </div>
+  
+        {/if}
       </div>
-      
-      {/if}
-    </div>
-  {/each}
-</section>
+    {/each}
+  </section>
+</div>
 
 
 
@@ -67,7 +69,11 @@
 
 
 <style>
-
+  .wrapper {
+    min-width: 15%;
+    display: flex;
+    flex-direction: column;
+  }
   button {
     float: right;
     background-color: transparent;
@@ -86,6 +92,7 @@
 
   .sidebar {
     border-right: 1px solid #565656;
+    position: fixed;
     min-width: 15%;
     padding-top: 20px;
     height: 100vh;

@@ -334,10 +334,6 @@ table tr:nth-child(even) td {
 
 #lexical {
   color : inherit;
-  font-weight: bold;
+  text-decoration: dotted underline;
 }
 
-#lexical:hover {
-  cursor: pointer;
-  text-decoration: underline;
-}

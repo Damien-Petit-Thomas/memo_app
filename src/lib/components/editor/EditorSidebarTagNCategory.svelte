@@ -125,7 +125,9 @@ const getTags = async () => {
   <style>
     /* Your existing styles remain unchanged */
   
-
+    section{
+      
+    }
 
     select{
       width: 90%;

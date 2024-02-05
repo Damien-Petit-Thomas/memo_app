@@ -178,15 +178,17 @@
   title={$title}
   {styles}
   />
-  <div class="wrapper">
-    <EditorSidebarTagNCategory
-    on:selectedCategory={handleSelectCategory}
-    on:selectedTags={handleTags}
-    />
-    <Lexicon {categoryId} />
-    <button
-    on:click={deleteMemo}
-    >Supprimer</button>
+  <div class="container">
+    <div class="wrapper">
+      <EditorSidebarTagNCategory
+      on:selectedCategory={handleSelectCategory}
+      on:selectedTags={handleTags}
+      />
+      <Lexicon {categoryId} />
+      <button
+      on:click={deleteMemo}
+      >Supprimer</button>
+    </div>
   </div>
   
 </div>
@@ -207,6 +209,7 @@
   }
   
   .wrapper {
+    position : fixed;
     display: flex;
     flex-direction: column;
     min-width: 15%;

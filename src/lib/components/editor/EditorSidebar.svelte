@@ -33,43 +33,53 @@
   }
 </script>
 
-<section>
-  <button id="saveMemo" on:click={() => dispatch("saveMemo")}
-    >Sauvegarder</button
-  >
-  <div class="content-type-container">
-    {#each items as item (item.id)}
-    {#if item.name !== "warning" && item.name !== "summary"}
-        <button on:click={() => handleCLick(item)}>
-          {item.name}
-        </button>
-    {/if}
-    {/each}
-  </div>
-
-  {#if showStylesSelection}
-    <div class="card">
-      {#if availableStyle.length > 0}
-        <h3>choix du style</h3>
-        {#each availableStyle as style}
-          <div class="style-item">
-            <button on:click={handleStyleClick(style)}>{style.name}</button>
-          </div>
-        {/each}
-      {:else}
-        <p class="no-styles">No styles available</p>
+<div class="wrapper">
+  <section>
+    <button id="saveMemo" on:click={() => dispatch("saveMemo")}
+      >Sauvegarder</button
+    >
+    <div class="content-type-container">
+      {#each items as item (item.id)}
+      {#if item.name !== "warning" && item.name !== "summary"}
+          <button on:click={() => handleCLick(item)}>
+            {item.name}
+          </button>
       {/if}
+      {/each}
     </div>
-  {/if}
-</section>
+  
+    {#if showStylesSelection}
+      <div class="card">
+        {#if availableStyle.length > 0}
+          <h3>choix du style</h3>
+          {#each availableStyle as style}
+            <div class="style-item">
+              <button on:click={handleStyleClick(style)}>{style.name}</button>
+            </div>
+          {/each}
+        {:else}
+          <p class="no-styles">No styles available</p>
+        {/if}
+      </div>
+    {/if}
+  </section>
+</div>
 
 <style>
-  section {
+
+
+.wrapper{
+  min-width: 15%;
     display: flex;
     flex-direction: column;
-    width: 100%;
+    border-right: 1px solid #565656;
+    align-items: center;
+}
+  section {
+    position: fixed;
+    width: 15%;
+    padding-top: 20px;
     height: 100vh;
-    gap: 5rem;
   }
 
   .content-type-container {

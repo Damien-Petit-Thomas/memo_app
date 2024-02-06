@@ -6,7 +6,9 @@
 	let original = value;
 	export let css = null;
 const dispatch = createEventDispatcher();
-
+if (isEditable === false) {
+  isSave = false;
+}
 function handleKeyDown(e) {
   const trimmedInnerText = e.target.innerText.trim();
   const trimmedOriginal = 'paragraphe'

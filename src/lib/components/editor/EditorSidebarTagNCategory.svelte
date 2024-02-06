@@ -60,63 +60,52 @@ const getTags = async () => {
       dispatch('selectedTags', tagsIds);
     }
   </script>
-  
-  <section>
+  <div class="wrapper">
     
-  
-    <div class="category-section">
-<details>
-  <summary>choisir une catégorie</summary>
-  <select name="categories" 
-  id="categories"  
-  on:change={handleCategoryChange} 
-  > 
-
-    {#each $categories as item (item.id)}
-    <option 
-      value={item.id} 
-      style={`background-color: ${item.color};`}
+    
+    
+      <div class="category-section">
+    <details>
+    <summary>choisir une catégorie</summary>
+    <select name="categories"
+    id="categories"
+    on:change={handleCategoryChange}
     >
-      {item.name}
-    </option>
-    {/each}
-  </select>
-</details>
-    </div>
-
-    <div class="tag-section">
-<details>
-  <summary>ajouter des tags</summary>
-
-  <select 
-    multiple 
-    name="tags" 
-    id="tags" 
-    size={nbTags}  
-    on:change={handleTagChange}
-  >
-  {#each $tags as item (item.id)}
-    <option 
-        class:selected
+      {#each $categories as item (item.id)}
+      <option
         value={item.id}
         style={`background-color: ${item.color};`}
-        >
-          {item.name}
-    </option>
+      >
+        {item.name}
+      </option>
       {/each}
     </select>
-</details>
-    </div>
-
-
-
-   
-
-
-
-  </section>
-
-
+    </details>
+      </div>
+      <div class="tag-section">
+    <details>
+    <summary>ajouter des tags</summary>
+    <select
+      multiple
+      name="tags"
+      id="tags"
+      size={nbTags}
+      on:change={handleTagChange}
+    >
+    {#each $tags as item (item.id)}
+      <option
+          class:selected
+          value={item.id}
+          style={`background-color: ${item.color};`}
+          >
+            {item.name}
+      </option>
+        {/each}
+      </select>
+    </details>
+      </div>
+    
+  </div>
 
 
 
@@ -124,10 +113,13 @@ const getTags = async () => {
   
   <style>
     /* Your existing styles remain unchanged */
-  
-    section{
-      
+  .wrapper{
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
     }
+ 
 
     select{
       width: 90%;

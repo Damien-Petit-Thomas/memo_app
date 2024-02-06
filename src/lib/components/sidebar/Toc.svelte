@@ -66,6 +66,14 @@
     display: flex;
     flex-direction: column;
   }
+  nav {
+    color: #ddd;
+    position: fixed;
+    top: 10%;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 1rem;
+  }
   .level-1 {
     font-size: 1.5rem;
   }
@@ -90,14 +98,6 @@
     font-size: 0.2rem;
   }
 
-  nav {
-    color: #ddd;
-    position: fixed;
-    top: 10%;
-    height: 100vh;
-    overflow-y: auto;
-    padding: 1rem;
-  }
   a {
     color: #ddd;
     text-decoration: none;

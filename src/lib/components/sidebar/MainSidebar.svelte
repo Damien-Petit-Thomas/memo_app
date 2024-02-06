@@ -74,6 +74,13 @@
     display: flex;
     flex-direction: column;
   }
+  .sidebar {
+    border-right: 1px solid #565656;
+    position: fixed;
+    min-width: 15%;
+    padding-top: 20px;
+    height: 100vh;
+  }
   button {
     float: right;
     background-color: transparent;
@@ -90,13 +97,6 @@
   }
 
 
-  .sidebar {
-    border-right: 1px solid #565656;
-    position: fixed;
-    min-width: 15%;
-    padding-top: 20px;
-    height: 100vh;
-  }
 
   .category {
     cursor: pointer;

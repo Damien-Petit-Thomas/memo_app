@@ -178,8 +178,8 @@
   title={$title}
   {styles}
   />
-  <div class="container">
-    <div class="wrapper">
+  <div class="wrapper">
+    <div class="wrapper_content">
       <EditorSidebarTagNCategory
       on:selectedCategory={handleSelectCategory}
       on:selectedTags={handleTags}
@@ -209,11 +209,16 @@
   }
   
   .wrapper {
-    position : fixed;
     display: flex;
     flex-direction: column;
     min-width: 15%;
   }
-  
+  .wrapper_content {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+position: fixed;
+  }
   
 </style>

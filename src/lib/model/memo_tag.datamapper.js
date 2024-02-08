@@ -1,8 +1,6 @@
-import CoreDatamapper from './datampper';
+import CoreDatamapper from './core.datamapper';
 
 export default class MemoTag extends CoreDatamapper {
-  tablename = 'memo_tag';
-
   async delete(memoId, tagId) {
     const query = `DELETE FROM ${this.tablename} WHERE memo_id = $1 AND tag_id = $2`;
     const values = [memoId, tagId];
@@ -24,4 +22,4 @@ export default class MemoTag extends CoreDatamapper {
     const result = await this.client.query(quary, values);
     return result.rows[0];
   }
-}
+};

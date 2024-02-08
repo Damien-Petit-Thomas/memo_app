@@ -1,4 +1,4 @@
-import CoreDatamapper from './datampper';
+import CoreDatamapper from './core.datamapper';
 
 export default class MemoContent extends CoreDatamapper {
   async deleteByMemoId(memoId) {

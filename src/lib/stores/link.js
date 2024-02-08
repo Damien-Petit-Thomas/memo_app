@@ -2,16 +2,12 @@ import { writable } from 'svelte/store';
 
 export const link = (() => {
   const { subscribe, update, set } = writable([]);
-  const linkList = [];
   // Méthode pour ajouter une nouvelle tâche
-  const url = import.meta.env.VITE_API_URL;
-  console.log(url);
   const get = async () => {
     try {
       const response = await fetch('/api/link');
-      if (response.ok) {
+      if (response) {
         const data = await response.json();
-        linkList.push(...data);
         update(() => data);
       } else {
         console.error(`Error fetching words: ${response.status}`);

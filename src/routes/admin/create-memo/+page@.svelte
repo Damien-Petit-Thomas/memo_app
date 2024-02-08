@@ -91,7 +91,6 @@
     if(!userConfirm) return;
     if(memoId){
       const deletedMemo = await memos.remove(memoId);
-      console.log(deletedMemo)
       if(deletedMemo){
         alert('le memo a bien été supprimé')
       }
@@ -141,8 +140,9 @@
       const data = { title: $title, contents: itemsToSave, categoryId, tagsIds };
       const newMemo = await memos.add( data);
       if (newMemo) {
-        alert(`create${JSON.stringify(newMemo)}`);
+        alert(`le memo a été bien été ajouté`);
         memoId = newMemo.id;
+        console.log("memoId", memoId)
         memoCategory = newMemo.category_id;
         memotags = newMemo.tags;
         memotitle = newMemo.title;

@@ -5,13 +5,16 @@
   import { categories } from '$lib/stores/category.js';
   let sortedLink = [];
   let groupeLink = {};
-  let links = null;
   onMount(async () => {
-    if (!$link == []) {
-  
-  links =  await link.get();
+    if ($link.length === 0) {
+      await  link.get();
     }
-
+    if ($memos.length === 0) {
+      await memos.get();
+    }
+    if ($categories.length === 0) {
+      await categories.get();
+    }
     sortedLink = $link.slice().sort((a, b) => a.name.localeCompare(b.name));
 
     sortedLink.forEach(( link ) => {
@@ -27,7 +30,7 @@
 </script>
 
 <div class="lexicon">
-  {#if $link.length === 0 && links === null }
+  {#if $link.length === 0 }
     
     <p>Loading...</p>
   {:else}

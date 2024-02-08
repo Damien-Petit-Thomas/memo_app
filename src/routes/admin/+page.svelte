@@ -7,33 +7,16 @@
 	import {tags} from '$lib/stores/tag.js'
 	import Categorielist from '$lib/components/createList/CreateList.svelte';
 	import TodoList from '$lib/components/todolist/Todolist.svelte';
-    import { get } from 'svelte/store';
-	// export let data;
-
-
-async function getCategory(){
-	const  response = await fetch('/api/category')
-	return response.json();
-}
-async function getTag(){
-	const  response = await fetch('/api/tag')
-	return response.json();
-}
-
-async function getTodo(){
-	const  response = await fetch('/api/todo')
-	return response.json();
-}
 
 onMount(async () => {
 	if ($categories.length === 0) {
-		categories.set(await getCategory())
+		categories.get()
 	}
 	if ($tags.length === 0) {
-		tags.set(await getTag())
+		tags.get()
 	}
 	if ($todos.length === 0) {
-		todos.set(await getTodo())
+		todos.get()
 
 	}
 });
@@ -41,19 +24,9 @@ onMount(async () => {
 async function handleSubmit(e) {
 if (e.key !== 'Enter') return;
 const description = e.currentTarget.value;
-const response = await fetch('/api/todo', {
-	method: 'POST',
-	headers: {
-		'Content-Type': 'application/json'
-	},
-	body: JSON.stringify({ description })
-});
-
-if (response.ok) {
-	const newTodo = await response.json();
-	todos.update($todos => [...$todos,  newTodo]);
-	e.target.value = '';
-}
+let data = {}
+data.description = description
+todos.add(data)
 }
 
 

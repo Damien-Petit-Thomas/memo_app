@@ -1,5 +1,7 @@
 import { writable } from 'svelte/store';
 
+
+
 export const categories = (() => {
   const { subscribe, update, set } = writable([]);
   const get = async () => {

@@ -27,6 +27,8 @@
         <a href="/">Favoris</a>
         <a href="/">A propos</a>
         <a href="/">Contact</a> 
+        <a href="/auth/signup">Inscription</a>
+        <a href="/auth/signin">Connexion</a>
     </nav>
 </header>
 

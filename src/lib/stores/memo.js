@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 
 export const memos = (() => {
-  const { subscribe, set, update } = writable([]);
+  const { subscribe, update, set } = writable([]);
 
   // Méthode pour ajouter une nouvelle tâche
 
@@ -29,8 +29,8 @@ export const memos = (() => {
         body: JSON.stringify({ data }),
       });
 
-      if (response.ok) {
-        const newmemo = response.json();
+      if (response) {
+        const newmemo = await response.json();
         // Mettre à jour le store avec le nouveau memo de la BDD
         update(($memos) => [...$memos, newmemo]);
 
@@ -43,14 +43,11 @@ export const memos = (() => {
       console.error('An unexpected error occurred:', error);
     }
 
-    // Add a default return statement indicating no value
-    return null; // or undefined, depending on your preference
+    return null;
   };
 
-  // Méthode pour supprimer une tâche
   const remove = async (id) => {
     try {
-      // Envoyer la demande de suppression à la BDD
       const response = await fetch('/api/memo/', {
         method: 'DELETE',
         headers: {
@@ -59,14 +56,14 @@ export const memos = (() => {
         body: JSON.stringify({ id }),
       });
 
-      if (response.ok) {
-        // Mettre à jour le store en excluant la tâche supprimée
+      if (response) {
         update(($memos) => $memos.filter((t) => t.id !== id));
+        return true;
       }
-      console.error(`Error removing memo: ${response.status}`);
     } catch (error) {
       console.error('An unexpected error occurred:', error);
     }
+    return false;
   };
 
   const mark = async (data) => {

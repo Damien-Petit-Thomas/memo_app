@@ -1,5 +1,5 @@
 <script>
-  import { reloadNeeded } from "$lib/stores/reloadNeeded.js";
+  import { reloadNeeded } from "$lib/stores/index.js";
   import { send, receive } from "$lib/utils/transition.js";
   export let title;
   export let store;

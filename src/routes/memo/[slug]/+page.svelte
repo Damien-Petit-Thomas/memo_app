@@ -9,8 +9,7 @@
   import Detail from '../../../lib/components/text/Detail.svelte';
   import NoteCard from '../../../lib/components/text/NoteCard.svelte';
   import { page } from '$app/stores';
-  import { fullmemos } from '$lib/stores/fullmemos.js';
-  import  {currentMemo} from '$lib/stores/currentMemo.js';
+  import  {currentMemo, fullmemos} from '$lib/stores/index.js';
   import  NextBar  from '$lib/components/nextBar/NextBar.svelte';
   let isEditable = false;
   let color= 'red';

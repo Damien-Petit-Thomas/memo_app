@@ -1,5 +1,5 @@
 <script>
-  import { fullmemos } from "$lib/stores/fullmemos.js";
+  import { fullmemos } from "$lib/stores/index.js";
   import NextBar from "../nextBar/NextBar.svelte";
   import Card from "$lib/components/card/Card.svelte";
   export let selectedCategory;

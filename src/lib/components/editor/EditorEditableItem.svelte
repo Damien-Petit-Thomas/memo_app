@@ -1,7 +1,6 @@
 <script>
   import Code from "$lib/components/text/Code.svelte";
-  import { memoItems } from "$lib/stores/Editor.js";
-  import { title } from "$lib/stores/title.js";
+  import { memoItems, title } from "$lib/stores/index.js";
   import Detail from "$lib/components/text/Detail.svelte";
   import { onMount } from "svelte";
   import Paragraphe from "$lib/components/text/Paragraph.svelte";

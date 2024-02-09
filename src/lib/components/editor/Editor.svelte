@@ -2,8 +2,7 @@
   import { dndzone, SOURCES, TRIGGERS } from 'svelte-dnd-action';
   import { flip } from 'svelte/animate';
   import EditableItem from "$lib/components/editor/EditorEditableItem.svelte";
-  import { memoItems } from '$lib/stores/Editor.js';
-  import { currentMemo } from '$lib/stores/currentMemo.js';
+  import { memoItems, currentMemo} from '$lib/stores/index.js';
   export let isDeleted = false;
 
   $: title = {

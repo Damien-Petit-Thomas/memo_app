@@ -1,5 +1,5 @@
 <script>
-    import { reloadNeeded } from '$lib/stores/reloadNeeded.js';
+    import { reloadNeeded } from '$lib/stores/index.js';
     import  hackEffect  from '$lib/utils/hackEffect.js';
     import { onMount } from 'svelte';
     onMount(() => {

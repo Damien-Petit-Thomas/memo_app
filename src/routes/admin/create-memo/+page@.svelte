@@ -1,17 +1,13 @@
 <script>
-  import { reloadNeeded } from '$lib/stores/reloadNeeded.js';
-  import { fullmemos } from '$lib/stores/fullmemos.js';
-  import { memos, link} from '$lib/stores/index.js';
+  import { memos, link, reloadNeeded, fullmemos, memoItems, currentMemo, title} from '$lib/stores/index.js';
   import Lexicon from '$lib/components/editor/Lexicon.svelte';
-  import { memoItems } from '$lib/stores/Editor.js';
   import Editor from '$lib/components/editor/Editor.svelte';
   import EditorSidebar from '$lib/components/editor/EditorSidebar.svelte';
-  import {title} from '$lib/stores/title.js';
   import  EditorSidebarTagNCategory  from '$lib/components/editor/EditorSidebarTagNCategory.svelte';
   let memoId;
   export let data; 
   import { saveLinks } from '$lib/utils/saveLinks.js';
-  import { currentMemo } from '$lib/stores/currentMemo.js';
+
   import { onMount } from 'svelte';
   let memoCategory;
   let categoryId;

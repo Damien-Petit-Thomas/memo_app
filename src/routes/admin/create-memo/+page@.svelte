@@ -35,7 +35,6 @@
       memoId = $currentMemo.id
       memoCategory = $currentMemo.category.id
       if($currentMemo.tags) {
-        console.log("currentMemo.tags", $currentMemo.tags)
         memotags = $currentMemo.tags.forEach(tag => memotags.push(tag.id))
       }
       $currentMemo.contents.sort((a, b) => a.position -b.position);
@@ -141,7 +140,6 @@
       if (newMemo) {
         alert(`le memo a été bien été ajouté`);
         memoId = newMemo.id;
-        console.log("memoId", memoId)
         memoCategory = newMemo.category_id;
         memotags = newMemo.tags;
         memotitle = newMemo.title;

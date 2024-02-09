@@ -6,9 +6,7 @@
 	
 
 	const handleCheck = async(todo) => {
-		console.log("todo", todo)
 		todo.done = !todo.done;
-		console.log("todo", todo)
 		await store.mark(todo);
 	};
 

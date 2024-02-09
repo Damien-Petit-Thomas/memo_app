@@ -8,7 +8,6 @@ let signError = false;
   };
 let InscriptionSuccess = false;
   const handleSubmit = async() => {
-    console.log('sending data: ', formvalue);
 try {
   const response = await fetch ('/api/entry', {
     method: 'POST',

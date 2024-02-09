@@ -1,6 +1,5 @@
 <script>
 	import { todos , categories, tags} from '$lib/stores/index.js';
-	console.log("todo", todos)
 	import {onMount} from 'svelte';
 
 

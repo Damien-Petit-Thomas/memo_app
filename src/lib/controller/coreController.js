@@ -16,7 +16,6 @@ export class CoreController {
   }
 
   async create(data) {
-    console.log('data', data)
     const response = await this.datamapper.create(data);
     if (!response) throw new Error('Not found', { statusCode: 404 });
     return response;

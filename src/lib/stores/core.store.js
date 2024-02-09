@@ -31,9 +31,9 @@ class CoreStore {
         if (response.ok) {
           const newItem = await response.json();
           update((items) => [...items, newItem]);
-        } else {
-          console.error(`Error adding item: ${response.status}`);
+          return newItem;
         }
+        console.error(`Error adding item: ${response.status}`);
       } catch (error) {
         console.error('An unexpected error occurred:', error);
       }
@@ -51,12 +51,13 @@ class CoreStore {
 
         if (response.ok) {
           update((items) => items.filter((item) => item.id !== id));
-        } else {
-          console.error(`Error removing item: ${response.status}`);
+          return true;
         }
+        console.error(`Error removing item: ${response.status}`);
       } catch (error) {
         console.error('An unexpected error occurred:', error);
       }
+      return false;
     };
     const mark = async (imputData) => {
       const { id } = imputData;
@@ -74,9 +75,10 @@ class CoreStore {
 
         if (response.ok) {
           update((items) => items.map((i) => (i.id === id ? { ...i, ...data } : i)));
-        } else {
-          console.error(`Error updating item: ${response.status}`);
+          const updatedItem = await response.json();
+          return updatedItem;
         }
+        console.error(`Error updating item: ${response.status}`);
       } catch (error) {
         console.error('An unexpected error occurred:', error);
       }

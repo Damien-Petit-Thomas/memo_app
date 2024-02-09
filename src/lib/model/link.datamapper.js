@@ -6,4 +6,4 @@ export default class LinkDatamapper extends CoreDatamapper {
     const response = await this.client.query(sql);
     return response.rows;
   }
-};
+}

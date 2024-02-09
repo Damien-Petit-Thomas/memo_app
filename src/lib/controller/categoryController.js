@@ -2,10 +2,6 @@ import { CoreController } from './coreController';
 import { createSlug } from '$lib/utils/createSlug';
 
 export class CategoryTagController extends CoreController {
-  // constructor(model) {
-  //   super(model);
-  // }
-
   async create(data) {
     if (data.name && data.color) {
       const newData = { ...data };

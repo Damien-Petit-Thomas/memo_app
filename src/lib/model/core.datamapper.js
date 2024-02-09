@@ -68,6 +68,25 @@ export default class CoreDatamapper {
     return result.rows[0];
   }
 
+  async findAllFormated() {
+    const sql = 'SELECT * FROM getAllLinks()';
+    const response = await this.client.query(sql);
+    return response.rows;
+  }
+
+  async deleteByMemoId(memoId) {
+    const sql = `DELETE FROM ${this.tablename} WHERE memo_id = $1`;
+    const values = [memoId];
+    return this.client.query(sql, values);
+  }
+
+  async getMemoContents(memoId) {
+    const sql = `SELECT * FROM ${this.tablename} WHERE memo_id = $1`;
+    const values = [memoId];
+    const response = await this.client.query(sql, values);
+    return response.rows;
+  }
+
   async delete(id) {
     const find = await this.findByPk(id);
     if (!find) {

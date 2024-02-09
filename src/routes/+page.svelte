@@ -1,9 +1,8 @@
 <script>
 	
-	import { todos , categories, tags, lexicon, memos} from '$lib/stores/index.js';
+	import { todos , categories, tags, lexicon, memos, link} from '$lib/stores/index.js';
 	import Sidebar from '../lib/components/sidebar/MainSidebar.svelte';
 	import  { fullmemos } from '$lib/stores/fullmemos.js';
-	import { link } from '$lib/stores/link.js'
 	import Main from '../lib/components/main/Main.svelte';
 	import {onMount} from 'svelte';
   export let data;

@@ -1,4 +1,4 @@
-import { link } from '../stores/link';
+import { link } from '../stores/index.js';
 
 export const saveLinks = (content, linkList, memoid, categoryId) => {
   const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;

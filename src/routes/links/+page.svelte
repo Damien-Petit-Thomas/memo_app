@@ -1,7 +1,6 @@
 <script>
-  import { link } from '$lib/stores/link.js';
   import { onMount } from 'svelte';
-  import { categories, memos } from '$lib/stores/index.js';
+  import { categories, memos, link } from '$lib/stores/index.js';
   let sortedLink = [];
   let groupeLink = {};
   onMount(async () => {

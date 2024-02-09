@@ -18,9 +18,5 @@ export const saveLinks = (content, linkList, memoid, categoryId) => {
     }
     match = linkRegex.exec(content); // Move the exec call inside the loop
   }
-  if (linksAdded > 0) {
-    console.log(`${linksAdded} link(s) added.`);
-  } else {
-    console.log('No new links found.');
-  }
+  return linksAdded;
 };

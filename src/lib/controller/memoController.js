@@ -9,6 +9,9 @@ export class MemoController extends CoreController {
     const {
       title, contents, categoryId, tagsIds,
     } = data;
+    if (!title) {
+      throw new Error('title is null');
+    }
     const inpudata = { title, category_id: categoryId };
     inpudata.slug = createSlug(inpudata.title);
     let newMemoId;
@@ -83,6 +86,9 @@ export class MemoController extends CoreController {
     } = data;
     if (!id) {
       throw new Error('id is null');
+    }
+    if (!title) {
+      throw new Error('title is null');
     }
     const newMemo = {
       title, category_id: categoryId, id, tags: tagsIds,

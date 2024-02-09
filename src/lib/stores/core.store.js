@@ -63,7 +63,6 @@ class CoreStore {
       const data = { ...imputData };
       delete data.id;
       delete data.updated_at;
-      console.log("ddddddddddddddaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", data)
       try {
         const response = await fetch(apiEndpoint, {
           method: 'PATCH',

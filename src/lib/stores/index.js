@@ -7,5 +7,5 @@ const lexicon = new CoreStore('/api/lexicon');
 const memos = new CoreStore('/api/memo');
 
 export {
-  todos, categories, tags, lexicon, memo,
+  todos, categories, tags, lexicon, memos,
 };

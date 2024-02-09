@@ -28,10 +28,12 @@ export let memo = null;
     height: 5rem;
     width: var(--width, 30%);
     margin: var(--margin, 1rem);
-    padding: var(--padding, 2.5rem);
+    /* padding: var(--padding, 2.5rem); */
     transition: .3s;
   }
 .card > a {
+  width:100%;
+  padding: 1rem;
   text-decoration: none;
 }
 

@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import db from '$lib/db';
-import CoreDatamapper from '$lib/model/care.datamapper.js';
+import CoreDatamapper from '$lib/model/core.datamapper.js';
 
 const users = new CoreDatamapper(db, 'user');
 

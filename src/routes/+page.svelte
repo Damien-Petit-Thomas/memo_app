@@ -1,10 +1,6 @@
 <script>
 	
-	import { memos } from '$lib/stores/memo.js';
- 	import { todos } from '$lib/stores/todo.js';
-	import {categories} from '$lib/stores/category.js';
-	import {tags} from '$lib/stores/tag.js'
-	import { lexicon } from '$lib/stores/lexicon.js';
+	import { todos , categories, tags, lexicon, memos} from '$lib/stores/index.js';
 	import Sidebar from '../lib/components/sidebar/MainSidebar.svelte';
 	import  { fullmemos } from '$lib/stores/fullmemos.js';
 	import { link } from '$lib/stores/link.js'

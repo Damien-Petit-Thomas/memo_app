@@ -1,6 +1,6 @@
 <script>
   import {onMount} from 'svelte';
-  import { lexicon } from '$lib/stores/lexicon.js';
+  import { lexicon } from '$lib/stores/index.js';
 let sortedLexicon = [];
 let groupedLexicon = {};
   // Tri du lexicon par ordre alphabétique

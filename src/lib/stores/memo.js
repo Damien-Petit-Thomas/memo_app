@@ -1,3 +1,4 @@
+import { c } from 'preprocess/lib/regexrules';
 import { writable } from 'svelte/store';
 
 export const memos = (() => {
@@ -66,14 +67,18 @@ export const memos = (() => {
     return false;
   };
 
-  const mark = async (data) => {
+  const mark = async (imputData) => {
+    const { id } = imputData;
+    const data = { ...imputData };
+    delete data.id;
+    delete data.updated_at;
     try {
       const response = await fetch('/api/memo', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ data }),
+        body: JSON.stringify({ data, id }),
       });
 
       if (response.ok) {

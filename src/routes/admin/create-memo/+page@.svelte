@@ -1,7 +1,7 @@
 <script>
   import { reloadNeeded } from '$lib/stores/reloadNeeded.js';
   import { fullmemos } from '$lib/stores/fullmemos.js';
-  import { memos} from '$lib/stores/memo.js';
+  import { memos} from '$lib/stores/index.js';
   import Lexicon from '$lib/components/editor/Lexicon.svelte';
   import { memoItems } from '$lib/stores/Editor.js';
   import Editor from '$lib/components/editor/Editor.svelte';

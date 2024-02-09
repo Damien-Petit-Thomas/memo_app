@@ -77,9 +77,9 @@ export class MemoController extends CoreController {
     res.status(200).json(memos[0].getallmemos);
   }
 
-  async update(data) {
+  async update(data, id) {
     const {
-      title, contents, categoryId, tagsIds, id,
+      title, contents, categoryId, tagsIds, 
     } = data;
     if (!id) {
       throw new Error('id is null');

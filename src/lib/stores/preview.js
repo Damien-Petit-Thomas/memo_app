@@ -16,7 +16,7 @@ function createPreviewStore() {
         Object.keys(data).forEach((key) => {
           store[key] = data[key];
         });
-        return store; // Vous devez renvoyer le store mis à jour
+        return store; 
       });
     },
     remove: (data) => update((store) => store.filter((t) => t.id !== data.id)),

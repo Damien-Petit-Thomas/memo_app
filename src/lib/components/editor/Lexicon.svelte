@@ -1,5 +1,5 @@
 <script>
-  import { lexicon } from "$lib/stores/lexicon.js";
+  import { lexicon } from "$lib/stores/index.js";
   import { onMount } from "svelte";
   export let categoryId;
 

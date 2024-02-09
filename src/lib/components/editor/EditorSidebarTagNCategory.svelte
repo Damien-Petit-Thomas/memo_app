@@ -1,7 +1,7 @@
 
   <script>
-    import { categories } from '$lib/stores/category.js';
-    import { tags } from '$lib/stores/tag.js';
+    import { categories, tags } from '$lib/stores/index.js';
+    
     import { onMount } from 'svelte';
     import { createEventDispatcher } from 'svelte';
     let selected = false;

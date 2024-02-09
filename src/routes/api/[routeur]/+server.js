@@ -16,8 +16,8 @@ export async function POST({ request }) {
 
 export async function PATCH({ request }) {
   const controller = controllers[`${request.url.split('/').pop()}Controller`];
-  const { data } = await request.json();
-  const { id } = data;
+  const { data, id } = await request.json();
+  console.log('data', data, id)
   const response = await controller.update(data, id);
   return json(response);
 }

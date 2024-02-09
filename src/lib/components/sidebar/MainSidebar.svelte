@@ -3,8 +3,8 @@
 <script>
   import { createEventDispatcher, onMount } from 'svelte';
   import { fade } from 'svelte/transition';
-  import { memos} from '$lib/stores/memo.js';
-  import { categories } from '$lib/stores/category.js';
+  import { memos} from '$lib/stores/index.js';
+  import { categories } from '$lib/stores/index.js';
   let categoryStates = {};
   const dispatch = new createEventDispatcher();
   onMount(async () => {

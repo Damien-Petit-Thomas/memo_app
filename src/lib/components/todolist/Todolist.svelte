@@ -3,6 +3,16 @@
 	import { flip } from "svelte/animate";
 	export let store;
 	export let done;
+	
+
+	const handleCheck = async(todo) => {
+		console.log("todo", todo)
+		todo.done = !todo.done;
+		console.log("todo", todo)
+		await store.mark(todo);
+	};
+
+
 </script>
 
 <ul class="todos">
@@ -17,7 +27,7 @@
 				<input
 					type="checkbox"
 					checked={todo.done}
-					on:change={(e) => store.mark(todo)}
+					on:change={handleCheck(todo)}
 				/>
 
 				<span>{todo.description}</span>

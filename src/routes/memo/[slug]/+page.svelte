@@ -178,9 +178,10 @@ h2{
 }
 
   .container {
-    display: flex;
-    min-height: 100vh;
-    min-width: 100vw;
+    display: grid;
+    grid-template-columns: 1fr 4fr 1fr;
+    height: 100vh;
+    max-width: 100vw;
   }
 
   .container_nextbar {

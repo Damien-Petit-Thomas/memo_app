@@ -54,15 +54,16 @@ on:keydown={handleKeyDown}
 on:blur={handleBlur}
 class:isSave={isSave}
 class:isEditable={isEditable}
-  >
-  {@html value}
-</pre>
+  >{@html value}</pre>
 
 
 
 <style>
 
   pre {
+    border: 1px solid lightskyblue;
+    padding: 1rem;
+    width: 90%;
     margin: 0 1rem 0 1rem;
   }
   pre.isEditable {

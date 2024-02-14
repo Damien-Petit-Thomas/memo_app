@@ -77,7 +77,6 @@
     flex-direction: column;
   }
   .sidebar {
-    border-right: 1px solid #565656;
     position: fixed;
     min-width: 15%;
     padding-top: 20px;

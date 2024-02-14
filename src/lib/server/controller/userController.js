@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
-import { CoreController } from './coreController';
-import { authentifyUser } from '../../services/auth.service';
+import { CoreController } from '$lib/server/controller/coreController';
+import { authentifyUser } from '$lib/services/auth.service';
 
 
 export class UserController extends CoreController {

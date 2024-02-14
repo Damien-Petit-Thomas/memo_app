@@ -1,12 +1,13 @@
 import { json } from '@sveltejs/kit';
 import { controllers } from '$lib/server/controller';
-import { setAuthToken } from '$lib/services/auth.service';
+import { setAuthToken, clearAuthToken } from '$lib/services/auth.service';
 
 export async function POST({ cookies, request }) {
   const controllerMethod = request.url.split('/').pop();
   const { data } = await request.json();
   const response = await controllers.userController[controllerMethod](data);
-  if (response.ok && controllerMethod === 'getOne') {
+  if (response && controllerMethod === 'getOne') {
+    clearAuthToken({ cookies });
     setAuthToken({ cookies, token: response.token });
   }
   return json(response);

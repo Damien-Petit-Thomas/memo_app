@@ -8,6 +8,7 @@ import ContentTypeDatamapper from './content_type.datamapper';
 export const dataMappers = {
   memo: new Memo(client, 'memo'),
   memoTag: new MemoTag(client, 'memo_tag'),
+  user: new CoreDatamapper(client, 'user'),
   tag: new CoreDatamapper(client, 'tag'),
   link: new CoreDatamapper(client, 'link'),
   todo: new CoreDatamapper(client, 'todo'),

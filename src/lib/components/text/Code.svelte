@@ -66,7 +66,7 @@
     <button
       class="fa-regular"
       on:click={(e) => {
-        navigator.clipboard.writeText(trimmedInnerText);
+        navigator.clipboard.writeText(stripHtmlTags(hljsElement.innerText) || value);
         e.target.class= "checked";
       }}
     ></button>

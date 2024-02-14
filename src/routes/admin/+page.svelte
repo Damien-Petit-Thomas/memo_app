@@ -1,7 +1,9 @@
 <script>
 	import { todos , categories, tags} from '$lib/stores/index.js';
 	import {onMount} from 'svelte';
+	export let data;
 
+const userId = data?.user.id;
 
 	import Categorielist from '$lib/components/createList/CreateList.svelte';
 	import TodoList from '$lib/components/todolist/Todolist.svelte';
@@ -9,11 +11,11 @@
 
 onMount(async () => {
 	if ($categories.length === 0) {
-		categories.get()
+		categories.get(userId)
 
 	}
 	if ($tags.length === 0) {
-		tags.get()
+		tags.get(userId)
 	}
 
 });
@@ -23,7 +25,9 @@ if (e.key !== 'Enter') return;
 const description = e.currentTarget.value;
 let data = {}
 data.description = description
+data.user_id = userId
 todos.add(data)
+e.currentTarget.value = ''
 }
 
 
@@ -62,10 +66,12 @@ todos.add(data)
 		
 		<Categorielist
 		store={categories}
+		{userId}
 		storeName={"category"}
 		title="créer une catégorie"
 		/>
 		<Categorielist 
+		{userId}
 		title="créer un tag"
 		storeName={"tag"}
 		store={tags} />

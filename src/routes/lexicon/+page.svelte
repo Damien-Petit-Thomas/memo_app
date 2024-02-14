@@ -4,10 +4,11 @@
 let sortedLexicon = [];
 let groupedLexicon = {};
   // Tri du lexicon par ordre alphabétique
-
+export let data;
+const userId = data?.user.id;
 onMount(async () => {
   if ($lexicon.length === 0) {
-    await lexicon.get();
+    await lexicon.get(userId);
   }
 });
 

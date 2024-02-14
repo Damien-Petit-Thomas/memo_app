@@ -28,6 +28,7 @@ const fullmemos = (() => {
   };
 })();
 
+
 const todos = new CoreStore('/api/todo');
 const categories = new CoreStore('/api/category');
 const tags = new CoreStore('/api/tag');

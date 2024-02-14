@@ -3,8 +3,8 @@ export class CoreController {
     this.datamapper = datamapper;
   }
 
-  async getAll() {
-    const response = await this.datamapper.findAll();
+  async getAll(id) {
+    const response = await this.datamapper.findAll(id);
     if (!response) throw new Error('Not found', { statusCode: 404 });
     return response;
   }

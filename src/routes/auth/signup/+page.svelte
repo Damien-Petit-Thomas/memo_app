@@ -1,25 +1,24 @@
 <script>
-  let formvalue = {
-    username: '',
+  let data = {
+    name: '',
     email: '',
     password: '',
     confirmPassword: '',
   };
 let InscriptionSuccess = false;
   const handleSubmit = async() => {
-    console.log('sending data: ', formvalue);
 try {
-  const response = await fetch ('/api/auth', {
+  const response = await fetch ('/api/user/auth/create', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({formvalue}),
+    body: JSON.stringify({data}),
   });
   if (response.ok) {
     // on redirige vers la page de connexion
     InscriptionSuccess = true;
-   window.location.href = '/auth/signin';
+   window.location.href = '/auth/login';
   }
 } catch (error) {
   console.error('error: ', error);
@@ -33,22 +32,23 @@ try {
       <label
       for="username"
       >Username:</label>
-      <input name="username" id="username" bind:value="{formvalue.username}" type="text" />
+      <input name="username" id="username" bind:value="{data.name}" type="text" />
       <label
       for="email"
       >Email:</label>
-      <input bind:value="{formvalue.email}" type="text" />
+      <input bind:value="{data.email}" type="text" />
       <label
       for="password"
       >Password:</label>
-      <input bind:value="{formvalue.password}" type="password" />
+      <input bind:value="{data.password}" type="password" />
       <label
       for="confirmPassword"
       >Confirm password:</label>
-      <input bind:value="{formvalue.confirmPassword}" type="password" />
+      <input bind:value="{data.confirmPassword}" type="password" />
       <button on:click={handleSubmit}>
         Envoyer
       </button>
+      <p>déjà inscrit? <a href="/auth/login">Connectez-vous</a></p>
   </div>
 </div>
 
@@ -95,6 +95,7 @@ try {
     border: none;
     border-radius: 0.3rem;
     cursor: pointer;
+    margin-bottom: 1rem;
   }
   button:hover {
     background-color: #0056b3;

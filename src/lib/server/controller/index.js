@@ -2,10 +2,10 @@ import { CoreController } from './coreController';
 import { CategoryTagController } from './categoryController';
 import { MemoController } from './memoController';
 import { LinkController } from './linkController';
-
+import { UserController } from './userController';
 import {
   dataMappers,
-} from '../model/index';
+} from '../../model/index';
 
 const apiController = {
   home(req, res) {
@@ -16,7 +16,7 @@ const apiController = {
 export const controllers = {
   apiController,
   memoController: new MemoController(dataMappers.memo),
-  // userController: new CoreController(dataMappers.user),
+  userController: new UserController(dataMappers.user),
   linkController: new LinkController(dataMappers.link),
   todoController: new CoreController(dataMappers.todo),
   styleController: new CoreController(dataMappers.style),

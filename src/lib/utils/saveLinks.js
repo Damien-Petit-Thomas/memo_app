@@ -1,6 +1,6 @@
 import { link } from '../stores/index.js';
 
-export const saveLinks = (content, linkList, memoid, categoryId) => {
+export const saveLinks = (content, linkList, memoid, categoryId, userId) => {
   const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
   let match = linkRegex.exec(content);
   let linksAdded = 0;
@@ -13,10 +13,11 @@ export const saveLinks = (content, linkList, memoid, categoryId) => {
         url: linkUrl,
         memo_id: memoid,
         category_id: categoryId,
+        user_id: userId,
       });
       linksAdded += 1;
     }
-    match = linkRegex.exec(content); // Move the exec call inside the loop
+    match = linkRegex.exec(content);
   }
   return linksAdded;
 };

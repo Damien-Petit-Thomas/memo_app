@@ -20,8 +20,8 @@ export default class CoreDatamapper {
  * retrieve all rows in the table of the model instance
  * @returns {Promise<Array>} - The list of all rows in the table
  */
-  async findAll() {
-    const result = await this.client.query(`SELECT * FROM "${this.tablename}" ORDER BY id ASC`);
+  async findAll(id) {
+    const result = await this.client.query(`SELECT * FROM "${this.tablename}" WHERE user_id = $1`, [id]);
     return result.rows;
   }
 
@@ -68,9 +68,10 @@ export default class CoreDatamapper {
     return result.rows[0];
   }
 
-  async findAllFormated() {
-    const sql = 'SELECT * FROM getAllLinks()';
-    const response = await this.client.query(sql);
+  async findAllFormated(userId) {
+    const sql = 'SELECT * FROM getAllLinksForUser($1) ';
+    const values = [userId];
+    const response = await this.client.query(sql, values);
     return response.rows;
   }
 
@@ -96,7 +97,7 @@ export default class CoreDatamapper {
     return !!result.rowCount;
   }
 
-  getOneByEmail = async (email) => {
+  findByEmail = async (email) => {
     const response = await this.client.query(
       `SELECT * FROM "${this.tablename}" WHERE email = $1`,
       [email],

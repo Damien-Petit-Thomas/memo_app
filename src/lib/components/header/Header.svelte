@@ -2,6 +2,8 @@
     import { reloadNeeded } from '$lib/stores/index.js';
     import  hackEffect  from '$lib/utils/hackEffect.js';
     import { onMount } from 'svelte';
+export let data
+
     onMount(() => {
         
         hackEffect('#hack', 30, 5);
@@ -27,8 +29,15 @@
         <a href="/">Favoris</a>
         <a href="/">A propos</a>
         <a href="/">Contact</a> 
+        <a href="/home">home</a>
+        {#if data?.user}
+        <form method="POST" action="?/logout">
+            <button type="submit">Log Out</button>
+        </form>
+        {:else}
         <a href="/auth/signup">Inscription</a>
-        <a href="/auth/signin">Connexion</a>
+        <a href="/auth/login">Connexion</a>
+        {/if}
     </nav>
 </header>
 

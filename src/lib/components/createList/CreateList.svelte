@@ -3,15 +3,19 @@
   import { send, receive } from "$lib/utils/transition.js";
   export let title;
   export let store;
+  export let userId;
   import { flip } from "svelte/animate";
   let name = "";
   let color = "#413779";
   reloadNeeded.set(false);
 
+  
+
   const addCategory = () => {
     const data = {
       name,
       color,
+      user_id: userId,
     };
     const response = store.add(data);
     if (response) {

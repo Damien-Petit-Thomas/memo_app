@@ -76,7 +76,7 @@ const getFullMemo = async () => {
         isDataReady = true;
       }
     } else {
-      console.log("no memo")
+      return;
     }
   });
   

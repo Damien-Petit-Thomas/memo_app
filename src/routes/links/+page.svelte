@@ -3,15 +3,17 @@
   import { categories, memos, link } from '$lib/stores/index.js';
   let sortedLink = [];
   let groupeLink = {};
+  export let data;
+  const userId = data?.user.id;
   onMount(async () => {
     if ($link.length === 0) {
-      await  link.get();
+      await  link.get(userId);
     }
     if ($memos.length === 0) {
-      await memos.get();
+      await memos.get(userId);
     }
     if ($categories.length === 0) {
-      await categories.get();
+      await categories.get(userId);
     }
     sortedLink = $link.slice().sort((a, b) => a.name.localeCompare(b.name));
 

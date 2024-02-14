@@ -4,7 +4,7 @@
   import "../app.pcss";
   import Header from "$lib/components/header/Header.svelte";
   import Footer from "$lib/components/footer/Footer.svelte";
-
+  export let data;
 onNavigate((navigation) => {
 	if (!document.startViewTransition) {
     return;
@@ -27,7 +27,7 @@ onNavigate((navigation) => {
 
 
 <main>
-  <Header />
+  <Header {data}  />
 
       <slot />
  

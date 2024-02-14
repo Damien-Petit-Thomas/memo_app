@@ -37,6 +37,7 @@ class CoreStore {
       } catch (error) {
         console.error('An unexpected error occurred:', error);
       }
+      return false;
     };
 
     const remove = async (id) => {

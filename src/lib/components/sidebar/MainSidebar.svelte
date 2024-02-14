@@ -5,11 +5,13 @@
   import { fade } from 'svelte/transition';
   import { memos} from '$lib/stores/index.js';
   import { categories } from '$lib/stores/index.js';
+  export let data;
+  const userId = data?.user.id;
   let categoryStates = {};
   const dispatch = new createEventDispatcher();
   onMount(async () => {
     if ($categories.length === 0) {
-      await categories.get();
+      await categories.get(userId);
     }
     if ($memos.length === 0) {
       memos.set(await getMemos());

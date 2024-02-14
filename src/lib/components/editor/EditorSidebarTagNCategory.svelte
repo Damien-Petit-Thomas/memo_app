@@ -6,9 +6,11 @@
     import { createEventDispatcher } from 'svelte';
     let selected = false;
     let selectedCategoryId;
+    selectedCategoryId = $categories[0]?.id;
     let tagsIds = [];
     let nbTags;
     $tags.length < 10 ? nbTags = $tags.length : nbTags = 10;
+ 
     const dispatch = createEventDispatcher();
   
     onMount(async () => {

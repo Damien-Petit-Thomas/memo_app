@@ -1,18 +1,18 @@
 /* eslint-disable max-len */
 import { json } from '@sveltejs/kit';
 import { dataMappers } from '$lib/model/index.js';
-import { createSlug } from '../utils/createSlug';
+import { createSlug } from '../../utils/createSlug';
 import { CoreController } from './coreController';
 
 export class MemoController extends CoreController {
   async create(data) {
     const {
-      title, contents, categoryId, tagsIds,
+      title, contents, categoryId, tagsIds, userId,
     } = data;
     if (!title) {
       throw new Error('title is null');
     }
-    const inpudata = { title, category_id: categoryId };
+    const inpudata = { title, category_id: categoryId, user_id: userId };
     inpudata.slug = createSlug(inpudata.title);
     let newMemoId;
     try {
@@ -82,7 +82,7 @@ export class MemoController extends CoreController {
 
   async update(data, id) {
     const {
-      title, contents, categoryId, tagsIds, 
+      title, contents, categoryId, tagsIds, userId,
     } = data;
     if (!id) {
       throw new Error('id is null');
@@ -91,9 +91,9 @@ export class MemoController extends CoreController {
       throw new Error('title is null');
     }
     const newMemo = {
-      title, category_id: categoryId, id, tags: tagsIds,
+      title, category_id: categoryId, id, tags: tagsIds, userId,
     };
-    const inputdata = { title, category_id: categoryId };
+    const inputdata = { title, category_id: categoryId, user_id: userId };
     inputdata.slug = createSlug(inputdata.title);
     try {
       const findMemo = await this.datamapper.findByPk(id);

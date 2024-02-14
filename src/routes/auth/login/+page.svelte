@@ -1,25 +1,22 @@
 <script>
 let signError = false;
-  let formvalue = {
-    username: '',
+  let data = {
     email: '',
     password: '',
-    confirmPassword: '',
   };
-let InscriptionSuccess = false;
   const handleSubmit = async() => {
 try {
-  const response = await fetch ('/api/entry', {
+  const response = await fetch ('/api/user/auth/getOne', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({formvalue}),
+    body: JSON.stringify({data}),
   });
+  console.log('response: ', response);
   if (response.ok) {
-    // on redirige vers la page de connexion
-    InscriptionSuccess = true;
-    window.location.href = '/auth/signin';
+    console.log('response: ', response);
+    window.location.href = '/';
   }
 } catch (error) {
   signError = error;
@@ -46,11 +43,11 @@ try {
       <label
       for="email"
       >Email:</label>
-      <input bind:value="{formvalue.email}" type="text" />
+      <input bind:value="{data.email}" type="text" />
       <label
       for="password"
       >Password:</label>
-      <input bind:value="{formvalue.password}" type="password" />
+      <input bind:value="{data.password}" type="password" />
       <button on:click={handleSubmit}>
         Envoyer
       </button>

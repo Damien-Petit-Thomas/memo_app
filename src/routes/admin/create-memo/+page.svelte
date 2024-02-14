@@ -1,5 +1,5 @@
 <script>
-  import { memos, link, reloadNeeded, fullmemos, memoItems, currentMemo, title} from '$lib/stores/index.js';
+  import { memos, link, reloadNeeded, fullmemos, memoItems, currentMemo, title, categories} from '$lib/stores/index.js';
   import Lexicon from '$lib/components/editor/Lexicon.svelte';
   import Editor from '$lib/components/editor/Editor.svelte';
   import EditorSidebar from '$lib/components/editor/EditorSidebar.svelte';
@@ -20,7 +20,7 @@
   $link.forEach((link) => linkList.push(link.url))
   
   
-  
+  let userId = data.user.id;
   
   
   
@@ -121,7 +121,7 @@
       }if($title === ""){
         $title = memotitle
       }
-      const data = { title: $title, contents: itemsToSave, categoryId, tagsIds , id: memoId};
+      const data = { title: $title, contents: itemsToSave, categoryId, tagsIds , id: memoId, userId};
       const newMemo = await memos.mark( data );
       memotags = newMemo.tags;
       if (newMemo) { 
@@ -130,8 +130,8 @@
         memotags = newMemo.tags;
       }
     } else{
-      if(categoryId === undefined) return alert('choose a category') 
-      const data = { title: $title, contents: itemsToSave, categoryId, tagsIds };
+      if(categoryId === undefined) categoryId = $categories[0].id;
+      const data = { title: $title, contents: itemsToSave, categoryId, tagsIds, userId};
       const newMemo = await memos.add( data);
       if (newMemo) {
         alert(`le memo a été bien été ajouté`);
@@ -143,9 +143,9 @@
       
       
     }
-    await  fullmemos.get();
+    await  fullmemos.get(userId);
     itemsToSave.forEach(item => {
-      saveLinks(item.content, linkList, memoId, categoryId, memotitle)
+      saveLinks(item.content, linkList, memoId, categoryId , userId)
     })
     
     reloadNeeded.set(true)
@@ -177,7 +177,7 @@
       on:selectedCategory={handleSelectCategory}
       on:selectedTags={handleTags}
       />
-      <Lexicon {categoryId} />
+      <Lexicon {categoryId} {userId} />
       <button
       on:click={deleteMemo}
       >Supprimer</button>

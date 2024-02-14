@@ -1,6 +1,5 @@
 import { redirect, fail } from '@sveltejs/kit';
 import db from '$lib/db';
-import { redirect } from '@sveltejs/kit';
 
 export const actions = {
   logout: async ({ cookies }) => {

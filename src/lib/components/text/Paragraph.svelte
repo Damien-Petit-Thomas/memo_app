@@ -61,7 +61,6 @@ class:isEditable={isEditable}
 <style>
 
   pre {
-    border: 1px solid lightskyblue;
     padding: 1rem;
     width: 90%;
     margin: 0 1rem 0 1rem;

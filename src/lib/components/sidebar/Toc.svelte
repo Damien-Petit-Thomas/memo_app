@@ -20,6 +20,7 @@
   }
 
   doc.forEach((content) => {
+    if(content.type.name==='code') return;
     toc.push(generateToc(content.content));
     toc = toc.flat();
   });

@@ -67,7 +67,7 @@ const getFullMemo = async () => {
       copyMemo = JSON.parse(JSON.stringify(memo));
       if (copyMemo.contents){
         copyMemo.contents.forEach((item) => {
-          parseText(item);
+          if (item.type.name !== 'code') parseText(item);
         });
         
         // on classe les items par position
@@ -85,7 +85,8 @@ const getFullMemo = async () => {
   
   function parseText(item) {
     const markdownRenderedContent = md.render(item.content);
-    
+    if(item.type.name ==='code') console.log('code')
+    if(item.type.name ==='code') return;
     const tocRegex = /<(h[1-6])>(.*?)<\/\1>/g;
     const modifiedLines = [];
     

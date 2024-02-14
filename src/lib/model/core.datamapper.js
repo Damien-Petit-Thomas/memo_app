@@ -21,6 +21,7 @@ export default class CoreDatamapper {
  * @returns {Promise<Array>} - The list of all rows in the table
  */
   async findAll(id) {
+    if (!id) return [];
     const result = await this.client.query(`SELECT * FROM "${this.tablename}" WHERE user_id = $1`, [id]);
     return result.rows;
   }

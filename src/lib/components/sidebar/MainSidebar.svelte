@@ -3,8 +3,7 @@
 <script>
   import { createEventDispatcher, onMount } from 'svelte';
   import { fade } from 'svelte/transition';
-  import { memos} from '$lib/stores/index.js';
-  import { categories } from '$lib/stores/index.js';
+  import { memos, categories} from '$lib/stores/index.js';
   export let data;
   const userId = data?.user.id;
   let categoryStates = {};
@@ -14,7 +13,7 @@
       await categories.get(userId);
     }
     if ($memos.length === 0) {
-      memos.set(await getMemos());
+      memos.get(userId);
     }
     $categories.forEach((category) => {
       categoryStates[category.id] = false;

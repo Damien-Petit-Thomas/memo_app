@@ -10,11 +10,11 @@ const userId = data?.user.id;
 
 
 onMount(async () => {
-	if ($categories.length === 0) {
+	if ($categories.length === 0 && userId) {
 		categories.get(userId)
 
 	}
-	if ($tags.length === 0) {
+	if ($tags.length === 0 && userId) {
 		tags.get(userId)
 	}
 

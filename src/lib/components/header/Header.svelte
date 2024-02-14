@@ -16,9 +16,9 @@ export let data
             {#if $reloadNeeded === true}
             <a  
             data-sveltekit-reload
-            href="/">Memo <span id="hack">Devops</span></a>
+            href="/"><span id="hack">Memo</span></a>
             {:else}
-            <a href="/">Memo <span id="hack">Devops</span></a>
+            <a href="/"><span id="hack">Memo</span></a>
             {/if}
         </h1>
     </div>

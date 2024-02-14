@@ -13,7 +13,7 @@
   let isSave = true;
   export let css = null;
   const dispatch = createEventDispatcher();
-  let trimmedInnerText = value;
+  let trimmedInnerText = value
   import { onMount } from "svelte";
 
   onMount(() => {
@@ -44,7 +44,7 @@
 
     if (e.ctrlKey && e.key === " ") {
       e.preventDefault();
-      dispatch("contentEdited", trimmedInnerText);
+      dispatch("contentEdited", trimmedInnerText.trim());
       isSave = true;
     } else {
       isSave = false;
@@ -70,16 +70,14 @@
         e.target.class= "checked";
       }}
     ></button>
-    <pre
-      style={css}
-      bind:this={hljsElement}
-      contenteditable={isEditable}
-      on:keydown={handleKeyDown}
-      class:isSave
-      class:isEditable>
-      <code>{@html value}</code>
-    </pre>
-  </div>
+      <pre
+        style={css}
+        bind:this={hljsElement}
+        contenteditable={isEditable}
+        on:keydown={handleKeyDown}
+        class:isSave
+        class:isEditable>{@html value}</pre>
+    </div>
 {/if}
 
 <style>
@@ -99,7 +97,7 @@
     }
   }
 
- 
+
 
  button.fa-regular {
     margin: 0;
@@ -129,11 +127,13 @@
   
   }
 
+pre{
+min-height: 2.2rem;
+ padding-top:.6rem;
+ padding-left: .6rem;
+ border-radius: 5px;
+}
 
-
-  pre {
-    min-height: 35px;
-  }
 
   pre.isEditable {
     border-left: 1px solid lightskyblue;

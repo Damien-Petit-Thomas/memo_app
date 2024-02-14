@@ -83,8 +83,10 @@ a:hover {
 }
 pre {
 	overflow-wrap: break-word;
-	white-space: pre-wrap;
+
 }
+
+
 
 /* Primary */
 :root {
@@ -336,4 +338,7 @@ table tr:nth-child(even) td {
   color : inherit;
   text-decoration: dotted underline;
 }
+
+
+
 

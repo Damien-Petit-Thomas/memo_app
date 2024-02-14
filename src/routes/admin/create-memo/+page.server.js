@@ -13,7 +13,6 @@ export const actions = {
 
 export const load = async ({ locals }) => {
   const { user } = locals;
-  console.log(locals);
   if (!user) {
     throw redirect(302, '/auth/login');
 

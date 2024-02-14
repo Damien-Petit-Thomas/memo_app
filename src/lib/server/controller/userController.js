@@ -16,7 +16,6 @@ export class UserController extends CoreController {
   }
 
   async getOne(data) {
-    console.log('data', data);
     const userFound = await this.datamapper.findByEmail(data.email);
     if (!userFound) throw new Error('Email not found', { statusCode: 400 });
     const token = await authentifyUser(userFound, data.password);

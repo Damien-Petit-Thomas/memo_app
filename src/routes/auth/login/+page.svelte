@@ -13,9 +13,7 @@ try {
     },
     body: JSON.stringify({data}),
   });
-  console.log('response: ', response);
   if (response.ok) {
-    console.log('response: ', response);
     window.location.href = '/';
   }
 } catch (error) {

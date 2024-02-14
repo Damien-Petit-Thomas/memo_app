@@ -3,7 +3,6 @@ import { controllers } from '$lib/server/controller';
 import { setAuthToken } from '$lib/services/auth.service';
 
 export async function GET({ request }) {
-  console.log("js suiq dans lz bon fichier");
   const { userId } = request;
   const controller = controllers[`${request.url.split('/').pop()}Controller`];
   const response = await controller.getAll(userId);

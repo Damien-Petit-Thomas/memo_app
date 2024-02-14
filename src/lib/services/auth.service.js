@@ -9,7 +9,6 @@ export async function authentifyUser(user, password) {
     email: user.email,
     name: user.name,
   }, process.env.JWT_SECRET, { expiresIn: '1d' });
-  console.log('token', token);
   return token;
 }
 

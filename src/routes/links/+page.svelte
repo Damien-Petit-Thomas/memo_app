@@ -4,7 +4,11 @@
   let sortedLink = [];
   let groupeLink = {};
   export let data;
-  const userId = data?.user.id;
+  const userId = data?.user?.id;
+  let isConnect = false;
+  if (userId) {
+    isConnect = true;
+  }
   onMount(async () => {
     if ($link.length === 0) {
       await  link.get(userId);
@@ -29,6 +33,8 @@
 
 </script>
 
+
+{#if isConnect}
 <div class="lexicon">
   {#if $link.length === 0 }
     
@@ -49,6 +55,9 @@
     {/each}
   {/if}
 </div>
+{:else}
+  <p>Vous devez être connecté pour pouvoir accéder à vos liens</p>
+{/if}
 
 
 
@@ -56,6 +65,9 @@
 
     <style>
 
+p{
+  padding: 2rem;
+}
     .lexicon {
       display: flex;
       flex-direction: column;

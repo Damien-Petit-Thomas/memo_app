@@ -2,7 +2,7 @@
   <nav>
 
     <a href="/lexicon">lexique</a>
-<a href="/admin">backOffice</a>
+<a href="/admin">edition</a>
 <a href="/links">liens utiles</a>
   </nav>
 </footer>
@@ -34,11 +34,15 @@ nav {
 }
 
 a {
-        color: black;
+        color : #cdcdcd;
         text-decoration: none;
         font-weight: 700;
         font-size: 1.2rem;
         margin: 0 1rem;
+    }
+
+    a:hover {
+        text-decoration: none;
     }
 
 </style>

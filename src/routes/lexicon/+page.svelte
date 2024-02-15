@@ -5,7 +5,11 @@ let sortedLexicon = [];
 let groupedLexicon = {};
   // Tri du lexicon par ordre alphabétique
 export let data;
-const userId = data?.user.id;
+const userId = data?.user?.id;
+let isConnect = false;
+  if (userId) {
+    isConnect = true;
+  }
 onMount(async () => {
   if ($lexicon.length === 0) {
     await lexicon.get(userId);
@@ -41,7 +45,7 @@ const handleRemove = async (id) => {
 
 
 </script>
-
+{#if isConnect}
 <div class="lexicon">
   
     {#each Object.keys(groupedLexicon).sort() as firstLetter}
@@ -59,13 +63,18 @@ const handleRemove = async (id) => {
         {/each}
     {/each}
 </div>  
+{:else}
+  <p>Vous devez être connecté pour pouvoir accéder à votre lexique</p>
+{/if}
   
 
 
 
 
     <style>
-
+p{
+  padding:2rem;
+}
 .remove {
     background-image: url($lib/assets/remove.svg);
     background-repeat:no-repeat;

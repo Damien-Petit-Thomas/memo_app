@@ -71,6 +71,8 @@
 
 <style>
   .wrapper {
+  background: #1b1f2a;
+
     min-width: 15%;
     display: flex;
     flex-direction: column;

@@ -49,13 +49,24 @@ try {
       <button on:click={handleSubmit}>
         Envoyer
       </button>
- 
+      {#if signError}
+      <p>{signError}</p>
+      {/if}
+      <p>
+        Pas encore de compte? Inscrivez-vous <a style="text-decoration: underline;" href="/auth/signup">ici </a>
+      </p>
   </div>
 </div>
 
 
 
 <style>
+
+  p{
+    padding: 1rem;
+    font-size: .7rem;
+  }
+
   .wrapper {
     display: flex;
     justify-content: center;

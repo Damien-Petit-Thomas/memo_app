@@ -48,13 +48,22 @@ try {
       <button on:click={handleSubmit}>
         Envoyer
       </button>
-      <p>déjà inscrit? <a href="/auth/login">Connectez-vous</a></p>
+      <p>déjà inscrit? <a style="text-decoration: underline;" href="/auth/login">Connection</a></p>
   </div>
 </div>
 
 
 
 <style>
+
+
+p{
+    padding: 1rem;
+    font-size: .7rem;
+  }
+
+
+
   .wrapper {
     display: flex;
     justify-content: center;

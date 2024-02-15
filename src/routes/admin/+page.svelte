@@ -3,8 +3,11 @@
 	import {onMount} from 'svelte';
 	export let data;
 
-const userId = data?.user.id;
-
+const userId = data?.user?.id;
+let isConnect = false;
+  if (userId) {
+    isConnect = true;
+  }
 	import Categorielist from '$lib/components/createList/CreateList.svelte';
 	import TodoList from '$lib/components/todolist/Todolist.svelte';
 
@@ -82,9 +85,30 @@ e.currentTarget.value = ''
 
 
 <button class='btn btn-create-memo'>
+
 	<a href="/admin/create-memo" >créer un memo</a>
 </button>
+
+
+{#if !isConnect}
+<div class="msg">
+	<p>
+		Vous devez être <a style="text-decoration: underline;" href="/auth/login">connecté</a> pour profiter des différentes fonctionnalités de l'application 
+	</p>
+</div>
+{/if}
+
+
+
 <style>
+	.msg {
+		text-align: center;
+		margin-top: 2rem;
+	}
+  
+
+
+
 	
 	.btn {
 		border-radius: 0;

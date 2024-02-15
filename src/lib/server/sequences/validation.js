@@ -3,8 +3,8 @@ import userCreateSchema from '$lib/validation/createUserSchema';
 import userLoginSchema from '$lib/validation/userLoginSchema';
 
 const map = {
-  '/api/auth/signup': userCreateSchema,
-  '/api/auth/login': userLoginSchema,
+  '/api/user/auth/create': userCreateSchema,
+  '/api/user/auth/getOne': userLoginSchema,
 };
 export async function validator({ event, resolve }) {
   for (const url of Object.keys(map)) {
@@ -24,7 +24,6 @@ export async function validator({ event, resolve }) {
           } else {
             msg = 'unknown validation error';
           }
-
           return new Response(`Validation: ${msg}`, { status: 400 });
         }
       }

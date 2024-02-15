@@ -1,4 +1,5 @@
 <script>
+  let signError = false;
   let data = {
     name: '',
     email: '',
@@ -20,8 +21,11 @@ try {
     InscriptionSuccess = true;
    window.location.href = '/auth/login';
   }
+  else{
+    signError = await response.text();
+  }
 } catch (error) {
-  console.error('error: ', error);
+  signError = error;
 }
   };
 
@@ -48,6 +52,9 @@ try {
       <button on:click={handleSubmit}>
         Envoyer
       </button>
+      {#if signError}
+      <p>{signError}</p>
+      {/if}
       <p>déjà inscrit? <a style="text-decoration: underline;" href="/auth/login">Connection</a></p>
   </div>
 </div>

@@ -81,8 +81,12 @@
 {/if}
 
 <style>
-  .container {
+  pre {
+  white-space:pre-wrap;
 
+}
+
+  .container {
   max-width: 80%;
     margin : 0 1rem 0 1rem;
     position: relative;

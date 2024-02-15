@@ -1,12 +1,10 @@
 import { redirect, fail } from '@sveltejs/kit';
+import { clearAuthToken } from '$lib/services/auth.service.js';
 import db from '$lib/db';
 
 export const actions = {
   logout: async ({ cookies }) => {
-    const cookieOptions = {
-      path: '/',
-    };
-    cookies.delete('AuthorizationToken', cookieOptions);
+    clearAuthToken({ cookies });
     throw redirect(302, '/auth/login');
   },
 };

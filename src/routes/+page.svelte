@@ -5,6 +5,11 @@
 	import Main from '../lib/components/main/Main.svelte';
 	import {onMount} from 'svelte';
   export let data;
+	const userId = data?.user?.id;
+	let isConnect = false;
+	if (userId) {
+		isConnect = true;
+	}
 	let linkList = [];
 
 
@@ -42,7 +47,7 @@
 
 <div class="container">
 		<Sidebar  on:showMemos={showMemos}/>
-		<Main on:scroll {selectedCategory}/>
+		<Main on:scroll {isConnect} {selectedCategory}/>
 </div>
 
 

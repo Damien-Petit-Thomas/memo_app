@@ -16,29 +16,19 @@
     onMount(async () => {
   if ($categories.length === 0) {
 
-    await categories.set(await getCategory());
+    await categories.get();
 
     if ($categories.length > 0) {
         selectedCategoryId = $categories[0].id;
       dispatch('selectedCategory', selectedCategoryId);
     }
   }  if ($tags.length === 0) {
-    tags.set(await getTags());
+    tags.get();
   } else {
         selectedCategoryId = $categories[0].id;
     dispatch('selectedCategory', selectedCategoryId);
   }
 });
-
-const getCategory = async () => {
-	const  response = await fetch('/api/category')
-  return response.json();
-}
-
-const getTags = async () => {
-  const response = await fetch('/api/tag');
-  return response.json();
-}
 
 
 

@@ -76,7 +76,8 @@
       </div>
     </div>
   </div>
-  {/if}
+  
+  {:else}
   {#if !selectedCategory}
     <div class="container_main-header">
       <h2>Accueil</h2>
@@ -103,6 +104,7 @@
         {/each}
       {/if}
     </div>
+  {/if}
   {/if}
 
   <NextBar {currentMemoIdx} />

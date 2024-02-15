@@ -1,9 +1,28 @@
 <script>
+    import { createEventDispatcher } from "svelte";
     import { fly } from "svelte/transition";
     import { reloadNeeded } from "$lib/stores/index.js";
     import hackEffect from "$lib/utils/hackEffect.js";
     import { onMount } from "svelte";
     export let data;
+
+    const dispatch = createEventDispatcher();
+
+    const logout = async () => {
+    const response = await fetch("/api/logout", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}),
+    });
+    if (response.ok) {
+        reloadNeeded.set(true);
+        window.location.href = "/";
+    }
+};
+
+
 let showMenu = false;
     onMount(() => {
         hackEffect("#hack", 30, 5);
@@ -12,6 +31,13 @@ let showMenu = false;
     function showMenuToggle() {
       showMenu = !showMenu;
     }
+
+
+
+
+
+
+
 
 
 </script>
@@ -32,9 +58,9 @@ let showMenu = false;
         <a href="/links">liens utiles</a>
         <a href="/favorite">Favoris</a>
         {#if data?.user}
-            <form method="POST" action="?/logout">
-                <button type="submit">Log Out</button>
-            </form>
+                <button type="submit"
+                on:click={logout}
+                >Log Out</button>
         {:else}
             <a href="/auth/signup">Inscription</a>
             <a href="/auth/login">Connexion</a>

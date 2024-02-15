@@ -20,30 +20,24 @@ onNavigate((navigation) => {
  
   import "../styles/global.css";
 
-
+const handleLogout = () =>   {
+ return console.log('logout')
+}
 
 </script>
 
-
-
 <main>
-  <Header {data}  />
+  <Header {data} on:logout={handleLogout} />
 
-      <slot />
- 
+  <slot />
+
   <Footer />
 </main>
 
-
-
 <style>
-  
-
   main {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
   }
-
-
 </style>

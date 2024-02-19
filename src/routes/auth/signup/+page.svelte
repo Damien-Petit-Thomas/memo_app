@@ -8,6 +8,10 @@
   };
 let InscriptionSuccess = false;
   const handleSubmit = async() => {
+    if(data.password !== data.confirmPassword){
+      signError = "Les mots de passe ne correspondent pas";
+      return;
+    }
 try {
   const response = await fetch ('/api/user/auth/create', {
     method: 'POST',

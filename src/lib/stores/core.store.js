@@ -41,6 +41,7 @@ class CoreStore {
     };
 
     const remove = async (id) => {
+      console.log('remove', id)
       try {
         const response = await fetch(apiEndpoint, {
           method: 'DELETE',

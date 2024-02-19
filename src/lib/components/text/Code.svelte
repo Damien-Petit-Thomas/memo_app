@@ -132,7 +132,8 @@
   }
 
 pre{
-min-height: 2.2rem;
+  height: 6rem;
+  min-height: 2.2rem;
  padding-top:.6rem;
  padding-left: .6rem;
  border-radius: 5px;

@@ -86,7 +86,7 @@ e.currentTarget.value = ''
 
 <button class='btn btn-create-memo'>
 
-	<a href="/admin/create-memo" >créer un memo</a>
+	<a href="/admin/editor" >créer un memo</a>
 </button>
 
 

@@ -11,7 +11,7 @@ if (isEditable === false) {
 }
 function handleKeyDown(e) {
   const trimmedInnerText = e.target.innerText.trim();
-  const trimmedOriginal = 'paragraphe'
+  const trimmedOriginal = 'entrer l\'adresse de l\'image'
 
   if (trimmedInnerText === trimmedOriginal) {
     e.target.innerText = '';
@@ -40,21 +40,28 @@ function handleBlur(e) {
 
 
 
-
-
+let imgIsUploaded = false;
+let imgUrl = '';
 
 </script>
 
+{#if imgIsUploaded}
+  <input type="text" placeholder="entrer l'adresse de l'image"   bind:value={imgUrl}    />
+{/if}
+
+<!-- {#if value}
+  <img src={imgUrl} alt="img"/>
+{/if} -->
 
 
-<pre
+<!-- <pre
 style={css} 
 contenteditable={isEditable}
 on:keydown={handleKeyDown}
 on:blur={handleBlur}
 class:isSave={isSave}
 class:isEditable={isEditable}
-  >{@html value}</pre>
+  >{@html value}</pre> -->
 
 
 
@@ -63,11 +70,9 @@ class:isEditable={isEditable}
   pre {
     padding: 1rem;
     width: 90%;
-    margin: 0;
-    height: 7rem;
+    margin: 0 1rem 0 1rem;
   }
   pre.isEditable {
-    /*  quand on ecrit dans le pre il ne doit pas y avoir de border */
     border-left: 1px solid lightskyblue;
     color: rgb(174, 174, 189);
 	animation: notSave 3s infinite; 

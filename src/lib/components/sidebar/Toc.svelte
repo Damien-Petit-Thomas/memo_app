@@ -47,7 +47,7 @@
 
 <div class="wrapper">
   <nav>
-    <a href="/admin/create-memo"><button>éditer</button></a>
+    <a href="/admin/editor"><button>éditer</button></a>
     <a href={slugTitle}><h3>{title}</h3></a>
     <ul>
       {#each toc as { title, level, link }}

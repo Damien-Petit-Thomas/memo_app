@@ -14,5 +14,5 @@ app.use((req, res, next) => {
 app.use(handler);
 
 app.listen(3000, () => {
-  console.log('Node app is running on port 3000');
+  console.log('Listening on http://localhost:3000');
 });

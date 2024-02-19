@@ -10,6 +10,17 @@
   export let selectedCategory;
   let currentMemoIdx = 0;
   let visible = true;
+  let currentPage = 1;
+  let totalPage = 0;
+
+
+
+  const handleChanPage = (event) => {
+    currentPage = event.detail;
+    availableMemo = $fullmemos.slice((currentPage - 1) * 12, currentPage * 12);
+  };
+
+
   $: mem = $fullmemos.filter(
     (memo) => memo.category.id === selectedCategory?.id,
   );
@@ -22,92 +33,99 @@
       (memo) => memo.category.id === selectedCategory?.id,
     );
   }
+
+let availableMemo = [];
+  // on ne garde que les 12 premiers memo
+  // on decoupe $fullememos en paquet de 12 
+  $: totalPage = Math.ceil($fullmemos.length / 12);
+  $: if ($fullmemos !== undefined) {
+    availableMemo = $fullmemos.slice(0, 12);
+  }
 </script>
 
-<div class="container_main">
-  {#if !isConnect}
-  <div class="text">
-    <h2 class="slide-left text-title">
-      Bienvenue sur votre application de prise de notes!!
-    </h2>
-    <div class="text-main">
-      <h3 class="slide-top">
-        <p>
-          Memo s'appuie sur le format Markdown pour vous permettre de
-          rédiger vos notes.... mais pas que!
-        </p>
-      </h3>
-      <p class="slide-right">
-        les plus de <span class="strong">Memo</span>:
-      </p>
-
-      <ul>
-        <li style="--delay:1">
-          Possibilité de créer un lexique pour vos notes
-        </li>
-        <li style="--delay:2">
-          Détection automatique des liens contenu dans vos notes et
-          création d'une liste de liens
-        </li>
-        <li style="--delay:3">
-          Simplicité de mise en page grâce à l'éditeur de texte
-        </li>
-      </ul>
-      <div class="social-wrapper">
-        <p style="--delay:4" class="slide-bottom">
-          Mais Memo c'est aussi mon passe-temps et un projet personnel.
-          J'ai encore plein d'idées pour le développer encore plus. Si
-          vous avez des suggestions, des idées d'améliorations ou des bugs
-          à signaler, n'hésitez pas à me contacter.
-        </p>
-        <div class="social slide-right">
-          <a href="https://github.com/Damien-Petit-Thomas" target="_blank"
-            ><img src={github} alt="logo github" style="--delay:1" /></a
-          >
-          <a
-            href="http://www.linkedin.com/in/damien-petit-thomas"
-            target="_blank"
-            ><img src={linkedin} alt="logo github" style="--delay:2" /></a
-          >
-          <a href="mailto:damien.petit.thomas@gmail.com" target="_blank"
-            ><img src={email} alt="logo github" style="--delay:3" /></a
-          >
+<div class="container">
+  <div class="container_main">
+    {#if !isConnect}
+      <div class="text">
+        <h2 class="slide-left text-title">
+          Bienvenue sur votre application de prise de notes!!
+        </h2>
+        <div class="text-main">
+          <h3 class="slide-top">
+            <p>
+              Memo s'appuie sur le format Markdown pour vous permettre de rédiger
+              vos notes.... mais pas que!
+            </p>
+          </h3>
+          <p class="slide-right">
+            les plus de <span class="strong">Memo</span>:
+          </p>
+  
+          <ul>
+            <li style="--delay:1">
+              Possibilité de créer un lexique pour vos notes
+            </li>
+            <li style="--delay:2">
+              Détection automatique des liens contenu dans vos notes et création
+              d'une liste de liens
+            </li>
+            <li style="--delay:3">
+              Simplicité de mise en page grâce à l'éditeur de texte
+            </li>
+          </ul>
+          <div class="social-wrapper">
+            <p style="--delay:4" class="slide-bottom">
+              Mais Memo c'est aussi mon passe-temps et un projet personnel. J'ai
+              encore plein d'idées pour le développer encore plus. Si vous avez
+              des suggestions, des idées d'améliorations ou des bugs à signaler,
+              n'hésitez pas à me contacter.
+            </p>
+            <div class="social slide-right">
+              <a href="https://github.com/Damien-Petit-Thomas" target="_blank"
+                ><img src={github} alt="logo github" style="--delay:1" /></a
+              >
+              <a
+                href="http://www.linkedin.com/in/damien-petit-thomas"
+                target="_blank"
+                ><img src={linkedin} alt="logo github" style="--delay:2" /></a
+              >
+              <a href="mailto:damien.petit.thomas@gmail.com" target="_blank"
+                ><img src={email} alt="logo github" style="--delay:3" /></a
+              >
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
+    {:else if !selectedCategory}
+      <div class="container_main-header">
+        <h2>Accueil</h2>
+      </div>
+      <div class="container_main-main">
+        {#if $fullmemos === undefined}
+          <p>Chargement des données</p>
+        {:else}
+          {#each availableMemo as memo}
+            <Card {memo} --color={memo.category.color} />
+          {/each}
+        {/if}
+      </div>
+    {:else}
+      <div class="container_main-header">
+        <h2>{selectedCategory.name}</h2>
+      </div>
+      <div class="container_main-main">
+        {#if mem.length === 0}
+          <p>pas de memo dans cette catégorie</p>
+        {:else}
+          {#each mem as memo}
+            <Card {memo} --color={memo.category.color} />
+          {/each}
+        {/if}
+      </div>
+    {/if}
   
-  {:else}
-  {#if !selectedCategory}
-    <div class="container_main-header">
-      <h2>Accueil</h2>
-    </div>
-    <div class="container_main-main">
-      {#if $fullmemos === undefined}
-        <p>Chargement des données</p>
-      {:else}
-        {#each $fullmemos as memo}
-          <Card {memo} --color={memo.category.color} />
-        {/each}
-      {/if}
-    </div>
-  {:else}
-    <div class="container_main-header">
-      <h2>{selectedCategory.name}</h2>
-    </div>
-    <div class="container_main-main">
-      {#if mem.length === 0}
-        <p>pas de memo dans cette catégorie</p>
-      {:else}
-        {#each mem as memo}
-          <Card {memo} --color={memo.category.color} />
-        {/each}
-      {/if}
-    </div>
-  {/if}
-  {/if}
-
-  <NextBar {currentMemoIdx} />
+  </div>
+  <NextBar on:changePage={handleChanPage} {totalPage} {currentPage}/>
 </div>
 
 <style>
@@ -262,8 +280,8 @@
   }
 
   .container_main {
+    height: 100%;
     background: #1b1f2a;
-    overflow: auto;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -272,8 +290,8 @@
   }
   .container_main-main {
     display: flex;
-    flex-direction: row;
     flex-wrap: wrap;
+    flex-direction: row;
     justify-content: space-evenly;
     width: 100%;
     height: 100%;
@@ -284,4 +302,13 @@
     font-weight: 700;
     margin-bottom: 2rem;
   }
+
+
+.container{
+  display: flex;
+  overflow: scroll;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 </style>

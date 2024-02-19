@@ -20,14 +20,11 @@ onNavigate((navigation) => {
  
   import "../styles/global.css";
 
-const handleLogout = () =>   {
- return console.log('logout')
-}
 
 </script>
 
 <main>
-  <Header {data} on:logout={handleLogout} />
+  <Header {data}  />
 
   <slot />
 

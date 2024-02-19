@@ -1,5 +1,8 @@
 
   <script>
+
+   import Grid, { GridItem } from "svelte-grid-extended";
+
     import { categories, tags } from '$lib/stores/index.js';
     
     import { onMount } from 'svelte';
@@ -29,6 +32,16 @@
     dispatch('selectedCategory', selectedCategoryId);
   }
 });
+
+const getCategory = async () => {
+	const  response = await fetch('/api/category')
+  return response.json();
+}
+
+const getTags = async () => {
+  const response = await fetch('/api/tag');
+  return response.json();
+}
 
 
 

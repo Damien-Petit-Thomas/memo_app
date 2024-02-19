@@ -9,37 +9,27 @@
     const dispatch = createEventDispatcher();
 
     const logout = async () => {
-    const response = await fetch("/api/logout", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({}),
-    });
-    if (response.ok) {
-        reloadNeeded.set(true);
-        window.location.href = "/";
-    }
-};
+        const response = await fetch("/api/logout", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({}),
+        });
+        if (response.ok) {
+            reloadNeeded.set(true);
+            window.location.href = "/";
+        }
+    };
 
-
-let showMenu = false;
+    let showMenu = false;
     onMount(() => {
         hackEffect("#hack", 30, 5);
     });
 
     function showMenuToggle() {
-      showMenu = !showMenu;
+        showMenu = !showMenu;
     }
-
-
-
-
-
-
-
-
-
 </script>
 
 <header>
@@ -58,21 +48,25 @@ let showMenu = false;
         <a href="/links">liens utiles</a>
         <a href="/favorite">Favoris</a>
         {#if data?.user}
-                <button type="submit"
-                on:click={logout}
-                >Log Out</button>
+            <button type="submit" on:click={logout}>Log Out</button>
         {:else}
             <a href="/auth/signup">Inscription</a>
             <a href="/auth/login">Connexion</a>
         {/if}
-        <button id="burger"  on:click={showMenuToggle}>
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
+        {#if !showMenu}
+            <button id="burger" on:click={showMenuToggle}>
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        {/if}
+        {#if showMenu}
+            <button id="burger" on:click={showMenuToggle}> X </button>
+        {/if}
     </nav>
     {#if showMenu}
         <div class="menu" transition:fly={{ x: 200, duration: 1000 }}>
+            <a href="/test">Test</a>
             <a href="/">Option</a>
             <a href="/">Categorie</a>
             <a href="/">Tag</a>
@@ -84,16 +78,15 @@ let showMenu = false;
 </header>
 
 <style>
-
-        .menu {
+    .menu {
         display: flex;
-        gap: .5rem;
+        gap: 0.5rem;
         flex-direction: column;
         position: absolute;
         top: 5vh;
         right: 0;
         backdrop-filter: blur(10px);
-        background:transparent;
+        background: transparent;
         color: #cdcdcd;
         font-weight: 700;
         text-align: center;
@@ -102,9 +95,9 @@ let showMenu = false;
         z-index: 100;
         height: 90vh;
         width: 15%;
-        }
-        
-.menu a {
+    }
+
+    .menu a {
         text-decoration: none;
         font-weight: 700;
         font-size: 1.2rem;
@@ -118,7 +111,7 @@ let showMenu = false;
         border-bottom: 1px solid #ffffff;
         padding-bottom: 0.5rem;
         padding-top: 0.5rem;
-}
+    }
 
     #burger {
         flex-direction: column;
@@ -146,7 +139,6 @@ let showMenu = false;
         right: 0;
         margin: 0;
     }
-
 
     h1 > a {
         color: #cdcdcd;

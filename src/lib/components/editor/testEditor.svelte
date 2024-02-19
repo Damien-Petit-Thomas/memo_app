@@ -1,15 +1,18 @@
 <script>
   import { fade } from "svelte/transition";
   import Grid, { GridItem } from "svelte-grid-extended";
-
+  import { dndzone, SOURCES, TRIGGERS } from "svelte-dnd-action";
+  import { flip } from "svelte/animate";
   import EditableItem from "$lib/components/editor/EditorEditableItem.svelte";
   import { memoItems, currentMemo } from "$lib/stores/index.js";
   export let isDeleted = false;
   let items = [];
+  let initialLayout = [];
   export let getLayout = false;
   let gridController;
   let done = false;
   export let newItem = {};
+// quand newItem est nouveau on appelle le fonction addNewItem
   $: if (newItem.id) {
     addNewItem(newItem);
   }
@@ -139,7 +142,12 @@ const itemSize = { height: 120 };
 
 
 
-
+	.btn {
+		margin-top: 10px;
+		margin-left: 10px;
+		right: 2px;
+		top: 1px;
+	}
   .wrapper {
     border-left: 1px solid #818181;
     border-right: 1px solid #818181;
@@ -150,5 +158,37 @@ const itemSize = { height: 120 };
     background-color: rgb(29, 32, 32);
     padding-bottom: 1rem;
   }
+  .editor {
+    height: 1000vh;
+    display: flex;
+    flex-direction: column;
+    min-width: 70%;
+    background-color: rgb(29, 32, 32);
+  }
+  .handle {
+    /* position: absolute; */
+    left: 50%;
+    width: 1em;
+    height: 0.25em;
+    margin: 0 auto;
+    background-color: rgba(211, 211, 211, 0.144);
+    transition: cubic-bezier(0.165, 0.84, 0.44, 1) 0.2s;
+  }
+  .handle:hover {
+    scale: 3;
+  }
 
+  button.delete {
+    position: relative;
+    background-color: transparent;
+    background-image: url($lib/assets/remove.svg);
+    background-repeat: no-repeat;
+    border: none;
+    border-radius: 5%;
+    font-size: 0.5em;
+  }
+
+  button.delete:hover {
+    background-color: rgb(153, 75, 75);
+  }
 </style>

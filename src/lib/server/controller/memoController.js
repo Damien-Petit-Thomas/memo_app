@@ -7,12 +7,14 @@ import { CoreController } from './coreController';
 export class MemoController extends CoreController {
   async create(data) {
     const {
-      title, contents, categoryId, tagsIds, userId,
+      title, contents, categoryId, tagsIds, userId, layout,
     } = data;
     if (!title) {
       throw new Error('title is null');
     }
-    const inpudata = { title, category_id: categoryId, user_id: userId };
+    const inpudata = {
+      title, category_id: categoryId, user_id: userId, layout,
+    };
     inpudata.slug = createSlug(inpudata.title);
     let newMemoId;
     try {
@@ -82,7 +84,7 @@ export class MemoController extends CoreController {
 
   async update(data, id) {
     const {
-      title, contents, categoryId, tagsIds, userId,
+      title, contents, categoryId, tagsIds, userId, layout,
     } = data;
     if (!id) {
       throw new Error('id is null');
@@ -91,9 +93,11 @@ export class MemoController extends CoreController {
       throw new Error('title is null');
     }
     const newMemo = {
-      title, category_id: categoryId, id, tags: tagsIds, userId,
+      title, category_id: categoryId, id, tags: tagsIds, userId, layout,
     };
-    const inputdata = { title, category_id: categoryId, user_id: userId };
+    const inputdata = {
+      title, category_id: categoryId, user_id: userId, layout,
+    };
     inputdata.slug = createSlug(inputdata.title);
     try {
       const findMemo = await this.datamapper.findByPk(id);
@@ -101,7 +105,7 @@ export class MemoController extends CoreController {
 
       const existingTags = await dataMappers.memoTag.getMemoTags(findMemo.id);
 
-      if (title !== findMemo.title || categoryId !== findMemo.category_id) {
+      if (title !== findMemo.title || categoryId !== findMemo.category_id || layout !== findMemo.layout) {
         await this.datamapper.update(id, inputdata);
       }
 

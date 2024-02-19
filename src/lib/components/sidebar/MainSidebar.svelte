@@ -15,6 +15,7 @@
     if ($memos.length === 0) {
       memos.get(userId);
     }
+    $categories.sort((a, b) => a.name.localeCompare(b.name));
     $categories.forEach((category) => {
       categoryStates[category.id] = false;
     });
@@ -98,13 +99,16 @@
     transform: rotate(90deg);
   }
 
-
+h2 {
+  font-size: 1rem;
+}
 
   .category {
+    overflow: hidden;
+    max-width: 95%;
     cursor: pointer;
     padding: 6px 8px 6px 16px;
     text-decoration: none;
-    font-size: 1.2rem;
     color: #818181;
     display: block;
   }

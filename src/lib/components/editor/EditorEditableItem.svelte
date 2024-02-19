@@ -6,6 +6,7 @@
   import Paragraphe from "$lib/components/text/Paragraph.svelte";
   import Title from "$lib/components/text/Title.svelte";
   import Blockquote from "$lib/components/text/Blockquote.svelte";
+  import Img from "$lib/components/text/Img.svelte";
   import DOMPurity from "dompurify";
   import NoteCard from "$lib/components/text/NoteCard.svelte";
   export let item, value, isDeleted = false ;
@@ -24,6 +25,7 @@ $: if (isDeleted){
   let content = item.content !== undefined ? item.content : item.name;
 
   const components = {
+    image: Img,
     noteCard: NoteCard,
     title: Title,
     detail: Detail,
@@ -37,7 +39,8 @@ $: if (isDeleted){
   });
 
   function saveContent(e) {
-    let content = e.detail;
+
+    let  {detail: content} = e;
     if (content === "") {
       content = original;
     }
@@ -48,9 +51,18 @@ $: if (isDeleted){
         memoItems.update((items) => {
           const index = items.findIndex((memItem) => memItem.id === item.id);
           if (index !== -1) {
-            items[index].content = DOMPurity.sanitize(content);
-          }
-          return items;
+          const updatedItem = {
+            ...items[index],
+            content: DOMPurity.sanitize(content),
+            h: item.h,
+            w: item.w,
+            x: item.x,
+            y: item.y,
+          };
+          items[index] = updatedItem;
+        }
+
+        return items;
         });
       }
     }

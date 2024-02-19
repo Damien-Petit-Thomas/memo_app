@@ -15,12 +15,26 @@
   import reset from "$lib/assets/reset.png";
   import save from "$lib/assets/save.png";
   import burger from "$lib/assets/hamburger.png";
+  import CustomAlert from "$lib/components/CustomAlert/Alert.svelte";
   import {
     currentMemo,
     fullmemos,
     memos,
     reloadNeeded,
   } from "$lib/stores/index.js";
+  let alertVisible = false;
+  let typeAlert = '';
+  let titleAlert = '';
+  let messageAlert = '';
+  function showAlert(type,title, msg) {
+    typeAlert = type;
+    titleAlert = title;
+    messageAlert = msg;
+    alertVisible = true;
+    setTimeout(() => {
+      alertVisible = false;
+    }, 3000);
+  }
   import NextBar from "$lib/components/nextBar/NextBar.svelte";
   let isEditable = false;
   let isLayout = false;
@@ -127,6 +141,7 @@
       currentMemo.set({})
       currentMemo.set(newMemo);
       itemsBackup = structuredClone(items);
+      showAlert("success","enregistrement reussi", `le nouveau layout de: ${newMemo.title} a été bien été enregistré`);
     }
   }
 
@@ -177,6 +192,14 @@
     showLayout = !showLayout;
   }
 </script>
+{#if alertVisible  }
+    <CustomAlert
+    title={titleAlert}
+
+      type={typeAlert}
+      message={messageAlert}
+    />
+{/if}
 
 <div class="container">
   <MainSidebar />

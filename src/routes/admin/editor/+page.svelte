@@ -9,6 +9,7 @@
     title,
     categories,
   } from "$lib/stores/index.js";
+  import CustomAlert from "$lib/components/CustomAlert/Alert.svelte";
   import Lexicon from "$lib/components/editor/Lexicon.svelte";
   import Editor from "$lib/components/editor/Editor.svelte";
   import EditorSidebar from "$lib/components/editor/EditorSidebar.svelte";
@@ -26,7 +27,20 @@
   let linkList = [];
   let items = [];
   let getLayout = false;
+  let alertVisible = false;
+  let typeAlert = '';
+  let messageAlert = '';
+  let titleAlert = '';
 
+  function showAlert(type,title, msg) {
+    typeAlert = type;
+    titleAlert = title;
+    messageAlert = msg;
+    alertVisible = true;
+    setTimeout(() => {
+      alertVisible = false;
+    }, 3000);
+  }
   $link.forEach((link) => linkList.push(link.url));
 
   let userId = data.user.id;
@@ -86,7 +100,7 @@
     if (memoId) {
       const deletedMemo = await memos.remove(memoId);
       if (deletedMemo) {
-        alert("le memo a bien été supprimé");
+        showAlert("success","action réussie", `le memo ${deletedMemo.title} a été bien été supprimé`);
       }
     }
     memoItems.set([]);
@@ -116,7 +130,7 @@
       };
     });
 
-    if (itemsToSave.length === 0) return alert("add some content");
+    if (itemsToSave.length === 0) return showAlert("warn","attention: ", "le memo est vide");
 
     if (memoId) {
       if (categoryId === undefined) {
@@ -141,7 +155,7 @@
       const newMemo = await memos.mark(data);
       memotags = newMemo.tags;
       if (newMemo) {
-        alert(`le memo a été bien été modifié`);
+     showAlert("success","modification réussie", `le memo ${newMemo.title} a été bien été modifié`);
         memoCategory = newMemo.category_id;
         memotags = newMemo.tags;
       }
@@ -158,7 +172,7 @@
 
       const newMemo = await memos.add(data);
       if (newMemo) {
-        alert(`le memo a été bien été ajouté`);
+        showAlert("success","ajout réussi", `le memo ${newMemo.title} a été bien été ajouté`);
         memoId = newMemo.id;
         memoCategory = newMemo.category_id;
         memotags = newMemo.tags;
@@ -173,7 +187,13 @@
     reloadNeeded.set(true);
   }
 </script>
-
+{#if alertVisible  }
+    <CustomAlert
+      type={typeAlert}
+      title={titleAlert}
+      message={messageAlert}
+    />
+{/if}
 <div class="container">
   <EditorSidebar
     {styles}

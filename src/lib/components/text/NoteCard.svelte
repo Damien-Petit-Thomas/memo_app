@@ -79,9 +79,9 @@
     border-radius: .25rem;
     padding: 1rem 1rem 1rem 1.5rem;
     margin: 0 auto; 
-    min-height: 2rem;
-    width: 90%;
     height: fit-content;
+    min-height: 1rem;
+    width: 90%;
     animation: notSave 3s infinite; 
   }
   
@@ -92,8 +92,8 @@
   }	
   
   img{
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1rem;
+    height: 1rem;
   }
   
   div.note-card.isSave {

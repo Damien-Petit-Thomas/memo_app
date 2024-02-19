@@ -10,7 +10,7 @@
     categories,
   } from "$lib/stores/index.js";
   import Lexicon from "$lib/components/editor/Lexicon.svelte";
-  import Editor from "$lib/components/editor/testEditor.svelte";
+  import Editor from "$lib/components/editor/Editor.svelte";
   import EditorSidebar from "$lib/components/editor/EditorSidebar.svelte";
   import EditorSidebarTagNCategory from "$lib/components/editor/EditorSidebarTagNCategory.svelte";
   let memoId;

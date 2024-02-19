@@ -38,7 +38,7 @@ $: if (done){
     memoItems.update((items) => items.filter((item) => item.id !== id));
   }
 
-const itemSize = { height: 120 };
+const itemSize = { height: 50 };
 
 
 
@@ -74,7 +74,7 @@ const itemSize = { height: 120 };
   <EditableItem item={title} value={handleValue(title)} {isDeleted} />
   <!-- <button class="btn" on:click={addNewItem}>Add New Item</button>
   <button class="btn" on:click={resetGrid}>Reset Grid</button> -->
-  <Grid {itemSize} cols={10} collision="push" bind:controller={gridController}>
+  <Grid {itemSize} cols={10} rows={10000} collision="push" bind:controller={gridController}>
 	{#each items as item (item.id)}
 		<div transition:fade={{ duration: 300 }}>
 			<GridItem 
@@ -109,11 +109,12 @@ const itemSize = { height: 120 };
 }
 
 
+
  :global(.grid-item) {
     background-color:transparent !important; 
-    border-bottom: 1px solid #818181;
     position: relative;
     width: fit-content;
+    height: fit-content !important;
   }
   :global(.grid-item) {
     cursor:text !important;

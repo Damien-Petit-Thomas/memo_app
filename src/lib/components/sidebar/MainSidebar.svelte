@@ -44,7 +44,12 @@
       style="border-left: {category.color} solid 6px;"
       >
         <h2>
-          {category.name}
+          {#if category.name.length > 15}
+            {category.name.slice(0, 15)}...
+          {:else}
+            {category.name}
+          {/if}
+          
           <button class:expanded={categoryStates[category.id]} >
             ▶
           </button>
@@ -54,7 +59,12 @@
         <div transition:fade class="memo" class:expanded={categoryStates[category.id]}  >
           {#each $memos.filter(memo => memo.category_id === category.id) as memo}
             <div>
+              {#if memo.title.length > 15}
+                
+                <a href="/memo/{memo.slug}">{memo.title.slice(0, 15)}...</a>
+              {:else}
               <a href="/memo/{memo.slug}">{memo.title}</a>
+              {/if}
             </div>
           {/each}
         </div>
@@ -77,10 +87,14 @@
     min-width: 15%;
     display: flex;
     flex-direction: column;
+    flex-wrap: wrap;
   }
   .sidebar {
     position: fixed;
-    min-width: 15%;
+    width:15vw;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
     padding-top: 20px;
     height: 100vh;
   }
@@ -104,7 +118,6 @@ h2 {
 }
 
   .category {
-    overflow: hidden;
     max-width: 95%;
     cursor: pointer;
     padding: 6px 8px 6px 16px;

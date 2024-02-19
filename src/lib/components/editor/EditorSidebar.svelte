@@ -144,9 +144,7 @@
 </div>
 
 <style>
-  .slid-bottom {
-    animation: slide-bottom 2s ease;
-  }
+
 
   @keyframes slide-bottom {
     0% {
@@ -193,6 +191,7 @@
     background-color: #1b1f2a;
     border: 1px solid #565656;
     transition: background-color 0.3s;
+    height: 40px !important;
   }
 
   :global(.grid-item.sidebar-item:hover) {

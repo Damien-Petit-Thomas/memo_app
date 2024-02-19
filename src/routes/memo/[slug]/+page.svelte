@@ -1,4 +1,5 @@
 <script>
+  import { fly } from "svelte/transition";
   import hljs from "highlight.js";
   import markdownit from "markdown-it";
   import Grid, { GridItem } from "svelte-grid-extended";
@@ -11,15 +12,27 @@
   import NoteCard from "../../../lib/components/text/NoteCard.svelte";
   import Img from "../../../lib/components/text/Img.svelte";
   import { page } from "$app/stores";
-  import { currentMemo, fullmemos } from "$lib/stores/index.js";
+  import reset from "$lib/assets/reset.png";
+  import save from "$lib/assets/save.png";
+  import burger from "$lib/assets/hamburger.png";
+  import {
+    currentMemo,
+    fullmemos,
+    memos,
+    reloadNeeded,
+  } from "$lib/stores/index.js";
   import NextBar from "$lib/components/nextBar/NextBar.svelte";
   let isEditable = false;
   let isLayout = false;
   let items = [];
   let itemsBackup = [];
   let gridController;
-  let itemSize = { height: 120 };
+  let itemSize = { height: 50 };
   let color = "red";
+  export let data;
+
+  let userId = data.user.id;
+
   // Actual default values
   const md = markdownit({
     html: true,
@@ -71,8 +84,8 @@
         });
 
         // on classe les items par position
-        copyMemo.contents.sort((a, b) => a.position - b.position);
-        memo.contents.sort((a, b) => a.position - b.position);
+        // copyMemo.contents.sort((a, b) => a.position - b.position);
+        // memo.contents.sort((a, b) => a.position - b.position);
         isDataReady = true;
         if (copyMemo.layout !== null) {
           isLayout = true;
@@ -89,9 +102,37 @@
   function resetGrid() {
     items = structuredClone(itemsBackup);
   }
+
+  async function saveGrid() {
+    const newMemo = { ...memo, layout: items };
+    const itemsToSave = newMemo.contents.map((item) => {
+      return {
+        content: item.content,
+        type_id: item.type.id,
+        styleId: item.style.id,
+      };
+    });
+    const data = {
+      title: newMemo.title,
+      contents: itemsToSave,
+      categoryId: newMemo.category.id,
+      tagsIds: newMemo?.tags?.map((tag) => tag.id),
+      userId,
+      id: newMemo.id,
+      layout: JSON.stringify(newMemo.layout),
+    };
+    const updatedMemo = await memos.mark(data);
+    if (updatedMemo) {
+      reloadNeeded.set(true);
+      currentMemo.set({})
+      currentMemo.set(newMemo);
+      itemsBackup = structuredClone(items);
+    }
+  }
+
   function parseText(item) {
     const markdownRenderedContent = md.render(item.content);
-    if (item.type.name === "code") return;
+    if (item.type.name === "code" || item.type.name === "image") return;
     const tocRegex = /<(h[1-6])>(.*?)<\/\1>/g;
     const modifiedLines = [];
 
@@ -131,15 +172,38 @@
   }
 
   $: currentMemo.set(memo);
+  let showLayout = false;
+  function showLayoutMenu() {
+    showLayout = !showLayout;
+  }
 </script>
 
-<button on:click={resetGrid}> RESET </button>
 <div class="container">
   <MainSidebar />
   <div class="container_main">
     <div class="content" contenteditable="false">
       {#if isDataReady}
-        <h2 id="memo-title">{copyMemo.title}</h2>
+        <div class="title-wrapper">
+          <div class="layout-menu">
+            <button id="burger" on:click={showLayoutMenu}
+              ><img src={burger} alt="menu layout" /></button
+            >
+            {#if showLayout}
+              <div
+                class="layout-menu-btn"
+                transition:fly={{ x: -50, duration: 200 }}
+              >
+                <button title="reset layout" id="reset" on:click={resetGrid}
+                  ><img src={reset} alt="" />
+                </button>
+                <button title="save  layout" id="save" on:click={saveGrid}
+                  ><img src={save} alt="" />
+                </button>
+              </div>
+            {/if}
+          </div>
+          <h2 id="memo-title">{copyMemo.title}</h2>
+        </div>
         {#if copyMemo}
           {#if copyMemo.contents && !isLayout}
             {#each copyMemo.contents as content (content.id)}
@@ -194,6 +258,42 @@
 </div>
 
 <style>
+  .title-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+  }
+
+  .title-wrapper h2 {
+    margin-right: 40%;
+  }
+
+  .layout-menu {
+    display: flex;
+  }
+
+  .layout-menu-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100px;
+  }
+
+  button#reset,
+  button#save,
+  button#burger {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+  }
+  button#reset img {
+    width: 100%;
+    height: 100%;
+  }
+
   h2 {
     text-align: center;
     color: #bd9918;
@@ -201,6 +301,7 @@
 
   :global(.grid-item.read-only) {
     border: none;
+    height: fit-content !important;
   }
 
   :global(.active.read-only) {

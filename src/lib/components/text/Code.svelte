@@ -132,7 +132,7 @@
   }
 
 pre{
-  height: 6rem;
+  height: fit-content;
   min-height: 2.2rem;
  padding-top:.6rem;
  padding-left: .6rem;

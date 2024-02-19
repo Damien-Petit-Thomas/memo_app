@@ -65,9 +65,9 @@ blockquote.isEditable {
 	background: rgb(53, 48, 48);
 	border-left: 4px solid var(--color-orange);
 	border-right: 4px solid var(--color-orange);
-	padding: 2.4rem;
 	margin: 0 auto;
   width: 90%;
+	height: fit-content;
 	border-radius: 0.4rem;
 	font-weight: bold !important;
 	color: var(--color-preview-qoute-body) !important;     

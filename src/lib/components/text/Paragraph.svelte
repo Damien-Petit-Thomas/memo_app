@@ -64,7 +64,8 @@ class:isEditable={isEditable}
     padding: 1rem;
     width: 90%;
     margin: 0;
-    height: 7rem;
+    height: fit-content;
+    min-height: 1rem;
   }
   pre.isEditable {
     /*  quand on ecrit dans le pre il ne doit pas y avoir de border */

@@ -293,7 +293,7 @@ let availableMemo = [];
     flex-wrap: wrap;
     flex-direction: row;
     justify-content: space-evenly;
-    width: 100%;
+    width: 85vw;
     height: 100%;
   }
 

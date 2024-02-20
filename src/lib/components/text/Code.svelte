@@ -87,8 +87,7 @@
 }
 
   .container {
-  max-width: 80%;
-    margin : 0 1rem 0 1rem;
+    margin : 0 3rem 0 0rem;
     position: relative;
   }
 

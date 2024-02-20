@@ -40,8 +40,7 @@
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<pre>
-  <div class="note-card"
+<pre><div class="note-card"
   class:isSave={isSave}
   style={css} 
   >
@@ -53,10 +52,7 @@
   on:blur={handleBlur}
   class:isEditable={isEditable}
   >
-  {@html value}
-</div>
-</div>
-</pre>
+  {@html value}</div></div></pre>
 
 
 

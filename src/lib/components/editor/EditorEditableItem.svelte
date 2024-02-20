@@ -69,7 +69,7 @@ $: if (isDeleted){
   }
 </script>
 
-<div role="button" tabindex="0">
+
   {#if components[item.name]}
     <svelte:component
       this={components[item.name]}
@@ -87,7 +87,7 @@ $: if (isDeleted){
   {:else}
     <p>{content}</p>
 {/if}
-</div>
+
 
 <style>
   p {

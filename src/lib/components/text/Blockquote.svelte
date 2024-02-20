@@ -38,16 +38,14 @@ function handleBlur(e) {
 
 </script>
 
-<pre>
-	<blockquote 
+<pre><blockquote 
 	style={css} 
 	contenteditable={isEditable}
 	on:keydown={handleKeyDown}
 	on:blur={handleBlur}
 	class:isSave={isSave}
 	class:isEditable={isEditable}
-	>{@html value}</blockquote>
-</pre>
+	>{@html value}</blockquote></pre>
 
 
 

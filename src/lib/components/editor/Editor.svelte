@@ -14,132 +14,186 @@
     addNewItem(newItem);
   }
 
-if($currentMemo.layout ) {
-  for(let i =0; i < $currentMemo.layout.length; i+=1) {
-    items[i] = {...$currentMemo.layout[i],  ...$currentMemo.contents[i]}
-
+  if ($currentMemo.layout) {
+    for (let i = 0; i < $currentMemo.layout.length; i += 1) {
+      items[i] = { ...$currentMemo.layout[i], ...$currentMemo.contents[i] };
+    }
+    done = true;
   }
-  done = true;
-}
 
-$: if (done){
-  memoItems.set(items);
-}
-
-
+  $: if (done) {
+    memoItems.set(items);
+  }
+  let itemWidth;
+  let itemHeight;
 
 
-	const itemsBackup = structuredClone(items);
-	function resetGrid() {
-		items = structuredClone(itemsBackup);
-	}
-	function remove(id) {
-		items = items.filter((i) => i.id !== id);
+  const itemsBackup = structuredClone(items);
+  function resetGrid() {
+    items = structuredClone(itemsBackup);
+  }
+  function remove(id) {
+    items = items.filter((i) => i.id !== id);
     memoItems.update((items) => items.filter((item) => item.id !== id));
   }
 
-const itemSize = { height: 50 };
-
-
+  const itemSize = { height: 50 };
 
   $: title = {
     content: $currentMemo?.title || "titre",
     name: "title",
   };
-  
+
   function handleValue(item) {
     return item.content !== undefined
       ? item.content
       : (item.content = item.name);
   }
 
-
-
-
-	function addNewItem(item) {
-		const w = 10;
-		const h= 1;
-		const newPosition = gridController.getFirstAvailablePosition(w, h);
-		items = newPosition
-			? [...items, {  x: newPosition.x, y: newPosition.y, w, h, ...item }]
-			: items;
-      memoItems.update((items) => [...items, {  x: newPosition.x, y: newPosition.y, w, h, ...item }]);
-	}
+  function addNewItem(item) {
+    const w = 100;
+    const h = 1;
+    const newPosition = gridController.getFirstAvailablePosition(w, h);
+    items = newPosition
+      ? [...items, { x: newPosition.x, y: newPosition.y, w, h, ...item }]
+      : items;
+    memoItems.update((items) => [
+      ...items,
+      {
+        x: newPosition.x,
+        y: newPosition.y,
+        w,
+        h,
+        itemHeight,
+        itemWidth,
+        ...item,
+      },
+    ]);
+  }
 
   $: if (getLayout) {
     memoItems.set(items);
   }
+
+  $: items.forEach((item) => {
+    if(item.type.name ==='image') return;
+    if (item.itemHeight / item.h > 50) {
+      while (item.itemHeight / item.h > 50) {
+        item.h += 1;
+        console.log(item.h)
+      }
+    }
+    if (item.w === 0) item.w = 1;
+    if (item.itemWidth / item.w > 100 && item.w < 10) {
+      while (item.itemWidth / item.w > 100 && item.w < 10) {
+        item.w += 1;
+        console.log(item.w)
+        console.log(item)
+      }
+    }
+  });
 </script>
+
 <div class="wrapper">
   <EditableItem item={title} value={handleValue(title)} {isDeleted} />
   <!-- <button class="btn" on:click={addNewItem}>Add New Item</button>
   <button class="btn" on:click={resetGrid}>Reset Grid</button> -->
-  <Grid {itemSize} cols={10} rows={10000} collision="push" bind:controller={gridController}>
-	{#each items as item (item.id)}
-		<div transition:fade={{ duration: 300 }}>
-			<GridItem 
-      class="grid-item"
-      activeClass="active"
-      id={item.id} bind:x={item.x} bind:y={item.y} bind:w={item.w} bind:h={item.h}>
-				<button
-					on:pointerdown={(e) => e.stopPropagation()}
-					on:click={() => remove(item.id)}
-					class="remove"
-				>
-					✕
-				</button>
-				<div class="item">
-          <EditableItem
-          {item}
-          value={handleValue(item)}
-          />
+  <Grid
+    {itemSize}
+    gap={2}
+    cols={100}
+    rows={100}
+    collision="push"
+    bind:controller={gridController}
+  >
+    {#each items as item (item.id)}
+      <div transition:fade={{ duration: 300 }}>
+        <GridItem
+          class="grid-item item-editor"
+          activeClass="active"
+          id={item.id}
+          bind:x={item.x}
+          bind:y={item.y}
+          bind:w={item.w}
+          bind:h={item.h}
+
+        >
+        <div slot="moveHandle" let:moveStart>
+          <div class="move-handle" on:pointerdown={moveStart}></div>
         </div>
-			</GridItem>
-		</div>
-	{/each}
-</Grid>
-
-
+          <button
+            on:pointerdown={(e) => e.stopPropagation()}
+            on:click={() => remove(item.id)}
+            class="remove"
+          >✕</button>
+        
+          <div
+            class="item"
+            bind:offsetWidth={item.itemWidth}
+            bind:offsetHeight={item.itemHeight}
+          >
+            <div class="wrapper2">
+              <EditableItem {item} value={handleValue(item)} />
+            </div>
+          </div>
+        </GridItem>
+      </div>
+    {/each}
+  </Grid>
 </div>
 
 <style>
 
-.item{
+.wrapper2{
+  white-space: pre-wrap;
   height: fit-content;
 }
 
 
 
- :global(.grid-item) {
-    background-color:transparent !important; 
-    position: relative;
-    width: fit-content;
-    height: fit-content !important;
-  }
-  :global(.grid-item) {
-    cursor:text !important;
+  .item {
   }
 
-:global(.active) {
+
+
+  .move-handle {
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    border-radius: 0 0 5px 0;
+    top: 0;
+    right: 0;
+    z-index: 1;
+    background-color: transparent;
+  }  
+  .move-handle:hover {
+    background-color: #2196f3;;
+    cursor: move;
+  }
+  :global(.grid-item.item-editor) {
+   
+    height: fit-content !important;
+    position: relative;
+    cursor: text !important;
+  }
+
+  :global(.active) {
     border-color: #2196f3;
     background: transparent;
   }
 
-
-	.remove {
-		cursor: pointer;
-		position: absolute;
+  .remove {
+    cursor: pointer;
+    position: absolute;
     background-color: transparent;
-		right: 10px;
-		top: 3px;
-	}
-
-.remove:hover {
-    color: #f00;
+    right: 0;
+    top: 0;
+    z-index: 100;
   }
 
-
-
+  .remove:hover {
+    color: #f00;
+  }
 
   .wrapper {
     border-left: 1px solid #818181;
@@ -151,5 +205,4 @@ const itemSize = { height: 50 };
     background-color: rgb(29, 32, 32);
     padding-bottom: 1rem;
   }
-
 </style>

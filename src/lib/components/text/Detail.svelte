@@ -1,7 +1,9 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import { onMount } from "svelte";
-
+let total;
+let pre1height;
+let pre2height;
   export let value;
   export let isEditable = true;
   let isSave = true;
@@ -62,24 +64,27 @@
 
 {#if isEditable}
   ce texte sera visible
-  <pre
-    class="summary"
-    style={css}
-    contenteditable={isEditable}
-    on:keydown={handleKeyDownSummary}
-    class:isSave
-    class:isEditable>
-    {@html summary}
-  </pre>
-  ce texte sera caché
-  <pre
-    class="detail"
-    style={css}
-    contenteditable={isEditable}
-    on:keydown={handleKeyDownDetail}
-    class:isSave
-    class:isEditable>
-    {@html detail}
+  <pre bind:clientHeight={total}>
+    {total} {pre1height} {pre2height}
+    <pre bind:clientHeight={pre1height}
+      class="summary"
+      style={css}
+      contenteditable={isEditable}
+      on:keydown={handleKeyDownSummary}
+      class:isSave
+      class:isEditable>
+      {@html summary}
+    </pre>
+    ce texte sera caché 
+    <pre bind:clientHeight={pre2height}
+      class="detail"
+      style={css}
+      contenteditable={isEditable}
+      on:keydown={handleKeyDownDetail}
+      class:isSave
+      class:isEditable>
+      {@html detail}
+    </pre>
   </pre>
 {:else}
   <pre>

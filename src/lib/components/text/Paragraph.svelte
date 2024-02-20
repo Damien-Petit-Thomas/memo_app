@@ -61,14 +61,12 @@ class:isEditable={isEditable}
 <style>
 
   pre {
-    padding: 1rem;
-    width: 90%;
+    white-space: pre-wrap;
+    margin:0;
     margin: 0;
-    height: fit-content;
-    min-height: 1rem;
   }
   pre.isEditable {
-    /*  quand on ecrit dans le pre il ne doit pas y avoir de border */
+    padding-left: .2rem;
     border-left: 1px solid lightskyblue;
     color: rgb(174, 174, 189);
 	animation: notSave 3s infinite; 

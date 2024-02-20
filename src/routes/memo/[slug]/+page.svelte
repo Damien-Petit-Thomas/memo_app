@@ -80,7 +80,8 @@
   let lexicon;
   let isDataReady = false;
   let currentMemoIdx;
-
+  let itemWidth;
+  let itemHeight;
   page.subscribe(async ($page) => {
     if ($fullmemos.length === 0) {
       await fullmemos.get();
@@ -104,7 +105,7 @@
         if (copyMemo.layout !== null) {
           isLayout = true;
           for (let i = 0; i < copyMemo.layout.length; i++) {
-            items[i] = { ...copyMemo.layout[i], data: copyMemo.contents[i] };
+            items[i] = { ...copyMemo.layout[i],itemHeight, itemWidth, data: copyMemo.contents[i] };
           }
           itemsBackup = structuredClone(items);
         }
@@ -113,6 +114,23 @@
       return;
     }
   });
+  $: items.forEach((item) => {
+    if (item.itemHeight / item.h > 50) {
+      while (item.itemHeight / item.h > 50) {
+        item.h += 1;
+      }
+    }
+    if (item.w === 0) item.w = 1;
+    if (item.itemWidth / item.w > 100 && item.w < 10) {
+      while (item.itemWidth / item.w > 100 && item.w < 10) {
+        item.w += 1;
+      }
+    }
+  });
+
+
+
+
   function resetGrid() {
     items = structuredClone(itemsBackup);
   }
@@ -244,7 +262,13 @@
           {/if}
         {/if}
         {#if isLayout}
-          <Grid {itemSize} cols={10} collision="push">
+          <Grid
+          {itemSize}
+          gap={2}
+          cols={100}
+          rows={100}
+          collision="push"
+            >
             {#each items as item (item.id)}
               <GridItem
                 activeClass="active read-only"
@@ -255,7 +279,10 @@
                 bind:w={item.w}
                 bind:h={item.h}
               >
-                <div class="item">
+                <div class="item"
+                bind:offsetWidth={item.itemWidth}
+                bind:offsetHeight={item.itemHeight}
+                >
                   {#if components[item.data.type.name]}
                     <svelte:component
                       this={components[item.data.type.name]}
@@ -322,13 +349,21 @@
     color: #bd9918;
   }
 
+  .item{
+
+    padding: 0;
+    margin: 0;
+
+  }
   :global(.grid-item.read-only) {
     border: none;
     height: fit-content !important;
+
   }
 
   :global(.active.read-only) {
     border: 1px solid #bd9918;
+    padding: 0 !important;
   }
 
   .container {

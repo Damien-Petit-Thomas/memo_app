@@ -57,12 +57,9 @@ on:keydown={handleKeyDown}
 on:blur={handleBlur}
 class:isSave={isSave}
 class:isEditable={isEditable}
-  ><span>{@html value}</span>
-
-<img 
+  ><span>{@html value}</span><img 
 {src}
- alt="">
-</pre> 
+ alt=""></pre> 
  
   
 
@@ -70,19 +67,18 @@ class:isEditable={isEditable}
 
 <style>
 
-  pre {
-    padding: 1rem;
-    width: 90%;
-    margin: 0 1rem 0 1rem;
+  pre{
+    white-space: pre-wrap;
+    background-color: green;
   }
-
+ 
   pre span {
     display: none;
   }
   pre.isEditable {
+    padding-left: .2rem;
     border-left: 1px solid lightskyblue;
-    color: rgb(174, 174, 189);
-	animation: notSave 3s infinite; 
+	  animation: notSave 3s infinite; 
   }
 
   pre.isEditable span {

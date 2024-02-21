@@ -58,7 +58,7 @@
 
 
 	.container {
-		overflow: hidden;
+		overflow: scroll;
 		display: flex;
 		width: 100vw;
 		height: 92vh;

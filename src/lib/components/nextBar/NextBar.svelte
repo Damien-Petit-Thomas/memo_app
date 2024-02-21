@@ -2,11 +2,11 @@
   import { fade } from "svelte/transition";
   import { createEventDispatcher } from "svelte";
   import { fullmemos } from "$lib/stores/index.js";
-  import Card from "$lib/components/card/Card.svelte";
   import next from "$lib/assets/next.png";
   export let totalPage;
   export let currentPage;
-
+$: console.log("currentPage", currentPage);
+$: console.log("totalPage", totalPage);
   const dispatch = createEventDispatcher();
 
   $: dispatch("changePage", currentPage);
@@ -20,21 +20,29 @@
       class="container container-preview"
       transition:fade
     >
-      
+      <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
       <img
         on:click={() => (currentPage -= 1)}
-        class="preview"
+        class="prev"
         src={next}
-        alt="fleche droite"
+        alt="fleche gauche"
       />
 
+      <span>{currentPage -1}/{totalPage}</span>
+    </div>
+  {/if}
+  {#if totalPage > 1}
+    <div  class="container">
       <span>{currentPage}/{totalPage}</span>
     </div>
   {/if}
 
-  {#if currentPage < (totalPage - 1)}
+  {#if currentPage < (totalPage )}
     <div  transition:fade class="container container-next">
       <span>{currentPage + 1}/{totalPage}</span>
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
       <img on:click={() => (currentPage += 1)} src={next} alt="fleche droite" />
     </div>
   {/if}
@@ -48,14 +56,14 @@
     justify-content: center;
     gap: 10px;
     margin: 0.5rem;
-    padding: 1rem;
+    padding: .6rem;
     border-radius: 10px;
     background-color: #c2c2c2;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     transition: all 0.3s;
     cursor: pointer;
-    width: 100px;
-    height: 50px;
+    width: 80px;
+    height: 35px;
     color: #333;
     text-align: center;
     text-transform: uppercase;
@@ -73,7 +81,8 @@
   }
 
   .container_nextbar {
-    background-color: #1b1f2a;
+    background: #1f1f20;
+
     display: flex;
 
     width: 100%;
@@ -82,7 +91,7 @@
   img {
     /* on assombrit l'image */
     filter: brightness(0.5);
-    width: 40px;
+    width: 30px;
   }
 
   img:hover {
@@ -96,8 +105,8 @@
     filter: brightness(0.3);
   }
 
-  img.preview {
-    /* on tourne l'image de 180° */
+  img.prev {
+
     transform: rotate(180deg);
   }
 </style>

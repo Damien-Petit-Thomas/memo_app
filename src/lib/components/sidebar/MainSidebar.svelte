@@ -83,20 +83,18 @@
 <style>
   .wrapper {
   background: #1b1f2a;
-
+    overflow: scroll;
     min-width: 15%;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
   }
   .sidebar {
-    position: fixed;
     width:15vw;
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
     padding-top: 20px;
-    height: 100vh;
+    height: fit-content;
   }
   button {
     float: right;

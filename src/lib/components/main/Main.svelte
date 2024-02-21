@@ -8,39 +8,36 @@
   import linkedin from "$lib/assets/linkedin.svg";
   export let isConnect = false;
   export let selectedCategory;
-  let currentMemoIdx = 0;
-  let visible = true;
   let currentPage = 1;
   let totalPage = 0;
-
-
+  let availableMemo = [];
+  let numberTotalMemo = 0;
+  
+  $: memoCategory = $fullmemos.filter(
+    (memo) => memo.category.id === selectedCategory?.id,
+    );
+  $: memoCategory.length > 0
+    ? (numberTotalMemo = memoCategory.length)
+    : (numberTotalMemo = $fullmemos.length);
+  $: totalPage = Math.ceil(numberTotalMemo / 12);
+  $: if (selectedCategory) {
+    currentPage = 1;
+    availableMemo = memoCategory.slice(0, 12);
+  }
+  $: if ($fullmemos !== undefined) {
+    selectedCategory ? (availableMemo = memoCategory.slice(0, 12)) : (availableMemo = $fullmemos.slice(0, 12));
+  }
 
   const handleChanPage = (event) => {
     currentPage = event.detail;
-    availableMemo = $fullmemos.slice((currentPage - 1) * 12, currentPage * 12);
+    if (selectedCategory) {
+      availableMemo = memoCategory.slice((currentPage - 1) * 12, currentPage * 12);
+    } else {
+      availableMemo = $fullmemos.slice((currentPage - 1) * 12, currentPage * 12);
+    }
+
   };
 
-
-  $: mem = $fullmemos.filter(
-    (memo) => memo.category.id === selectedCategory?.id,
-  );
-  $: if (
-    $fullmemos !== null &&
-    $fullmemos.filter((memo) => memo.category.id === selectedCategory?.id)
-      .length !== 0
-  ) {
-    currentMemoIdx = $fullmemos.findIndex(
-      (memo) => memo.category.id === selectedCategory?.id,
-    );
-  }
-
-let availableMemo = [];
-  // on ne garde que les 12 premiers memo
-  // on decoupe $fullememos en paquet de 12 
-  $: totalPage = Math.ceil($fullmemos.length / 12);
-  $: if ($fullmemos !== undefined) {
-    availableMemo = $fullmemos.slice(0, 12);
-  }
 </script>
 
 <div class="container">
@@ -53,14 +50,14 @@ let availableMemo = [];
         <div class="text-main">
           <h3 class="slide-top">
             <p>
-              Memo s'appuie sur le format Markdown pour vous permettre de rédiger
-              vos notes.... mais pas que!
+              Memo s'appuie sur le format Markdown pour vous permettre de
+              rédiger vos notes.... mais pas que!
             </p>
           </h3>
           <p class="slide-right">
             les plus de <span class="strong">Memo</span>:
           </p>
-  
+
           <ul>
             <li style="--delay:1">
               Possibilité de créer un lexique pour vos notes
@@ -114,18 +111,17 @@ let availableMemo = [];
         <h2>{selectedCategory.name}</h2>
       </div>
       <div class="container_main-main">
-        {#if mem.length === 0}
+        {#if memoCategory.length === 0}
           <p>pas de memo dans cette catégorie</p>
         {:else}
-          {#each mem as memo}
+          {#each availableMemo as memo}
             <Card {memo} --color={memo.category.color} />
           {/each}
         {/if}
       </div>
     {/if}
-  
   </div>
-  <NextBar on:changePage={handleChanPage} {totalPage} {currentPage}/>
+  <NextBar on:changePage={handleChanPage} {totalPage} {currentPage} />
 </div>
 
 <style>
@@ -281,7 +277,7 @@ let availableMemo = [];
 
   .container_main {
     height: 100%;
-    background: #1b1f2a;
+    background: #1f1f20;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -303,12 +299,10 @@ let availableMemo = [];
     margin-bottom: 2rem;
   }
 
-
-.container{
-  display: flex;
-  overflow: scroll;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
+  .container {
+    display: flex;
+    overflow: scroll;
+    flex-direction: column;
+    justify-content: space-between;
+  }
 </style>

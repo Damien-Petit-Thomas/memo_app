@@ -169,7 +169,6 @@
     }
   }
   function parseText(item) {
-    console.log('je suis dans parseText')
     const markdownRenderedContent = md.render(item.content);
     const tocRegex = /<(h[1-6])>(.*?)<\/\1>/g;
     const modifiedLines = [];

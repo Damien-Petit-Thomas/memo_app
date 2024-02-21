@@ -132,7 +132,6 @@
             class="item"
             bind:offsetWidth={item.itemWidth}
             bind:offsetHeight={item.itemHeight}>
-            {item.itemHeight} {item.h} ratio:{item.itemWidth /item.w}
             <EditableItem {item} value={handleValue(item)}       
             />
           </div>

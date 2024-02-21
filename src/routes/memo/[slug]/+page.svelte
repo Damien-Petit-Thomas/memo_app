@@ -41,7 +41,8 @@
   let items = [];
   let itemsBackup = [];
   let gridController;
-  let itemSize = { height: 50 };
+  let itemSize = { height: 20 };
+
   let color = "red";
   export let data;
 
@@ -112,19 +113,6 @@
       }
     } else {
       return;
-    }
-  });
-  $: items.forEach((item) => {
-    if (item.itemHeight / item.h > 50) {
-      while (item.itemHeight / item.h > 50) {
-        item.h += 1;
-      }
-    }
-    if (item.w === 0) item.w = 1;
-    if (item.itemWidth / item.w > 100 && item.w < 10) {
-      while (item.itemWidth / item.w > 100 && item.w < 10) {
-        item.w += 1;
-      }
     }
   });
 
@@ -263,14 +251,16 @@
         {/if}
         {#if isLayout}
           <Grid
+          class="grid"
           {itemSize}
-          gap={2}
-          cols={100}
-          rows={100}
-          collision="push"
+          gap={5}
+          cols={40}
+          rows={0}
+          collision="none"
             >
             {#each items as item (item.id)}
               <GridItem
+                previewClass="preview"
                 activeClass="active read-only"
                 class="grid-item read-only"
                 id={item.id}
@@ -308,6 +298,7 @@
 </div>
 
 <style>
+
   .title-wrapper {
     display: flex;
     justify-content: space-between;
@@ -361,7 +352,19 @@
 
   }
 
+  :global(.preview) {
+  z-index: 10 !important;
+  border: 5px solid #2196f3;
+  background-color: rebeccapurple !important;
+}
+
+  :global(.grid){
+    min-height: 100%;
+    height: 100000vh;
+  }
+
   :global(.active.read-only) {
+    z-index: 11 !important;
     border: 1px solid #bd9918;
     padding: 0 !important;
   }
@@ -388,7 +391,8 @@
     justify-content: space-between;
     align-items: center;
     min-width: 65%;
-    height: 100%;
+    height: fit-content;
+    background-color: var(--color-primary-2);
   }
 
   .content {
@@ -397,12 +401,9 @@
     display: flex;
     color: var(--color-primary-5);
     flex-direction: column;
-    padding: 20px;
     min-width: 100%;
     min-height: 95vh;
-    widows: 15%;
     height: fit-content;
-    background-color: var(--color-primary-2);
     max-width: 80%;
   }
 </style>

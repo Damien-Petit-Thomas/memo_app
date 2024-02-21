@@ -116,6 +116,9 @@
   function layoutBackup() {
     let layout = [];
     $memoItems.forEach((item) => {
+      if(item.type.name === "detail"){
+        item.h = 1;
+      }
       layout.push({ x: item.x, y: item.y, w: item.w, h: item.h, id: item.id });
     });
     return layout;
@@ -124,6 +127,7 @@
   async function saveMemo() {
     getLayout = true;
     const layout = JSON.stringify(layoutBackup());
+    console.log(layout);
     categoryId = categoryId !== undefined ? categoryId : memoCategory;
 
     const itemsToSave = $memoItems.map((item) => {

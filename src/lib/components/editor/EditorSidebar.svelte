@@ -94,7 +94,7 @@
           <div class="grid-container">
             <GridItem
               class="grid-item sidebar-item"
-              previewClass="preview"
+              previewClass="prev"
               id={item.id}
               bind:x={item.x}
               bind:y={item.y}
@@ -200,7 +200,7 @@
     cursor: pointer !important;
   }
 
-  :global(.preview) {
+  :global(.prev) {
     background-color: rgba(0, 0, 0, 0.1);
   }
 

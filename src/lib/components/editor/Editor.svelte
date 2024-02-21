@@ -37,7 +37,6 @@
     memoItems.update((items) => items.filter((item) => item.id !== id));
   }
 
-  const itemSize = { height: 50 };
 
   $: title = {
     content: $currentMemo?.title || "titre",
@@ -49,10 +48,27 @@
       ? item.content
       : (item.content = item.name);
   }
+  $: if (getLayout) {
+    memoItems.set(items);
+  }
 
+  $: items.forEach((item) => {
+    if (item.itemHeight / item.h > 20) {
+      while (item.itemHeight / item.h > 20) {
+        item.h += 1;
+      }
+    }
+    if ((item.itemWidth / item.w < 20)  && item.w < 40) {
+      while (item.itemWidth / item.w < 25 && item.w < 40) {
+        item.w += 1;
+        console.log(item.w)
+        console.log(item.itemWidth)
+      }
+    }
+  });
   function addNewItem(item) {
-    const w = 100;
-    const h = 1;
+    const w = 40;
+    const h = 2;
     const newPosition = gridController.getFirstAvailablePosition(w, h);
     items = newPosition
       ? [...items, { x: newPosition.x, y: newPosition.y, w, h, ...item }]
@@ -71,27 +87,10 @@
     ]);
   }
 
-  $: if (getLayout) {
-    memoItems.set(items);
-  }
+  let itemSize = { height: 20 };
 
-  $: items.forEach((item) => {
-    if(item.type.name ==='image') return;
-    if (item.itemHeight / item.h > 50) {
-      while (item.itemHeight / item.h > 50) {
-        item.h += 1;
-        console.log(item.h)
-      }
-    }
-    if (item.w === 0) item.w = 1;
-    if (item.itemWidth / item.w > 100 && item.w < 10) {
-      while (item.itemWidth / item.w > 100 && item.w < 10) {
-        item.w += 1;
-        console.log(item.w)
-        console.log(item)
-      }
-    }
-  });
+
+
 </script>
 
 <div class="wrapper">
@@ -99,11 +98,12 @@
   <!-- <button class="btn" on:click={addNewItem}>Add New Item</button>
   <button class="btn" on:click={resetGrid}>Reset Grid</button> -->
   <Grid
+    class="grid"
     {itemSize}
-    gap={2}
-    cols={100}
-    rows={100}
-    collision="push"
+    gap={5}
+    cols={40}
+    rows={0}
+    collision="none"
     bind:controller={gridController}
   >
     {#each items as item (item.id)}
@@ -111,6 +111,7 @@
         <GridItem
           class="grid-item item-editor"
           activeClass="active"
+          previewClass="preview editor"
           id={item.id}
           bind:x={item.x}
           bind:y={item.y}
@@ -130,11 +131,10 @@
           <div
             class="item"
             bind:offsetWidth={item.itemWidth}
-            bind:offsetHeight={item.itemHeight}
-          >
-            <div class="wrapper2">
-              <EditableItem {item} value={handleValue(item)} />
-            </div>
+            bind:offsetHeight={item.itemHeight}>
+            {item.itemHeight} {item.h} ratio:{item.itemWidth /item.w}
+            <EditableItem {item} value={handleValue(item)}       
+            />
           </div>
         </GridItem>
       </div>
@@ -144,17 +144,22 @@
 
 <style>
 
-.wrapper2{
-  white-space: pre-wrap;
-  height: fit-content;
+
+
+.item{
+  background-color: rgba(0, 0, 0, 0.133);
+  border: 1px solid transparent;
+}
+
+.item:hover{
+  border: 1px dashed brown;
 }
 
 
-
-  .item {
-  }
-
-
+:global(.preview.editor) {
+  border: 5px solid #2196f3;
+  background-color: rebeccapurple !important;
+}
 
   .move-handle {
     position: absolute;
@@ -202,7 +207,7 @@
     display: flex;
     flex-direction: column;
     min-width: 70%;
-    background-color: rgb(29, 32, 32);
+    /* background-color: rgb(29, 32, 32); */
     padding-bottom: 1rem;
   }
 </style>

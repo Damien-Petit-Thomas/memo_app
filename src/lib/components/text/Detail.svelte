@@ -63,14 +63,14 @@ let pre2height;
 </script>
 
 {#if isEditable}
-  ce texte sera visible
-  <pre bind:clientHeight={total}>
-    {total} {pre1height} {pre2height}
-    <pre bind:clientHeight={pre1height}
+  ce texte sera visible {pre1height} {pre2height}
+  <pre>
+    <pre
       class="summary"
       style={css}
       contenteditable={isEditable}
       on:keydown={handleKeyDownSummary}
+      bind:offsetHeight={pre1height}
       class:isSave
       class:isEditable>
       {@html summary}
@@ -81,6 +81,7 @@ let pre2height;
       style={css}
       contenteditable={isEditable}
       on:keydown={handleKeyDownDetail}
+      bind:offsetHeight={pre1height}
       class:isSave
       class:isEditable>
       {@html detail}
@@ -119,12 +120,13 @@ let pre2height;
   border: 1px solid #aaa;
   border-radius: 4px;
   padding: 0.5em 0.5em 0;
+  z-index: 999;
   color:rgb(253, 253, 253)
 }
 
 summary {
   background-color: #686868;
-
+  z-index: 1;
   cursor: pointer;
   font-weight: bold;
   margin: -0.5em -0.5em 0;

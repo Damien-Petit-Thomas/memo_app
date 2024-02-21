@@ -36,7 +36,7 @@
     alertVisible = true;
     setTimeout(() => {
       alertVisible = false;
-    }, 3000);
+    }, 2000);
   }
   import NextBar from "$lib/components/nextBar/NextBar.svelte";
   let isEditable = false;
@@ -86,7 +86,11 @@
   let currentMemoIdx;
   let itemWidth;
   let itemHeight;
-  page.subscribe(async ($page) => {
+
+
+  
+
+  $: page.subscribe(async ($page) => {
     if ($fullmemos.length === 0) {
       await fullmemos.get();
     }
@@ -99,13 +103,14 @@
       copyMemo = JSON.parse(JSON.stringify(memo));
       if (copyMemo.contents) {
         copyMemo.contents.forEach((item) => {
-          if (item.type.name !== "code") parseText(item);
+          if (item.type.name !== "code" && item.type.name !== "image") parseText(item);
         });
 
         // on classe les items par position
         // copyMemo.contents.sort((a, b) => a.position - b.position);
         // memo.contents.sort((a, b) => a.position - b.position);
         isDataReady = true;
+        isLayout = false;
         if (copyMemo.layout !== null) {
           isLayout = true;
           for (let i = 0; i < copyMemo.layout.length; i++) {
@@ -163,10 +168,9 @@
       );
     }
   }
-
   function parseText(item) {
+    console.log('je suis dans parseText')
     const markdownRenderedContent = md.render(item.content);
-    if (item.type.name === "code" || item.type.name === "image") return;
     const tocRegex = /<(h[1-6])>(.*?)<\/\1>/g;
     const modifiedLines = [];
 
@@ -190,13 +194,12 @@
 
     // Join modified lines without applying markdown rendering
     item.content = modifiedLines.join("");
-
     lexicon = $page.data.lexicon;
 
     lexicon.forEach((wordObj) => {
       const word = wordObj.word;
       const regex = new RegExp(`\\b${word}\\b`, "g");
-      if (item.content.match(regex)) {
+      if (item.content.match(regex) && !item.content.startsWith("<h")) {
         item.content = item.content.replace(
           regex,
           `<a href="/lexicon" id="lexical">${word}</a>`,
@@ -204,6 +207,7 @@
       }
     });
   }
+
 
   $: currentMemo.set(memo);
   let showLayout = false;

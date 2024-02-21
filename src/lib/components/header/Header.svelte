@@ -66,6 +66,7 @@
     </nav>
     {#if showMenu}
         <div class="menu" transition:fly={{ x: 200, duration: 1000 }}>
+            <a href="/test">Test</a>
             <a href="/">Option</a>
             <a href="/">Categorie</a>
             <a href="/">Tag</a>

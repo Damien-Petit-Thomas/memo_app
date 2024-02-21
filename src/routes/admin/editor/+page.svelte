@@ -14,6 +14,7 @@
   import Editor from "$lib/components/editor/Editor.svelte";
   import EditorSidebar from "$lib/components/editor/EditorSidebar.svelte";
   import EditorSidebarTagNCategory from "$lib/components/editor/EditorSidebarTagNCategory.svelte";
+  import { redirect } from '@sveltejs/kit';
   let memoId;
   export let data;
   import { saveLinks } from "$lib/utils/saveLinks.js";

@@ -1,8 +1,9 @@
 <script>
 	import { todos , categories, tags} from '$lib/stores/index.js';
 	import {onMount} from 'svelte';
+	import {currentMemo} from '$lib/stores/index.js';
 	export let data;
-
+	import { goto } from '$app/navigation';
 const userId = data?.user?.id;
 let isConnect = false;
   if (userId) {
@@ -33,7 +34,13 @@ todos.add(data)
 e.currentTarget.value = ''
 }
 
-
+const handleClick = () =>{
+	if (!isConnect) {
+		goto('/auth/login')
+	}
+	currentMemo.set({})
+	goto('/admin/editor')
+}
 
 	
 </script>
@@ -84,9 +91,9 @@ e.currentTarget.value = ''
 
 
 
-<button class='btn btn-create-memo'>
+<button class='btn btn-create-memo' on:click={handleClick}>
 
-	<a href="/admin/editor" >créer un memo</a>
+	créer un memo
 </button>
 
 

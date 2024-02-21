@@ -1,4 +1,5 @@
 <script>
+  import {goto} from '$app/navigation';
   let signError = false;
   let data = {
     name: '',
@@ -23,7 +24,7 @@ try {
   if (response.ok) {
     // on redirige vers la page de connexion
     InscriptionSuccess = true;
-   window.location.href = '/auth/login';
+    goto('/auth/login');
   }
   else{
     signError = await response.text();

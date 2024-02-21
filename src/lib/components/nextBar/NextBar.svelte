@@ -1,12 +1,10 @@
 <script>
   import { fade } from "svelte/transition";
   import { createEventDispatcher } from "svelte";
-  import { fullmemos } from "$lib/stores/index.js";
   import next from "$lib/assets/next.png";
   export let totalPage;
   export let currentPage;
-$: console.log("currentPage", currentPage);
-$: console.log("totalPage", totalPage);
+
   const dispatch = createEventDispatcher();
 
   $: dispatch("changePage", currentPage);

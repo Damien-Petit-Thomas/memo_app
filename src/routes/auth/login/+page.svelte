@@ -1,4 +1,6 @@
 <script>
+
+
 let signError = false;
   let data = {
     email: '',

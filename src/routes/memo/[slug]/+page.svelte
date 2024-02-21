@@ -13,6 +13,8 @@
   import Img from "../../../lib/components/text/Img.svelte";
   import { page } from "$app/stores";
   import reset from "$lib/assets/reset.png";
+  import cadenas from "$lib/assets/cadenas.png";
+  import openLock from "$lib/assets/cadenas-ouvert.png";
   import save from "$lib/assets/save.png";
   import burger from "$lib/assets/hamburger.png";
   import CustomAlert from "$lib/components/CustomAlert/Alert.svelte";
@@ -23,10 +25,11 @@
     reloadNeeded,
   } from "$lib/stores/index.js";
   let alertVisible = false;
-  let typeAlert = '';
-  let titleAlert = '';
-  let messageAlert = '';
-  function showAlert(type,title, msg) {
+  let typeAlert = "";
+  let titleAlert = "";
+  let messageAlert = "";
+  let isReadOnly = false;
+  function showAlert(type, title, msg) {
     typeAlert = type;
     titleAlert = title;
     messageAlert = msg;
@@ -106,7 +109,12 @@
         if (copyMemo.layout !== null) {
           isLayout = true;
           for (let i = 0; i < copyMemo.layout.length; i++) {
-            items[i] = { ...copyMemo.layout[i],itemHeight, itemWidth, data: copyMemo.contents[i] };
+            items[i] = {
+              ...copyMemo.layout[i],
+              itemHeight,
+              itemWidth,
+              data: copyMemo.contents[i],
+            };
           }
           itemsBackup = structuredClone(items);
         }
@@ -116,8 +124,9 @@
     }
   });
 
-
-
+  function lockGrid() {
+    isReadOnly = !isReadOnly;
+  }
 
   function resetGrid() {
     items = structuredClone(itemsBackup);
@@ -144,10 +153,14 @@
     const updatedMemo = await memos.mark(data);
     if (updatedMemo) {
       reloadNeeded.set(true);
-      currentMemo.set({})
+      currentMemo.set({});
       currentMemo.set(newMemo);
       itemsBackup = structuredClone(items);
-      showAlert("success","enregistrement reussi", `le nouveau layout de: ${newMemo.title} a été bien été enregistré`);
+      showAlert(
+        "success",
+        "enregistrement reussi",
+        `le nouveau layout de: ${newMemo.title} a été bien été enregistré`,
+      );
     }
   }
 
@@ -198,13 +211,9 @@
     showLayout = !showLayout;
   }
 </script>
-{#if alertVisible  }
-    <CustomAlert
-    title={titleAlert}
 
-      type={typeAlert}
-      message={messageAlert}
-    />
+{#if alertVisible}
+  <CustomAlert title={titleAlert} type={typeAlert} message={messageAlert} />
 {/if}
 
 <div class="container">
@@ -227,6 +236,16 @@
                 </button>
                 <button title="save  layout" id="save" on:click={saveGrid}
                   ><img src={save} alt="" />
+                </button>
+                <button
+                  title={isReadOnly ? "unlock layout" : "lock lauout"}
+                  id="lock"
+                  on:click={lockGrid}
+                  ><img
+                    src={isReadOnly ? openLock : cadenas}
+                    alt={isReadOnly ? "open lock" : "lock"}
+                  />
+                  <!-- <a href="https://www.flaticon.com/fr/icones-gratuites/fermer-a-cle" title="fermer à clé icônes">Fermer à clé icônes créées par Freepik - Flaticon</a> -->
                 </button>
               </div>
             {/if}
@@ -251,13 +270,14 @@
         {/if}
         {#if isLayout}
           <Grid
-          class="grid"
-          {itemSize}
-          gap={5}
-          cols={40}
-          rows={0}
-          collision="none"
-            >
+            readOnly={isReadOnly}
+            class="grid"
+            {itemSize}
+            gap={5}
+            cols={40}
+            rows={0}
+            collision="none"
+          >
             {#each items as item (item.id)}
               <GridItem
                 previewClass="preview"
@@ -269,9 +289,10 @@
                 bind:w={item.w}
                 bind:h={item.h}
               >
-                <div class="item"
-                bind:offsetWidth={item.itemWidth}
-                bind:offsetHeight={item.itemHeight}
+                <div
+                  class="item"
+                  bind:offsetWidth={item.itemWidth}
+                  bind:offsetHeight={item.itemHeight}
                 >
                   {#if components[item.data.type.name]}
                     <svelte:component
@@ -298,7 +319,6 @@
 </div>
 
 <style>
-
   .title-wrapper {
     display: flex;
     justify-content: space-between;
@@ -316,19 +336,19 @@
 
   .layout-menu-btn {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
-    width: 100px;
   }
 
+  button#lock,
   button#reset,
   button#save,
   button#burger {
     background-color: transparent;
-    border: none;
     cursor: pointer;
     width: 30px;
     height: 30px;
+    margin: 0;
   }
   button#reset img {
     width: 100%;
@@ -340,25 +360,22 @@
     color: #bd9918;
   }
 
-  .item{
-
+  .item {
     padding: 0;
     margin: 0;
-
   }
   :global(.grid-item.read-only) {
     border: none;
     height: fit-content !important;
-
   }
 
   :global(.preview) {
-  z-index: 10 !important;
-  border: 5px solid #2196f3;
-  background-color: rebeccapurple !important;
-}
+    z-index: 10 !important;
+    border: 5px solid #2196f3;
+    background-color: rebeccapurple !important;
+  }
 
-  :global(.grid){
+  :global(.grid) {
     min-height: 100%;
     height: 100000vh;
   }

@@ -53,8 +53,9 @@
   }
 
   $: items.forEach((item) => {
-    if (item.itemHeight / item.h > 20) {
-      while (item.itemHeight / item.h > 20) {
+    if (item.itemHeight / item.h > 18) {
+      while (item.itemHeight / item.h > 18) {
+        console.log("ratio", Math.round(item.itemHeight / item.h));
         item.h += 1;
       }
     }
@@ -100,7 +101,7 @@
   <Grid
     class="grid"
     {itemSize}
-    gap={5}
+    gap={2}
     cols={40}
     rows={0}
     collision="none"

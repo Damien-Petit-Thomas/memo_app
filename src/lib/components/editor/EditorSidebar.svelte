@@ -80,7 +80,7 @@
     </div>
     <Grid
       {itemSize}
-      gap={8}
+      gap={2}
       cols={10}
       collision="push"
       bind:controller={gridController}

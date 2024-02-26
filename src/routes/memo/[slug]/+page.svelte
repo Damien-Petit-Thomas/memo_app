@@ -18,6 +18,7 @@
   import save from "$lib/assets/save.png";
   import burger from "$lib/assets/hamburger.png";
   import CustomAlert from "$lib/components/CustomAlert/Alert.svelte";
+  import getNewColor from "$lib/utils/color.js";
   import {
     currentMemo,
     fullmemos,
@@ -45,8 +46,7 @@
   let itemsBackup = [];
   let gridController;
   let itemSize = { height: 20 };
-
-  let color = "red";
+  let color, newColor;
   export let data;
 
   let userId = data.user.id;
@@ -99,6 +99,7 @@
     memo = $fullmemos.find((m) => m.slug === pageSlug);
     if (memo) {
       color = memo.category.color;
+      newColor = getNewColor(color, 50);
       currentMemoIdx = $fullmemos.findIndex((m) => m.slug === pageSlug);
       copyMemo = JSON.parse(JSON.stringify(memo));
       if (copyMemo.contents) {
@@ -110,6 +111,12 @@
         // copyMemo.contents.sort((a, b) => a.position - b.position);
         // memo.contents.sort((a, b) => a.position - b.position);
         isDataReady = true;
+        let strong= document.querySelectorAll('strong');
+        if (newColor)
+        strong.forEach((s)=>{
+          s.style.color = color;
+          s.style.opacity = 0.65;
+        })
         isLayout = false;
         if (copyMemo.layout !== null) {
           isLayout = true;
@@ -207,6 +214,11 @@
     });
   }
 
+  // on attend que le dom soit chargé pour initialiser le grid
+
+
+
+
 
   $: currentMemo.set(memo);
   let showLayout = false;
@@ -214,6 +226,7 @@
     showLayout = !showLayout;
   }
 </script>
+<!-- <svelte:document/> -->
 
 {#if alertVisible}
   <CustomAlert title={titleAlert} type={typeAlert} message={messageAlert} />
@@ -304,6 +317,7 @@
                       value={item.data.content}
                       css={item.data.style.css}
                     />
+                    {color}
                   {:else}
                     <p>{item.data.content}</p>
                   {/if}
@@ -416,6 +430,7 @@
   }
 
   .content {
+    padding: 0 3rem 0 3rem;
     border-left: 1px solid #94d2bd;
     border-right: 1px solid #94d2bd;
     display: flex;
@@ -426,4 +441,16 @@
     height: fit-content;
     max-width: 80%;
   }
+
+  :global(.content p) {
+    font-family: "Roboto", sans-serif;
+    font-size: 17px;
+    line-height: 29px;
+    word-spacing: normal;
+    font-weight: 400;
+  }
+
+
+
+
 </style>

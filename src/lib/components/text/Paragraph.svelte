@@ -61,6 +61,8 @@ class:isEditable={isEditable}
 <style>
 
   pre {
+    
+    font-size: 17px;
     white-space: pre-wrap;
     min-height: 2rem;
     margin:0;

@@ -9,12 +9,17 @@
   export let getLayout = false;
   let gridController;
   let done = false;
+  let position= 0;
   export let newItem = {};
   $: if (newItem.id) {
     addNewItem(newItem);
   }
 
   if ($currentMemo.layout) {
+    // on class les par content.position de la plus petite à la plus grande
+    $currentMemo.layout.sort((a, b) => a.position - b.position);
+    $currentMemo.contents.sort((a, b) => a.position - b.position);
+    position = $currentMemo.layout[$currentMemo.layout.length - 1].position + 1;
     for (let i = 0; i < $currentMemo.layout.length; i += 1) {
       items[i] = { ...$currentMemo.layout[i], ...$currentMemo.contents[i] };
     }
@@ -55,15 +60,13 @@
   $: items.forEach((item) => {
     if (item.itemHeight / item.h > 18) {
       while (item.itemHeight / item.h > 18) {
-        console.log("ratio", Math.round(item.itemHeight / item.h));
         item.h += 1;
       }
     }
     if ((item.itemWidth / item.w < 20)  && item.w < 40) {
       while (item.itemWidth / item.w < 25 && item.w < 40) {
         item.w += 1;
-        console.log(item.w)
-        console.log(item.itemWidth)
+
       }
     }
   });
@@ -72,7 +75,7 @@
     const h = 2;
     const newPosition = gridController.getFirstAvailablePosition(w, h);
     items = newPosition
-      ? [...items, { x: newPosition.x, y: newPosition.y, w, h, ...item }]
+      ? [...items, { x: newPosition.x, y: newPosition.y, w, h,position,  ...item }]
       : items;
     memoItems.update((items) => [
       ...items,
@@ -81,11 +84,13 @@
         y: newPosition.y,
         w,
         h,
+        position,
         itemHeight,
         itemWidth,
         ...item,
       },
     ]);
+    position += 1;
   }
 
   let itemSize = { height: 20 };

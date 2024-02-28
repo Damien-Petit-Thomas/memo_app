@@ -111,11 +111,8 @@ newColor = getNewColor(color, 50);
         copyMemo.contents.forEach((item) => {
           if (item.type.name !== "code" && item.type.name !== "image") parseText(item);
         });
-
-        // on classe les items par position
-        // copyMemo.contents.sort((a, b) => a.position - b.position);
-        // memo.contents.sort((a, b) => a.position - b.position);
         isDataReady = true;
+
 let strong= document.querySelectorAll('strong');
         if (newColor)
         strong.forEach((s)=>{
@@ -125,13 +122,19 @@ let strong= document.querySelectorAll('strong');
         isLayout = false;
         if (copyMemo.layout !== null) {
           isLayout = true;
+   
+          copyMemo.contents.sort((a, b) => a.position - b.position);
+          copyMemo.layout.sort((a, b) => a.position - b.position);
+          console.log("contents", copyMemo.contents);
           for (let i = 0; i < copyMemo.layout.length; i++) {
+
             items[i] = {
               ...copyMemo.layout[i],
               itemHeight,
               itemWidth,
               data: copyMemo.contents[i],
             };
+            
           }
           itemsBackup = structuredClone(items);
         }
@@ -150,12 +153,24 @@ function lockGrid() {
   }
 
   async function saveGrid() {
-    const newMemo = { ...memo, layout: items };
+
+    const dataLayout = items.map((item) => {
+      return {
+        position: item.position,
+        id: item.id,
+        x: item.x,
+        y: item.y,
+        w: item.w,
+        h: item.h,
+      };
+    });
+    const newMemo = { ...memo, layout: dataLayout };
     const itemsToSave = newMemo.contents.map((item) => {
       return {
         content: item.content,
         type_id: item.type.id,
         styleId: item.style.id,
+        position: item.position,
       };
     });
     const data = {

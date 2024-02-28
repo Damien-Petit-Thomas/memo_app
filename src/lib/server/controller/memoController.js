@@ -83,7 +83,7 @@ export class MemoController extends CoreController {
   }
 
   async update(data, id) {
-    console.log('data', data);
+    console.log('data', data.layout);
     const {
       title, contents, categoryId, tagsIds, userId, layout,
     } = data;

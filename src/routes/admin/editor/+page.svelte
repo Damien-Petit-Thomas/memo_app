@@ -120,7 +120,7 @@
       if(item.type.name === "detail"){
         item.h = 1;
       }
-      layout.push({ x: item.x, y: item.y, w: item.w, h: item.h, id: item.id });
+      layout.push({ x: item.x, y: item.y, w: item.w, h: item.h, position: item.position, id: item.id});
     });
     return layout;
   }
@@ -136,6 +136,7 @@
         content: item.content,
         type_id: item.type.id,
         styleId: item.style.id,
+        position : item.position,
       };
     });
 

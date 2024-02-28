@@ -69,7 +69,6 @@ class:isEditable={isEditable}
 
   pre{
     white-space: pre-wrap;
-    background-color: green;
   }
  
   pre span {

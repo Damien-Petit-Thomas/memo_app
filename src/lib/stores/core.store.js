@@ -73,7 +73,6 @@ class CoreStore {
           },
           body: JSON.stringify({ data, id }),
         });
-
         if (response.ok) {
           update((items) => items.map((i) => (i.id === id ? { ...i, ...data } : i)));
           const updatedItem = await response.json();
@@ -83,6 +82,7 @@ class CoreStore {
       } catch (error) {
         console.error('An unexpected error occurred:', error);
       }
+      return false;
     };
 
     get(); // Appelle get() lors de la création de l'instance pour charger les données initiales

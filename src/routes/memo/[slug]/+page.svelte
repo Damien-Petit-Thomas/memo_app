@@ -92,7 +92,6 @@ let color, newColor;
   page.subscribe(async ($page) => {
     isDataReady = false;
     if(copyMemo) {
-      console.log('copyMemo')
       copyMemo = {};
       items = [];
     }
@@ -100,9 +99,7 @@ let color, newColor;
       await fullmemos.get();
     }
     // si il y a déjà un memo en cours on le vide
-    if (currentMemo) {
-      currentMemo.set({});
-    }
+ 
     pageSlug = $page.params.slug;
     memo = $fullmemos.find((m) => m.slug === pageSlug);
     if (memo) {

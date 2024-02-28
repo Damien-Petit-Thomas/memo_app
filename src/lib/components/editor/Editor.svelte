@@ -128,14 +128,14 @@
             on:click={() => remove(item.id)}
             class="remove"
           >✕</button>
-        
           <div
-            class="item"
-            bind:offsetWidth={item.itemWidth}
-            bind:offsetHeight={item.itemHeight}>
-            <EditableItem {item} value={handleValue(item)}       
-            />
-          </div>
+          class="item"
+          bind:offsetWidth={item.itemWidth}
+          bind:offsetHeight={item.itemHeight}>
+          <EditableItem {item} value={handleValue(item)}       
+          />
+        </div>
+        {item.itemWidth} {item.w}  {item.itemHeight} {item.h}
         </GridItem>
       </div>
     {/each}

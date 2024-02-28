@@ -13,12 +13,12 @@
   import Img from "../../../lib/components/text/Img.svelte";
   import { page } from "$app/stores";
   import reset from "$lib/assets/reset.png";
-  import cadenas from "$lib/assets/cadenas.png";
+import cadenas from "$lib/assets/cadenas.png";
   import openLock from "$lib/assets/cadenas-ouvert.png";
   import save from "$lib/assets/save.png";
   import burger from "$lib/assets/hamburger.png";
   import CustomAlert from "$lib/components/CustomAlert/Alert.svelte";
-  import getNewColor from "$lib/utils/color.js";
+import getNewColor from "$lib/utils/color.js";
   import {
     currentMemo,
     fullmemos,
@@ -46,7 +46,7 @@
   let itemsBackup = [];
   let gridController;
   let itemSize = { height: 20 };
-  let color, newColor;
+let color, newColor;
   export let data;
 
   let userId = data.user.id;
@@ -86,11 +86,7 @@
   let currentMemoIdx;
   let itemWidth;
   let itemHeight;
-
-
-  
-
-  $: page.subscribe(async ($page) => {
+  page.subscribe(async ($page) => {
     if ($fullmemos.length === 0) {
       await fullmemos.get();
     }
@@ -99,7 +95,7 @@
     memo = $fullmemos.find((m) => m.slug === pageSlug);
     if (memo) {
       color = memo.category.color;
-      newColor = getNewColor(color, 50);
+newColor = getNewColor(color, 50);
       currentMemoIdx = $fullmemos.findIndex((m) => m.slug === pageSlug);
       copyMemo = JSON.parse(JSON.stringify(memo));
       if (copyMemo.contents) {
@@ -111,7 +107,7 @@
         // copyMemo.contents.sort((a, b) => a.position - b.position);
         // memo.contents.sort((a, b) => a.position - b.position);
         isDataReady = true;
-        let strong= document.querySelectorAll('strong');
+let strong= document.querySelectorAll('strong');
         if (newColor)
         strong.forEach((s)=>{
           s.style.color = color;
@@ -136,7 +132,7 @@
     }
   });
 
-  function lockGrid() {
+function lockGrid() {
     isReadOnly = !isReadOnly;
   }
 
@@ -177,7 +173,7 @@
   }
   function parseText(item) {
     const markdownRenderedContent = md.render(item.content);
-    const tocRegex = /<(h[1-6])>(.*?)<\/\1>/g;
+        const tocRegex = /<(h[1-6])>(.*?)<\/\1>/g;
     const modifiedLines = [];
 
     let match;
@@ -228,7 +224,7 @@
 </script>
 <!-- <svelte:document/> -->
 
-{#if alertVisible}
+      {#if alertVisible}
   <CustomAlert title={titleAlert} type={typeAlert} message={messageAlert} />
 {/if}
 
@@ -253,7 +249,7 @@
                 <button title="save  layout" id="save" on:click={saveGrid}
                   ><img src={save} alt="" />
                 </button>
-                <button
+<button
                   title={isReadOnly ? "unlock layout" : "lock lauout"}
                   id="lock"
                   on:click={lockGrid}
@@ -286,14 +282,14 @@
         {/if}
         {#if isLayout}
           <Grid
-            readOnly={isReadOnly}
-            class="grid"
-            {itemSize}
-            gap={5}
-            cols={40}
-            rows={0}
-            collision="none"
-          >
+readOnly={isReadOnly}
+          class="grid"
+          {itemSize}
+          gap={5}
+          cols={40}
+          rows={0}
+          collision="none"
+            >
             {#each items as item (item.id)}
               <GridItem
                 previewClass="preview"
@@ -307,8 +303,8 @@
               >
                 <div
                   class="item"
-                  bind:offsetWidth={item.itemWidth}
-                  bind:offsetHeight={item.itemHeight}
+                bind:offsetWidth={item.itemWidth}
+                bind:offsetHeight={item.itemHeight}
                 >
                   {#if components[item.data.type.name]}
                     <svelte:component
@@ -317,7 +313,6 @@
                       value={item.data.content}
                       css={item.data.style.css}
                     />
-                    {color}
                   {:else}
                     <p>{item.data.content}</p>
                   {/if}
@@ -336,6 +331,7 @@
 </div>
 
 <style>
+
   .title-wrapper {
     display: flex;
     justify-content: space-between;
@@ -355,17 +351,17 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-  }
+      }
 
-  button#lock,
+button#lock,
   button#reset,
   button#save,
   button#burger {
     background-color: transparent;
-    cursor: pointer;
+        cursor: pointer;
     width: 30px;
     height: 30px;
-    margin: 0;
+margin: 0;
   }
   button#reset img {
     width: 100%;
@@ -387,10 +383,10 @@
   }
 
   :global(.preview) {
-    z-index: 10 !important;
-    border: 5px solid #2196f3;
-    background-color: rebeccapurple !important;
-  }
+  z-index: 10 !important;
+  border: 5px solid #2196f3;
+  background-color: rebeccapurple !important;
+}
 
   :global(.grid) {
     min-height: 100%;
@@ -430,7 +426,7 @@
   }
 
   .content {
-    padding: 0 3rem 0 3rem;
+padding: 0 3rem 0 3rem;
     border-left: 1px solid #94d2bd;
     border-right: 1px solid #94d2bd;
     display: flex;
@@ -445,7 +441,6 @@
   :global(.content p) {
     font-family: "Roboto", sans-serif;
     font-size: 17px;
-    line-height: 29px;
     word-spacing: normal;
     font-weight: 400;
   }

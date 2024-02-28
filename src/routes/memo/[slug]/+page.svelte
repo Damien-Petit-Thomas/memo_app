@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from "svelte";
   import { fly } from "svelte/transition";
   import hljs from "highlight.js";
   import markdownit from "markdown-it";
@@ -69,6 +70,8 @@ let color, newColor;
     },
   });
 
+
+
   const components = {
     image: Img,
     noteCard: NoteCard,
@@ -87,10 +90,19 @@ let color, newColor;
   let itemWidth;
   let itemHeight;
   page.subscribe(async ($page) => {
+    isDataReady = false;
+    if(copyMemo) {
+      console.log('copyMemo')
+      copyMemo = {};
+      items = [];
+    }
     if ($fullmemos.length === 0) {
       await fullmemos.get();
     }
-
+    // si il y a déjà un memo en cours on le vide
+    if (currentMemo) {
+      currentMemo.set({});
+    }
     pageSlug = $page.params.slug;
     memo = $fullmemos.find((m) => m.slug === pageSlug);
     if (memo) {

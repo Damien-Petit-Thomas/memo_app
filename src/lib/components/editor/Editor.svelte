@@ -135,7 +135,6 @@
           <EditableItem {item} value={handleValue(item)}       
           />
         </div>
-        {item.itemWidth} {item.w}  {item.itemHeight} {item.h}
         </GridItem>
       </div>
     {/each}

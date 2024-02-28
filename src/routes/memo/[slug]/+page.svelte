@@ -30,7 +30,7 @@ import getNewColor from "$lib/utils/color.js";
   let typeAlert = "";
   let titleAlert = "";
   let messageAlert = "";
-  let isReadOnly = false;
+  let isReadOnly = true;
   function showAlert(type, title, msg) {
     typeAlert = type;
     titleAlert = title;
@@ -210,7 +210,7 @@ function lockGrid() {
       const anchor = `<a name="  ${id}"></a>`;
       modifiedLines.push(
         markdownRenderedContent.substring(lastIndex, match.index) +
-          `<${headerTag} style="color : ${color}" id="${id}">${anchor}${headerContent}</${headerTag}>`,
+          `<div style="border-bottom: 1px ${color} solid" ><${headerTag}  style="padding: .5rem; color : ${color}" id="${id}">${anchor}${headerContent}</${headerTag}></div>`,
       );
       lastIndex = match.index + match[0].length;
     }
@@ -278,7 +278,7 @@ function lockGrid() {
                   id="lock"
                   on:click={lockGrid}
                   ><img
-                    src={isReadOnly ? openLock : cadenas}
+                    src={isReadOnly ? cadenas : openLock}
                     alt={isReadOnly ? "open lock" : "lock"}
                   />
                   <!-- <a href="https://www.flaticon.com/fr/icones-gratuites/fermer-a-cle" title="fermer à clé icônes">Fermer à clé icônes créées par Freepik - Flaticon</a> -->

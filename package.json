@@ -21,6 +21,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@react2svelte/image-gallery": "^1.0.1",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/adapter-node": "^2.0.2",
 		"@sveltejs/kit": "^2.0.0",

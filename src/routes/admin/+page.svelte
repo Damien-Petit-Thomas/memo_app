@@ -42,6 +42,18 @@ const handleClick = () =>{
 	goto('/admin/editor')
 }
 
+const handleClickSLides = () =>{
+	if (!isConnect) {
+		goto('/auth/login')
+	}
+	currentMemo.set({})
+	goto('/admin/editor/slides')
+}
+
+
+
+
+
 	
 </script>
 
@@ -95,6 +107,10 @@ const handleClick = () =>{
 
 	créer un memo
 </button>
+<button class='btn btn-create-memo' on:click={handleClickSLides}>
+
+	créer des slides
+</button>
 
 
 {#if !isConnect}
@@ -133,8 +149,8 @@ const handleClick = () =>{
 	}
 
 	.btn:hover {
-		border-top : none;
-		border-bottom : none;
+		border-top :1px solid transparent;
+		border-bottom : 1px solid transparent;
 		box-shadow: none;
 		width: 20rem;
 	}

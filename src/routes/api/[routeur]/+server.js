@@ -1,10 +1,13 @@
 import { json } from '@sveltejs/kit';
 import { controllers } from '$lib/server/controller';
-import { setAuthToken } from '$lib/services/auth.service';
 
 export async function GET({ cookies, request }) {
   const userId = cookies.get('userId');
   const controller = controllers[`${request.url.split('/').pop()}Controller`];
+  if (controller === 'imageController') {
+    const response = await controller.getAll();
+    return json(response);
+  }
   const response = await controller.getAll(userId);
   return json(response);
 }

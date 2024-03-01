@@ -4,7 +4,7 @@
   import Grid, { GridItem } from "svelte-grid-extended";
   import Submenu from "$lib/components/submenu/Submenu.svelte";
   import EditableItem from "$lib/components/editor/EditorEditableItem.svelte";
-  import { memoItems, currentMemo, images } from "$lib/stores/index.js";
+  import { memoItems, currentMemo } from "$lib/stores/index.js";
     import { page } from "$app/stores";
   export let isDeleted = false;
   let items = [];
@@ -16,6 +16,10 @@
   export let isSlide = false;
   export let selectedBackground = null;
   export let newItem = {};
+  export let background = null;
+
+
+
   $: if (newItem.id) {
     addNewItem(newItem);
   }
@@ -138,7 +142,7 @@ const handleCss = (e) => {
 <div
   class={isSlide ? "slide-wrapper" : "wrapper"}
   style="background-image: url({selectedBackground !== null
-    ? $images[selectedBackground].original
+    ? background[selectedBackground].original
     : ''});"
 >
   {#if !isSlide}

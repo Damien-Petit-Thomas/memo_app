@@ -1,7 +1,7 @@
 <script>
   import Editor from "$lib/components/editor/Editor.svelte";
   import CustomAlert from "$lib/components/CustomAlert/Alert.svelte";
-
+  import {onMount} from "svelte";
   import ImageGallery from "@react2svelte/image-gallery";
   import Sidemenu from "$lib/components/editor/SlideSidebar.svelte";
   import EditableItem from "$lib/components/editor/EditorEditableItem.svelte";
@@ -32,7 +32,22 @@
     }
   }
   
-  let userId = data.user.id;
+
+  const userId = data?.user?.id;
+let isConnect = false;
+  if (userId) {
+    isConnect = true;
+  }
+let background = null;
+onMount(async () => {
+  if($images.length === 0 && userId){
+    images.get(userId);
+    background = $images
+  }
+})
+
+
+
   const styles = data.styles;
   const contentTypeElem = data.contents;
   function handleShowGalery() {
@@ -68,6 +83,18 @@
       });
     }
   }
+
+
+  const handleTitleChange = (e) => {
+    console.log(e.target.innerText)
+    if(e.target.innerText === "Titre des slides"){
+      e.target.innerText = "";
+    }
+    if (e.key === "Enter") {
+      e.preventDefault();
+      e.target.blur();
+    }
+  };
 
 
   
@@ -108,6 +135,7 @@
     
     <div class={showGallery ? "hide" : "show ok"}>
       <Editor
+      {background}
       {selectedBackground}
       {getLayout}
       {newItem}
@@ -116,10 +144,32 @@
         />
     </div>
   </div>
-  <div class="menu menu-right"></div>
+  <div class="menu menu-right">
+    <!-- svelte-ignore missing-declaration -->
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <div class="slide-title" 
+    on:keydown={handleTitleChange}
+    contenteditable="true">
+    Titre des slides
+    </div>
+  </div>
 </div>
 
 <style>
+
+  .slide-title {
+    outline: 0px solid transparent;
+    height: 3rem;
+    font-size: 1.5rem;
+    background-color: #1b1f2a;
+    border: 1px solid #565656;
+    color: #00d0ff;
+  }
+
+
+
+
+
   .container {
     display: grid;
     grid-template-columns: 1fr 4fr 1fr;

@@ -19,6 +19,7 @@ export const controllers = {
   userController: new UserController(dataMappers.user),
   linkController: new LinkController(dataMappers.link),
   todoController: new CoreController(dataMappers.todo),
+  imageController: new CoreController(dataMappers.image),
   styleController: new CoreController(dataMappers.style),
   tagController: new CategoryTagController(dataMappers.tag),
   lexiconController: new CoreController(dataMappers.lexicon),

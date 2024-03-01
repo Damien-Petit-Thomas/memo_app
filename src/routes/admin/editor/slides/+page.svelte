@@ -37,7 +37,6 @@
   const contentTypeElem = data.contents;
   function handleShowGalery() {
     showGallery = !showGallery;
-    console.log(showGallery)
   }
 
 
@@ -93,19 +92,20 @@
     items={contentTypeElem}
     on:showGalery={handleShowGalery} />
   </div>
+  <div class={showGallery ? "gallery" : "hide"}>
+    <ImageGallery
+      bind:this={imageGallery}
+      on:click={handleClick}
+      items={$images}
+    />
+  </div>
   <div
   class="slide"
   style="margin: {slideMargin}px 0;"
   bind:offsetHeight={slideHeight}
   bind:offsetWidth={slideWidth}
   >
-    <div class={showGallery ? "show" : "hide"}>
-      <ImageGallery
-        bind:this={imageGallery}
-        on:click={handleClick}
-        items={$images}
-      />
-    </div>
+    
     <div class={showGallery ? "hide" : "show ok"}>
       <Editor
       {selectedBackground}
@@ -131,6 +131,14 @@
     overflow: hidden;
     border: 1px solid #000;
   }
+  .gallery{
+    position : absolute;
+   
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+  }
 
   .menu {
     background-color: #000;
@@ -140,9 +148,7 @@
     display: none;
   }
 
-  .show {
-    display: block;
-  }
+
   .ok{
     height: 100%;
   }

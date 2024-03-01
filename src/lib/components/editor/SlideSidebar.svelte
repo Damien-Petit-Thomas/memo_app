@@ -77,7 +77,7 @@ const handleSaveSlide = () => {};
   ];
 
 </script>
-<div transition:slide={{duration: 10000}}           class="main-container">
+<div transition:slide={{duration: 1000}}           class="main-container">
   <div class="container_nextbar">
     {#if totalPage === 1}
       <div class="container container-preview">

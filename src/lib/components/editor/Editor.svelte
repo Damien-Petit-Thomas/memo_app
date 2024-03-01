@@ -1,15 +1,20 @@
 <script>
+  import option from "$lib/assets/parametre.png";
   import { fade } from "svelte/transition";
   import Grid, { GridItem } from "svelte-grid-extended";
-
+  import Submenu from "$lib/components/submenu/Submenu.svelte";
   import EditableItem from "$lib/components/editor/EditorEditableItem.svelte";
-  import { memoItems, currentMemo } from "$lib/stores/index.js";
+  import { memoItems, currentMemo, images } from "$lib/stores/index.js";
+    import { page } from "$app/stores";
   export let isDeleted = false;
   let items = [];
   export let getLayout = false;
   let gridController;
   let done = false;
-  let position= 0;
+  let position = 0;
+  let showSubmenu = false;
+  export let isSlide = false;
+  export let selectedBackground = null;
   export let newItem = {};
   $: if (newItem.id) {
     addNewItem(newItem);
@@ -26,12 +31,26 @@
     done = true;
   }
 
+  let x;
+  let y;
+  let xo;
+  let yo;
+  let currentId
+  const submenu = (id, event) => {
+    //  on veut la position de la souris par rapport à la fenêtre et par rapport à l'élément
+    x= event.target.getBoundingClientRect().left;
+    y= event.target.getBoundingClientRect().top;
+    xo = event.clientX;
+    yo = event.clientY;
+    currentId = id;
+    return showSubmenu = !showSubmenu;
+  };
+
   $: if (done) {
     memoItems.set(items);
   }
   let itemWidth;
   let itemHeight;
-
 
   const itemsBackup = structuredClone(items);
   function resetGrid() {
@@ -41,7 +60,6 @@
     items = items.filter((i) => i.id !== id);
     memoItems.update((items) => items.filter((item) => item.id !== id));
   }
-
 
   $: title = {
     content: $currentMemo?.title || "titre",
@@ -63,10 +81,9 @@
         item.h += 1;
       }
     }
-    if ((item.itemWidth / item.w < 20)  && item.w < 40) {
+    if (item.itemWidth / item.w < 20 && item.w < 40) {
       while (item.itemWidth / item.w < 25 && item.w < 40) {
         item.w += 1;
-
       }
     }
   });
@@ -75,7 +92,10 @@
     const h = 2;
     const newPosition = gridController.getFirstAvailablePosition(w, h);
     items = newPosition
-      ? [...items, { x: newPosition.x, y: newPosition.y, w, h,position,  ...item }]
+      ? [
+          ...items,
+          { x: newPosition.x, y: newPosition.y, w, h, position, ...item },
+        ]
       : items;
     memoItems.update((items) => [
       ...items,
@@ -95,12 +115,35 @@
 
   let itemSize = { height: 20 };
 
+const handleCss = (e) => {
+  items = items.map((item) => {
+    if (item.id === currentId) {
+      item.style.css = e.detail.css;
+    }
+    return item;
+  });
+
+  
+}
 
 
 </script>
 
-<div class="wrapper">
-  <EditableItem item={title} value={handleValue(title)} {isDeleted} />
+{#if showSubmenu}
+  <Submenu 
+  on:css={handleCss}
+  {x} {y} />
+{/if}
+
+<div
+  class={isSlide ? "slide-wrapper" : "wrapper"}
+  style="background-image: url({selectedBackground !== null
+    ? $images[selectedBackground].original
+    : ''});"
+>
+  {#if !isSlide}
+    <EditableItem item={title} value={handleValue(title)} {isDeleted} />
+  {/if}
   <!-- <button class="btn" on:click={addNewItem}>Add New Item</button>
   <button class="btn" on:click={resetGrid}>Reset Grid</button> -->
   <Grid
@@ -116,30 +159,37 @@
       <div transition:fade={{ duration: 300 }}>
         <GridItem
           class="grid-item item-editor"
-          activeClass="active"
-          previewClass="preview editor"
+          activeClass={isSlide ? "active-slide" : "active"}
+          previewClass={isSlide ? "preview-slide" : "preview"}
           id={item.id}
           bind:x={item.x}
           bind:y={item.y}
           bind:w={item.w}
           bind:h={item.h}
-
         >
-        <div slot="moveHandle" let:moveStart>
-          <div class="move-handle" on:pointerdown={moveStart}></div>
-        </div>
-          <button
-            on:pointerdown={(e) => e.stopPropagation()}
-            on:click={() => remove(item.id)}
-            class="remove"
-          >✕</button>
+          <div slot="moveHandle" let:moveStart>
+            <div class="move-handle" on:pointerdown={moveStart}></div>
+          </div>
+          {#if !isSlide}
+            <button
+              on:pointerdown={(e) => e.stopPropagation()}
+              on:click={() => remove(item.id)}
+              class="remove">✕</button
+            >
+          {:else}
+            <button
+              on:pointerdown={(e) => e.stopPropagation()}
+              on:click={(e) => submenu(item.id, e)}
+              class="submenu"><img src={option} alt="sub-menu" /></button
+            >
+          {/if}
           <div
-          class="item"
-          bind:offsetWidth={item.itemWidth}
-          bind:offsetHeight={item.itemHeight}>
-          <EditableItem {item} value={handleValue(item)}       
-          />
-        </div>
+            class="item"
+            bind:offsetWidth={item.itemWidth}
+            bind:offsetHeight={item.itemHeight}
+          >
+            <EditableItem {item} value={handleValue(item)} />
+          </div>
         </GridItem>
       </div>
     {/each}
@@ -147,40 +197,38 @@
 </div>
 
 <style>
+  .item {
+    background-color: rgba(0, 0, 0, 0.133);
+    border: 1px solid transparent;
+  }
 
+  .item:hover {
+    background:rgb(139, 139, 139);
+    border: 1px dashed brown;
+  }
 
-
-.item{
-  background-color: rgba(0, 0, 0, 0.133);
-  border: 1px solid transparent;
-}
-
-.item:hover{
-  border: 1px dashed brown;
-}
-
-
-:global(.preview.editor) {
-  border: 5px solid #2196f3;
-  background-color: rebeccapurple !important;
-}
-
+  :global(.preview-slide) {
+    background-color: rgb(102, 85, 119) !important;
+  }
+  
+  :global(.preview) {
+    background-color: rgb(102, 85, 119) !important;
+  }
   .move-handle {
     position: absolute;
     width: 100%;
     height: 5px;
     border-radius: 0 0 5px 0;
-    top: 0;
+    top: 10;
     right: 0;
     z-index: 1;
     background-color: transparent;
-  }  
+  }
   .move-handle:hover {
-    background-color: #2196f3;;
+    background-color: #2196f3;
     cursor: move;
   }
   :global(.grid-item.item-editor) {
-   
     height: fit-content !important;
     position: relative;
     cursor: text !important;
@@ -188,7 +236,6 @@
 
   :global(.active) {
     border-color: #2196f3;
-    background: transparent;
   }
 
   .remove {
@@ -196,13 +243,37 @@
     position: absolute;
     background-color: transparent;
     right: 0;
-    top: 0;
+    top: -10px;
     z-index: 100;
   }
 
   .remove:hover {
     color: #f00;
   }
+
+  .submenu {
+    cursor: pointer;
+    position: absolute;
+    background-color: transparent;
+    right: 0;
+    top: -10px;
+    z-index: 100;
+  }
+
+  .submenu img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .submenu:hover img {
+    filter: invert(50%);
+  }
+
+  .submenu:hover {
+    color: #f00;
+  }
+
+
 
   .wrapper {
     border-left: 1px solid #818181;
@@ -212,6 +283,16 @@
     flex-direction: column;
     min-width: 70%;
     /* background-color: rgb(29, 32, 32); */
+    padding-bottom: 1rem;
+  }
+
+  .slide-wrapper {
+    background-size: cover;
+    height: 100%;
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-width: 70%;
     padding-bottom: 1rem;
   }
 </style>

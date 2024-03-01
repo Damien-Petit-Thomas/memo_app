@@ -1,8 +1,8 @@
 <!-- Sidebar.svelte -->
 
 <script>
+  import { slide } from 'svelte/transition';
   import { createEventDispatcher, onMount } from 'svelte';
-  import { fade } from 'svelte/transition';
   import { memos, categories} from '$lib/stores/index.js';
   export let data;
   const userId = data?.user.id;
@@ -33,8 +33,8 @@
     dispatch('showMemos', category  );
   }
 </script>
-<div class="wrapper">
-  <section class="sidebar">
+<div  class="wrapper">
+  <section  class="sidebar">
     {#each $categories as category (category)}
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -56,7 +56,7 @@
   
         </h2>
         {#if categoryStates[category.id]}
-        <div transition:fade class="memo" class:expanded={categoryStates[category.id]}  >
+        <div transition:slide class="memo" class:expanded={categoryStates[category.id]}  >
           {#each $memos.filter(memo => memo.category_id === category.id) as memo}
             <div>
               {#if memo.title.length > 15}

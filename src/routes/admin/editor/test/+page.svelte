@@ -1,5 +1,8 @@
 <script>
+  import ImageGallery from "@react2svelte/image-gallery";
+  import Sidemenu from "$lib/components/editor/SlideSidebar.svelte";
   import {
+    images,
     memos,
     link,
     reloadNeeded,
@@ -16,7 +19,6 @@
   import EditorSidebarTagNCategory from "$lib/components/editor/EditorSidebarTagNCategory.svelte";
   import { redirect } from '@sveltejs/kit';
   let memoId;
-  let isSlide = false;
   export let data;
   import { saveLinks } from "$lib/utils/saveLinks.js";
   import { onMount } from "svelte";
@@ -33,7 +35,7 @@
   let typeAlert = '';
   let messageAlert = '';
   let titleAlert = '';
-  let selectedBackground = null;
+
   function showAlert(type,title, msg) {
     typeAlert = type;
     titleAlert = title;
@@ -129,6 +131,7 @@
   async function saveMemo() {
     getLayout = true;
     const layout = JSON.stringify(layoutBackup());
+    console.log(layout);
     categoryId = categoryId !== undefined ? categoryId : memoCategory;
 
     const itemsToSave = $memoItems.map((item) => {
@@ -212,11 +215,13 @@
     on:saveMemo={saveMemo}
   />
   <Editor
-    {selectedBackground}
+    {data}
     {getLayout}
     {newItem}
+    {items}
     isDeleted={memoIsDeleted}
-    {isSlide}
+    title={$title}
+    {styles}
   />
   <div class="wrapper">
     <div class="wrapper_content">

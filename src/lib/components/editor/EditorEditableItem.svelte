@@ -9,7 +9,7 @@
   import Img from "$lib/components/text/Img.svelte";
   import DOMPurity from "dompurify";
   import NoteCard from "$lib/components/text/NoteCard.svelte";
-  export let item, value, isDeleted = false ;
+  export let item, value, isDeleted = false;
   let original;
 
 
@@ -21,7 +21,7 @@ $: if (isDeleted){
   window.location.reload()
 }
 
-  const css = item.style?.css !== undefined ? item.style.css : "";
+  $: css = item.style?.css !== undefined ? item.style.css : "";
   let content = item.content !== undefined ? item.content : item.name;
 
   const components = {

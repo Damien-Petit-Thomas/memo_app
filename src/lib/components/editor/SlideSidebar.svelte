@@ -1,45 +1,50 @@
 <script>
+  import { fade } from "svelte/transition";
+  import { slide } from 'svelte/transition';
   import { createEventDispatcher } from "svelte";
-  import { fade, fly } from "svelte/transition";
-  import Grid, { GridItem } from "svelte-grid-extended";
-  import reset from "$lib/assets/reset.png";
   let griditems = [];
+  import next from "$lib/assets/next.png";
   let itemsBackup = [];
+  let blocItemsBackup = [];
   const dispatch = createEventDispatcher();
   let showStylesSelection = false;
   let availableStyle = [];
   let currentItem;
   let showGalery = false;
+  let showBlock = false;
+  let totalPage = 1;
+  let currentPage=1;
 
+  export let items;
+  export let styles;
   function showStyles(item) {
     availableStyle = styles.filter((style) =>
       item.available_style.includes(style.id),
     );
-    showStylesSelection = true;
+    showBlock = true;
+    showStylesSelection = !showStylesSelection;
   }
-
-  let items = [{id:"galery", name: "choisir le background", action: "showBackground" }];
-
 
   function showBackground() {
     showGalery = !showGalery;
-    dispatch("showGalery");
-        }
+    dispatch("showGalery", showGalery);
+  }
 
-
-  function handleAction(action){
+  function handleAction(action) {
     switch (action) {
       case "showBackground":
         showBackground();
+        break;
+      case "showBloc":
+        showBlock = !showBlock;
+        break;
+      case "addPage":
+        totalPage += 1;
         break;
       default:
         break;
     }
   }
-
-
-
-
 
   function handleCLick(item) {
     if (item.available_style !== null) {
@@ -59,108 +64,104 @@
     showStylesSelection = false;
   }
 
+const handleSaveSlide = () => {};
+
+
+
   const itemSize = { height: 40 };
 
-  function resetGrid() {
-    griditems = structuredClone(itemsBackup);
-  }
+  let actions = [
+    {id: "page", name: "ajouter une page", action: "addPage"},
+    { id: "texte", name: "bloc", action: "showBloc" },
+    { id: "galery", name: "choisir un background", action: "showBackground" },
+  ];
 
-  let gridController;
-
-  let count = 0;
-
-  for (const item of items) {
-    item.x = 0;
-    item.y = count;
-    item.w = 10;
-    item.h = 1;
-    count++;
-    griditems.push(item);
-    if (griditems.length === items.length) {
-      itemsBackup = structuredClone(griditems);
-    }
-  }
-
-  function saveLayout() {
-    itemsBackup = structuredClone(griditems);
-  }
 </script>
-<svelte:document />
-<div class="wrapper">
-  <section>
-    <button id="saveMemo" on:click={() => dispatch("saveMemo")}>
-      Sauvegarder</button
-    >
-    <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-    <div class="reset" on:click={resetGrid}>
-      <!-- <a target="_blank" href="https://icons8.com/icon/BUtO0i9u8bcs/rendez-vous-p%C3%A9riodique">Rendez-vous périodique</a> icône par <a target="_blank" href="https://icons8.com">Icons8</a> -->
-      <img src={reset} alt="reset" />
-      <!-- <a target="_blank" href="https://icons8.com/icon/18765/sauvegarder">Sauvegarder</a> icône par <a target="_blank" href="https://icons8.com">Icons8</a> -->
-      <!-- svelte-ignore missing-declaration -->
-      <!-- <img src={save} on:click={saveLayout} alt="save layout"> -->
-    </div>
-    <Grid
-      {itemSize}
-      gap={2}
-      cols={10}
-      collision="push"
-      bind:controller={gridController}
-    >
-      {#each griditems as item (item.id)}
-        <!--  on met en place un delay pour ajouter un effet de transition -->
-        <!--  sur l'ajout d'un item -->
+<div transition:slide={{duration: 10000}}           class="main-container">
+  <div class="container_nextbar">
+    {#if totalPage === 1}
+      <div class="container container-preview">
+        <span>{currentPage}/{totalPage}</span>
+      </div>
+    {/if}
+    {#if currentPage > 1}
+      <div
+        class="container container-preview"
+        
+      >
+        <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <img
+          on:click={() => (currentPage -= 1)}
+          class="prev"
+          src={next}
+          alt="fleche gauche"
+        />
+  
+        <span>{currentPage -1}/{totalPage}</span>
+      </div>
+    {/if}
+    {#if totalPage > 1}
+      <div  class="container">
+        <span>{currentPage}/{totalPage}</span>
+      </div>
+    {/if}
+  
+    {#if currentPage < (totalPage )}
+      <div   class="container container-next">
+        <span>{currentPage + 1}/{totalPage}</span>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+        <img on:click={() => (currentPage += 1)} src={next} alt="fleche droite" />
+      </div>
+    {/if}
+  </div>
+</div>
+<button id="saveMemo" on:click={handleSaveSlide}>
+  Sauvegarder</button
+>
+<div>
+</div>
 
-        <div transition:fade={{ duration: 300 }}>
-          <!-- svelte-ignore a11y-no-static-element-interactions -->
-          <div class="grid-container">
-            <GridItem
-              class="grid-item sidebar-item"
-              previewClass="prev"
-              id={item.id}
-              bind:x={item.x}
-              bind:y={item.y}
-              bind:w={item.w}
-              bind:h={item.h}
-            >
-              <div slot="moveHandle" let:moveStart>
-                <div class="move-handle" on:pointerdown={moveStart}></div>
-              </div>
-              <!-- svelte-ignore a11y-click-events-have-key-events -->
-              <!-- svelte-ignore a11y-no-static-element-interactions -->
-              <div
-                class="item"
-                id={item.id}
-                aria-roledescription="item"
-                on:click={() => handleAction(item.action)}
-              >
-              {#if showGalery}
-                retour 
-              {:else}
-                {item.name}
-              {/if}
-              </div>
-            </GridItem>
-          </div>
-        </div>
-      {/each}
-    </Grid>
+{#each actions as item (item.id)}
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
+  <div
+    on:click={() => handleAction(item.action)}
+    class="actions"
+  >
+    {#if item.id === "galery" && showGalery}
+      retour
+    {:else}
+      {item.name}
+    {/if}
+    {#if showBlock && item.name === "bloc" }
+      <div class="sub-menu" 
+      transition:slide
 
-    {#if showStylesSelection}
-      <div class="card">
+      on:click={e => e.stopPropagation()}
+      >
+        {#each items as item (item.id)}
+          <div 
+          on:click={() => handleCLick(item)}
+          class="actions">{item.name}</div>
+        {/each}
+        {#if showStylesSelection}
+      <div class="card" 
+      transition:slide
+      
+      >
         {#if availableStyle.length > 0}
-          <h3 class="choice-title">choix du style</h3>
+          <h3 class="choice-title">choix du style de note</h3>
           <div class="style-item-wrapper">
             {#each availableStyle as style}
               <!-- svelte-ignore a11y-click-events-have-key-events -->
               <!-- svelte-ignore a11y-no-static-element-interactions -->
               <div
-                class="grid-item sidebar-item style-item"
+                class="actions"
                 aria-roledescription="style"
                 on:click={handleStyleClick(style)}
               >
-              
                 {style.name}
               </div>
             {/each}
@@ -170,115 +171,91 @@
         {/if}
       </div>
     {/if}
-  </section>
-</div>
+      </div>
+    {/if}
+    
+  </div>
+{/each}
 
 <style>
-  @keyframes slide-bottom {
-    0% {
-      transform: translateY(-1000%);
-      opacity: 0;
-    }
-    100% {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
 
-  .choice-title {
-    margin-bottom: 1rem;
-  }
-
-  .style-item-wrapper {
+.container {
+    vertical-align: baseline;
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-  .style-item {
-    padding: 0.5rem 1.5rem;
-  }
-
-  .reset {
-    display: flex;
-    width: 15px;
-    height: 15px;
-  }
-
-  .grid-container:hover {
-    background-color: #00d0ff !important;
-  }
-  .reset img:hover {
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 0.5rem;
+    padding: .6rem;
+    border-radius: 10px;
+    background-color: #c2c2c2;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
     cursor: pointer;
-    border-radius: 2px;
-    border: 1px solid #565656;
+    width: 32%;
+    height: 35px;
+    color: #333;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    border: 1px solid #f5f5f5;
   }
 
-  :global(.grid-item.sidebar-item) {
+  .container-preview {
+    margin-right: auto;
+  }
+
+  .container-next {
+    margin-left: auto;
+  }
+
+  .container_nextbar {
+    background: #1f1f20;
+
+    display: flex;
+
+    width: 100%;
+  }
+
+  img {
+    /* on assombrit l'image */
+    filter: brightness(0.5);
+    width: 25px;
+  }
+
+  img:hover {
+    cursor: pointer;
+    /* on remet l'image à la normale */
+    filter: brightness(0.6);
+  }
+
+  img:active {
+    /* on assombrit l'image */
+    filter: brightness(0.3);
+  }
+
+  img.prev {
+
+    transform: rotate(180deg);
+  }
+
+
+
+  .actions {
+    margin: 0.2rem;
     color: #00d0ff;
     font-weight: 700;
     background-color: #1b1f2a;
     border: 1px solid #565656;
     transition: background-color 0.3s;
+    padding: 0.5rem 1.5rem;
+    transition: all 0.3s;
   }
 
-  :global(.grid-item.sidebar-item:hover) {
-    background-color: #00d0ff !important;
-    color: #1b1f2a !important;
-    cursor: pointer !important;
-  }
-
-  :global(.prev) {
-    background-color: rgba(0, 0, 0, 0.1);
-  }
-
-  .item {
-    display: grid;
-    place-items: center;
-    width: 100%;
-    height: 100%;
-  }
-
-  .move-handle {
-    position: absolute;
-    width: 25px;
-    height: 10px;
-    border-radius: 0 0 5px 0;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    background-color: rgb(81, 77, 77);
-  }
-
-  .move-handle:hover {
-    cursor: grab;
-  }
-
-  .wrapper {
-    min-width: 15%;
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-    border-right: 1px solid #565656;
-    align-items: center;
-  }
-  section {
-    position: fixed;
-    width: 15%;
-    padding-top: 20px;
-    height: 100vh;
-  }
-
-  button#saveMemo {
-    margin-bottom: 1rem;
-  }
-
-  button:hover {
-    background-color: rgb(203, 232, 219);
-    color: #4a535f;
-  }
-
-  .no-styles {
-    margin-top: 1rem;
-    color: gray;
+  .actions:hover {
+    background-color: #00d0ff;
+    color: #1b1f2a;
+    cursor: pointer;
   }
 </style>

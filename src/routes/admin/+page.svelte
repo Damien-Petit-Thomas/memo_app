@@ -89,13 +89,11 @@ const handleClickSLides = () =>{
 		<Categorielist
 		store={categories}
 		{userId}
-		storeName={"category"}
 		title="créer une catégorie"
 		/>
 		<Categorielist 
 		{userId}
 		title="créer un tag"
-		storeName={"tag"}
 		store={tags} />
 	</div>
 	

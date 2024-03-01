@@ -14,12 +14,33 @@
   import Img from "../../../lib/components/text/Img.svelte";
   import { page } from "$app/stores";
   import reset from "$lib/assets/reset.png";
-import cadenas from "$lib/assets/cadenas.png";
+  import cadenas from "$lib/assets/cadenas.png";
   import openLock from "$lib/assets/cadenas-ouvert.png";
   import save from "$lib/assets/save.png";
   import burger from "$lib/assets/hamburger.png";
   import CustomAlert from "$lib/components/CustomAlert/Alert.svelte";
-import getNewColor from "$lib/utils/color.js";
+  import getNewColor from "$lib/utils/color.js";
+  let selectedCategory;
+  let currentPage = 1;
+  let totalPage = 0;
+  let availableMemo = [];
+  let numberTotalMemo = 0;
+  $: memoCategory = $fullmemos.filter(
+    (memo) => memo.category.id === selectedCategory?.id,
+  );
+  $: memoCategory.length > 0
+    ? (numberTotalMemo = memoCategory.length)
+    : (numberTotalMemo = $fullmemos.length);
+  $: totalPage = Math.ceil(numberTotalMemo / 12);
+  $: if (selectedCategory) {
+    currentPage = 1;
+    availableMemo = memoCategory.slice(0, 12);
+  }
+  $: if ($fullmemos !== undefined) {
+    selectedCategory
+      ? (availableMemo = memoCategory.slice(0, 12))
+      : (availableMemo = $fullmemos.slice(0, 12));
+  }
   import {
     currentMemo,
     fullmemos,
@@ -47,11 +68,25 @@ import getNewColor from "$lib/utils/color.js";
   let itemsBackup = [];
   let gridController;
   let itemSize = { height: 20 };
-let color, newColor;
+  let color, newColor;
   export let data;
 
   let userId = data.user.id;
 
+  const handleChanPage = (event) => {
+    currentPage = event.detail;
+    if (selectedCategory) {
+      availableMemo = memoCategory.slice(
+        (currentPage - 1) * 12,
+        currentPage * 12,
+      );
+    } else {
+      availableMemo = $fullmemos.slice(
+        (currentPage - 1) * 12,
+        currentPage * 12,
+      );
+    }
+  };
   // Actual default values
   const md = markdownit({
     html: true,
@@ -70,8 +105,6 @@ let color, newColor;
     },
   });
 
-
-
   const components = {
     image: Img,
     noteCard: NoteCard,
@@ -86,12 +119,11 @@ let color, newColor;
   let memo;
   let lexicon;
   let isDataReady = false;
-  let currentMemoIdx;
   let itemWidth;
   let itemHeight;
   page.subscribe(async ($page) => {
     isDataReady = false;
-    if(copyMemo) {
+    if (copyMemo) {
       copyMemo = {};
       items = [];
     }
@@ -99,42 +131,40 @@ let color, newColor;
       await fullmemos.get();
     }
     // si il y a déjà un memo en cours on le vide
- 
+
     pageSlug = $page.params.slug;
     memo = $fullmemos.find((m) => m.slug === pageSlug);
     if (memo) {
+      selectedCategory = memo.category;
       color = memo.category.color;
-newColor = getNewColor(color, 50);
-      currentMemoIdx = $fullmemos.findIndex((m) => m.slug === pageSlug);
+      newColor = getNewColor(color, 50);
       copyMemo = JSON.parse(JSON.stringify(memo));
       if (copyMemo.contents) {
         copyMemo.contents.forEach((item) => {
-          if (item.type.name !== "code" && item.type.name !== "image") parseText(item);
+          if (item.type.name !== "code" && item.type.name !== "image")
+            parseText(item);
         });
         isDataReady = true;
 
-let strong= document.querySelectorAll('strong');
+        let strong = document.querySelectorAll("strong");
         if (newColor)
-        strong.forEach((s)=>{
-          s.style.color = color;
-          s.style.opacity = 0.65;
-        })
+          strong.forEach((s) => {
+            s.style.color = color;
+            s.style.opacity = 0.65;
+          });
         isLayout = false;
         if (copyMemo.layout !== null) {
           isLayout = true;
-   
+
           copyMemo.contents.sort((a, b) => a.position - b.position);
           copyMemo.layout.sort((a, b) => a.position - b.position);
-          console.log("contents", copyMemo.contents);
           for (let i = 0; i < copyMemo.layout.length; i++) {
-
             items[i] = {
               ...copyMemo.layout[i],
               itemHeight,
               itemWidth,
               data: copyMemo.contents[i],
             };
-            
           }
           itemsBackup = structuredClone(items);
         }
@@ -144,7 +174,7 @@ let strong= document.querySelectorAll('strong');
     }
   });
 
-function lockGrid() {
+  function lockGrid() {
     isReadOnly = !isReadOnly;
   }
 
@@ -153,7 +183,6 @@ function lockGrid() {
   }
 
   async function saveGrid() {
-
     const dataLayout = items.map((item) => {
       return {
         position: item.position,
@@ -197,7 +226,7 @@ function lockGrid() {
   }
   function parseText(item) {
     const markdownRenderedContent = md.render(item.content);
-        const tocRegex = /<(h[1-6])>(.*?)<\/\1>/g;
+    const tocRegex = /<(h[1-6])>(.*?)<\/\1>/g;
     const modifiedLines = [];
 
     let match;
@@ -236,24 +265,21 @@ function lockGrid() {
 
   // on attend que le dom soit chargé pour initialiser le grid
 
-
-
-
-
   $: currentMemo.set(memo);
   let showLayout = false;
   function showLayoutMenu() {
     showLayout = !showLayout;
   }
 </script>
+
 <!-- <svelte:document/> -->
 
-      {#if alertVisible}
+{#if alertVisible}
   <CustomAlert title={titleAlert} type={typeAlert} message={messageAlert} />
 {/if}
 
 <div class="container">
-  <MainSidebar />
+  <MainSidebar {data} />
   <div class="container_main">
     <div class="content" contenteditable="false">
       {#if isDataReady}
@@ -273,7 +299,7 @@ function lockGrid() {
                 <button title="save  layout" id="save" on:click={saveGrid}
                   ><img src={save} alt="" />
                 </button>
-<button
+                <button
                   title={isReadOnly ? "unlock layout" : "lock lauout"}
                   id="lock"
                   on:click={lockGrid}
@@ -306,14 +332,14 @@ function lockGrid() {
         {/if}
         {#if isLayout}
           <Grid
-readOnly={isReadOnly}
-          class="grid"
-          {itemSize}
-          gap={5}
-          cols={40}
-          rows={0}
-          collision="none"
-            >
+            readOnly={isReadOnly}
+            class="grid"
+            {itemSize}
+            gap={5}
+            cols={40}
+            rows={0}
+            collision="none"
+          >
             {#each items as item (item.id)}
               <GridItem
                 previewClass="preview"
@@ -327,8 +353,8 @@ readOnly={isReadOnly}
               >
                 <div
                   class="item"
-                bind:offsetWidth={item.itemWidth}
-                bind:offsetHeight={item.itemHeight}
+                  bind:offsetWidth={item.itemWidth}
+                  bind:offsetHeight={item.itemHeight}
                 >
                   {#if components[item.data.type.name]}
                     <svelte:component
@@ -348,14 +374,13 @@ readOnly={isReadOnly}
       {/if}
     </div>
     <div class="container_nextbar">
-      <NextBar {currentMemoIdx} />
+      <NextBar on:changePage={handleChanPage} {totalPage} {currentPage} />
     </div>
   </div>
   <Toc title={copyMemo.title} doc={memo.contents} />
 </div>
 
 <style>
-
   .title-wrapper {
     display: flex;
     justify-content: space-between;
@@ -375,17 +400,17 @@ readOnly={isReadOnly}
     display: flex;
     justify-content: space-around;
     align-items: center;
-      }
+  }
 
-button#lock,
+  button#lock,
   button#reset,
   button#save,
   button#burger {
     background-color: transparent;
-        cursor: pointer;
+    cursor: pointer;
     width: 30px;
     height: 30px;
-margin: 0;
+    margin: 0;
   }
   button#reset img {
     width: 100%;
@@ -407,10 +432,10 @@ margin: 0;
   }
 
   :global(.preview) {
-  z-index: 10 !important;
-  border: 5px solid #2196f3;
-  background-color: rebeccapurple !important;
-}
+    z-index: 10 !important;
+    border: 5px solid #2196f3;
+    background-color: rebeccapurple !important;
+  }
 
   :global(.grid) {
     min-height: 100%;
@@ -450,7 +475,7 @@ margin: 0;
   }
 
   .content {
-padding: 0 3rem 0 3rem;
+    padding: 0 3rem 0 3rem;
     border-left: 1px solid #94d2bd;
     border-right: 1px solid #94d2bd;
     display: flex;
@@ -468,8 +493,4 @@ padding: 0 3rem 0 3rem;
     word-spacing: normal;
     font-weight: 400;
   }
-
-
-
-
 </style>

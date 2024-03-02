@@ -207,7 +207,7 @@ const handleCss = (e) => {
   }
 
   .item:hover {
-    background:rgb(139, 139, 139);
+    /* background:rgb(139, 139, 139); */
     border: 1px dashed brown;
   }
 

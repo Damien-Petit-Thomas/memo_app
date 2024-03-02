@@ -21,8 +21,8 @@
   import { saveLinks } from "$lib/utils/saveLinks.js";
   import { onMount } from "svelte";
   let memoCategory;
-  let categoryId;
   let memotags = [];
+  let categoryId;
   let tagsIds = [];
   let memotitle = "";
   let memoIsDeleted = false;
@@ -127,6 +127,7 @@
   }
   let count = 0;
   async function saveMemo() {
+    const type = "memo";
     getLayout = true;
     const layout = JSON.stringify(layoutBackup());
     categoryId = categoryId !== undefined ? categoryId : memoCategory;
@@ -160,6 +161,7 @@
         id: memoId,
         userId,
         layout,
+        type,
       };
 
       const newMemo = await memos.mark(data);
@@ -178,6 +180,7 @@
         tagsIds,
         userId,
         layout,
+        type,
       };
 
       const newMemo = await memos.add(data);

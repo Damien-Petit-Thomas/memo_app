@@ -64,7 +64,7 @@
     showStylesSelection = false;
   }
 
-const handleSaveSlide = () => {};
+
 
 
 
@@ -117,7 +117,7 @@ const handleSaveSlide = () => {};
     {/if}
   </div>
 </div>
-<button id="saveMemo" on:click={handleSaveSlide}>
+<button  on:click={() => dispatch("saveSlide")}>
   Sauvegarder</button
 >
 <div>

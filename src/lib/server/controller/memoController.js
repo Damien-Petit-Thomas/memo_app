@@ -7,18 +7,29 @@ import { CoreController } from './coreController';
 export class MemoController extends CoreController {
   async create(data) {
     const {
-      title, contents, categoryId, tagsIds, userId, layout,
+      title, contents, categoryId, tagsIds, userId, layout, type, backgroundId,
     } = data;
+
+    if (!title) {
+      throw new Error('title is null');
+    }
+    if (!categoryId) throw new Error('category is null');
+
+    let newSlidId;
+    if (type === 'slide') {
+      newSlidId = await dataMappers.slide.create({ user_id: userId });
+    }
+
     if (!title) {
       throw new Error('title is null');
     }
     const inpudata = {
-      title, category_id: categoryId, user_id: userId, layout,
+      title, category_id: categoryId, user_id: userId, layout, type, slide_id: newSlidId?.id || null, background_id: backgroundId || null,
     };
     inpudata.slug = createSlug(inpudata.title);
     let newMemoId;
     try {
-      // Step 1: Create the memo
+      // Step 1: Create the memo /slide
       const newMemo = await this.datamapper.create(inpudata);
       newMemoId = newMemo.id;
       if (!newMemo) {
@@ -40,11 +51,10 @@ export class MemoController extends CoreController {
       for (let i = 0; i < contents.length; i += 1) {
         const item = contents[i];
         if (item.styleId === undefined) item.styleId = 3;
-
         // eslint-disable-next-line no-await-in-loop
         await dataMappers.memoContent.create({
           // eslint-disable-next-line max-len
-          memo_id: newMemo.id, content: item.content, type_id: item.type_id, position: item.position, style_id: item.styleId,
+          memo_id: newMemo.id, content: item.content, type_id: item.type_id, position: item.position, style_id: item.styleId, css: item.css || null,
         });
       }
 

@@ -12,6 +12,7 @@ export const dataMappers = {
   memoTag: new MemoTag(client, 'memo_tag'),
   user: new CoreDatamapper(client, 'user'),
   link: new CoreDatamapper(client, 'link'),
+  slide: new CoreDatamapper(client, 'slide'),
   todo: new CoreDatamapper(client, 'todo'),
   style: new CoreDatamapper(client, 'style'),
   image: new ImageDatamapper(client, 'image'),

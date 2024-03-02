@@ -44,6 +44,7 @@
         </h1>
     </div>
     <nav class="header-right">
+        <a href="/slides">Slides</a>        
         <a href="/lexicon">lexique</a>
         <a href="/links">liens utiles</a>
         <a href="/favorite">Favoris</a>

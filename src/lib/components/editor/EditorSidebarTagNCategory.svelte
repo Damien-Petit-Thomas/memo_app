@@ -1,7 +1,6 @@
 
   <script>
 
-   import Grid, { GridItem } from "svelte-grid-extended";
 
     import { categories, tags } from '$lib/stores/index.js';
     
@@ -33,15 +32,6 @@
   }
 });
 
-const getCategory = async () => {
-	const  response = await fetch('/api/category')
-  return response.json();
-}
-
-const getTags = async () => {
-  const response = await fetch('/api/tag');
-  return response.json();
-}
 
 
 

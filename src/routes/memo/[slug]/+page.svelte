@@ -1,5 +1,4 @@
 <script>
-  import { onMount } from "svelte";
   import { fly } from "svelte/transition";
   import hljs from "highlight.js";
   import markdownit from "markdown-it";
@@ -19,7 +18,6 @@
   import save from "$lib/assets/save.png";
   import burger from "$lib/assets/hamburger.png";
   import CustomAlert from "$lib/components/CustomAlert/Alert.svelte";
-  import getNewColor from "$lib/utils/color.js";
   let selectedCategory;
   let currentPage = 1;
   let totalPage = 0;
@@ -68,7 +66,7 @@
   let itemsBackup = [];
   let gridController;
   let itemSize = { height: 20 };
-  let color, newColor;
+  let color;
   export let data;
 
   let userId = data.user.id;
@@ -128,7 +126,7 @@
       items = [];
     }
     if ($fullmemos.length === 0) {
-      await fullmemos.get();
+      await fullmemos.get(userId);
     }
     // si il y a déjà un memo en cours on le vide
 
@@ -137,7 +135,7 @@
     if (memo) {
       selectedCategory = memo.category;
       color = memo.category.color;
-      newColor = getNewColor(color, 50);
+
       copyMemo = JSON.parse(JSON.stringify(memo));
       if (copyMemo.contents) {
         copyMemo.contents.forEach((item) => {
@@ -146,12 +144,6 @@
         });
         isDataReady = true;
 
-        let strong = document.querySelectorAll("strong");
-        if (newColor)
-          strong.forEach((s) => {
-            s.style.color = color;
-            s.style.opacity = 0.65;
-          });
         isLayout = false;
         if (copyMemo.layout !== null) {
           isLayout = true;
@@ -270,9 +262,20 @@
   function showLayoutMenu() {
     showLayout = !showLayout;
   }
+  import { afterUpdate } from "svelte";
+
+  afterUpdate(() => {
+    let strong = document.querySelectorAll("strong");
+     // Remplacez "votre_couleur" par la couleur souhaitée
+    strong.forEach((s) => {
+      s.style.color = color;
+      s.style.opacity = "0.5";
+    });
+    console.log(strong);
+  });
 </script>
 
-<!-- <svelte:document/> -->
+
 
 {#if alertVisible}
   <CustomAlert title={titleAlert} type={typeAlert} message={messageAlert} />

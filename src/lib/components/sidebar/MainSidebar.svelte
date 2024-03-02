@@ -5,6 +5,7 @@
   import { createEventDispatcher, onMount } from 'svelte';
   import { memos, categories} from '$lib/stores/index.js';
   export let data;
+  let type='memo'
   const userId = data?.user.id;
   let categoryStates = {};
   const dispatch = new createEventDispatcher();
@@ -59,11 +60,18 @@
         <div transition:slide class="memo" class:expanded={categoryStates[category.id]}  >
           {#each $memos.filter(memo => memo.category_id === category.id) as memo}
             <div>
+              {#if memo.type === 'memo' }
               {#if memo.title.length > 15}
-                
                 <a href="/memo/{memo.slug}">{memo.title.slice(0, 15)}...</a>
               {:else}
               <a href="/memo/{memo.slug}">{memo.title}</a>
+              {/if}
+              {:else}
+              {#if memo.title.length > 15}
+                <a href="/slides/{memo.slug}">{memo.title.slice(0, 15)}...</a>
+              {:else}
+              <a href="/slides/{memo.slug}">{memo.title}</a>
+              {/if}
               {/if}
             </div>
           {/each}

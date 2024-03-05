@@ -7,9 +7,8 @@ import { CoreController } from './coreController';
 export class MemoController extends CoreController {
   async create(data) {
     const {
-      title, contents, categoryId, tagsIds, userId, layout, type, backgroundId,
+      title, contents, categoryId, tagsIds, userId, layout, type, backgroundId, page,
     } = data;
-
     if (!title) {
       throw new Error('title is null');
     }
@@ -17,14 +16,25 @@ export class MemoController extends CoreController {
 
     let newSlidId;
     if (type === 'slide') {
-      newSlidId = await dataMappers.slide.create({ user_id: userId });
+      console.log('je suis dans le type slide');
+      const { slideTitle } = data;
+      const slug = createSlug(slideTitle);
+      if (data.isNewSlide !== true) {
+        console.log('je suis dans le type slide et je suis dans le isNewSlide');
+        newSlidId = await dataMappers.slide.create({ user_id: userId, title: slideTitle, slug });
+      } else {
+        console.log('je suis dans le type slide et je suis dans le isNewSlide else');
+        newSlidId = await dataMappers.slide.findBySlug(slug);
+        console.log('newSlidId', newSlidId);
+      }
     }
 
     if (!title) {
       throw new Error('title is null');
     }
+    // ici si  backgroundId = 0 il ne faut pas le mettre à null : il faut le laisser à 0
     const inpudata = {
-      title, category_id: categoryId, user_id: userId, layout, type, slide_id: newSlidId?.id || null, background_id: backgroundId || null,
+      title, category_id: categoryId, user_id: userId, layout, type, slide_id: newSlidId?.id || null, background_id: backgroundId, page,
     };
     inpudata.slug = createSlug(inpudata.title);
     let newMemoId;
@@ -93,9 +103,9 @@ export class MemoController extends CoreController {
   }
 
   async update(data, id) {
-    console.log('data', data.layout);
+    console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh');
     const {
-      title, contents, categoryId, tagsIds, userId, layout,
+      title, contents, categoryId, tagsIds, userId, layout, type, backgroundId, page,
     } = data;
     if (!id) {
       throw new Error('id is null');

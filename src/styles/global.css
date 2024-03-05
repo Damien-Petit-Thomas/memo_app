@@ -204,7 +204,6 @@ blockquote {
   padding: 1rem;
   width: 100%;
 	border-radius: 0.4rem;
-	color: var(--color-preview-qoute-body) !important;
 	font-weight: bold !important;
 }
 

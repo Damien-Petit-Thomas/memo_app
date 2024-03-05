@@ -1,4 +1,5 @@
 <script>
+  import { createEventDispatcher } from "svelte";
   import Code from "$lib/components/text/Code.svelte";
   import { memoItems, title } from "$lib/stores/index.js";
   import Detail from "$lib/components/text/Detail.svelte";
@@ -12,7 +13,7 @@
   export let item, value, isDeleted = false;
   let original;
 
-
+const dispatch = createEventDispatcher()
 
 $: if (isDeleted){
 

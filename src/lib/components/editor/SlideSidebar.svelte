@@ -30,6 +30,10 @@
     dispatch("showGalery", showGalery);
   }
 
+
+
+
+
   function handleAction(action) {
     switch (action) {
       case "showBackground":
@@ -65,6 +69,18 @@
   }
 
 
+  const handlePrev = () => {
+    currentPage -= 1;
+    // dispatch("saveSlide");
+   dispatch("page", currentPage);
+  }
+
+
+  const handleNext = () => {
+    currentPage += 1;
+    // dispatch("saveSlide");
+   dispatch("page", currentPage);
+  }
 
 
 
@@ -92,7 +108,7 @@
         <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <img
-          on:click={() => (currentPage -= 1)}
+          on:click={handlePrev}
           class="prev"
           src={next}
           alt="fleche gauche"
@@ -112,7 +128,7 @@
         <span>{currentPage + 1}/{totalPage}</span>
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-        <img on:click={() => (currentPage += 1)} src={next} alt="fleche droite" />
+        <img on:click={handleNext} src={next} alt="fleche droite" />
       </div>
     {/if}
   </div>

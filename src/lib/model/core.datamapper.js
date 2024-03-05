@@ -62,6 +62,13 @@ export default class CoreDatamapper {
  * @returns {Promise<object>} - The row in the table with the id given in parameter
   */
 
+  async findBySlug(slug) {
+    const query = `SELECT * FROM "${this.tablename}" WHERE slug = $1`;
+    const values = [slug];
+    const result = await this.client.query(query, values);
+    return result.rows[0];
+  }
+
   async findByPk(id) {
     const query = `SELECT * FROM "${this.tablename}" WHERE id = $1`;
     const values = [id];

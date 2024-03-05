@@ -4,28 +4,29 @@
   import Grid, { GridItem } from "svelte-grid-extended";
   import Submenu from "$lib/components/submenu/Submenu.svelte";
   import EditableItem from "$lib/components/editor/EditorEditableItem.svelte";
-  import { memoItems, currentMemo } from "$lib/stores/index.js";
-    import { page } from "$app/stores";
+  import { memoItems, currentMemo, images } from "$lib/stores/index.js";
   export let isDeleted = false;
   let items = [];
   export let getLayout = false;
-  let gridController;
+let gridController;
   let done = false;
   let position = 0;
+  let content;
   let showSubmenu = false;
   export let isSlide = false;
-  export let selectedBackground = null;
+  export let backUrlId;
   export let newItem = {};
-  export let background = null;
+  export let page = 1;
 
+ $: console.log('back', backUrlId)
 
 
   $: if (newItem.id) {
     addNewItem(newItem);
   }
 
-  if ($currentMemo.layout) {
-    // on class les par content.position de la plus petite à la plus grande
+    if ($currentMemo.layout) {
+    // on classe les par content.position de la plus petite à la plus grande
     $currentMemo.layout.sort((a, b) => a.position - b.position);
     $currentMemo.contents.sort((a, b) => a.position - b.position);
     position = $currentMemo.layout[$currentMemo.layout.length - 1].position + 1;
@@ -34,7 +35,7 @@
     }
     done = true;
   }
-
+  
   let x;
   let y;
   let xo;
@@ -52,10 +53,10 @@
 
   $: if (done) {
     memoItems.set(items);
-  }
+      }
   let itemWidth;
   let itemHeight;
-
+  
   const itemsBackup = structuredClone(items);
   function resetGrid() {
     items = structuredClone(itemsBackup);
@@ -69,17 +70,17 @@
     content: $currentMemo?.title || "titre",
     name: "title",
   };
-
+  
   function handleValue(item) {
     return item.content !== undefined
-      ? item.content
-      : (item.content = item.name);
+    ? item.content
+    : (item.content = item.name);
   }
   $: if (getLayout) {
     memoItems.set(items);
   }
-
-  $: items.forEach((item) => {
+  
+$: items.forEach((item) => {
     if (item.itemHeight / item.h > 18) {
       while (item.itemHeight / item.h > 18) {
         item.h += 1;
@@ -91,6 +92,7 @@
       }
     }
   });
+  $: items = $memoItems;
   function addNewItem(item) {
     const w = 40;
     const h = 2;
@@ -101,21 +103,22 @@
           { x: newPosition.x, y: newPosition.y, w, h, position, ...item },
         ]
       : items;
-    memoItems.update((items) => [
+      memoItems.update((items) => [
       ...items,
       {
         x: newPosition.x,
         y: newPosition.y,
         w,
         h,
+        content,
         position,
         itemHeight,
         itemWidth,
         ...item,
       },
     ]);
-    position += 1;
-  }
+  position += 1;
+}
 
   let itemSize = { height: 20 };
 
@@ -129,8 +132,13 @@ const handleCss = (e) => {
 
   
 }
+$: console.log('voici les items', items)
 
+$:  backgroundUrl = backUrlId !== undefined
+    ? $images.filter((image) => image.id ===backUrlId)[0].original
+    : '';
 
+    
 </script>
 
 {#if showSubmenu}
@@ -141,12 +149,10 @@ const handleCss = (e) => {
 
 <div
   class={isSlide ? "slide-wrapper" : "wrapper"}
-  style="background-image: url({selectedBackground !== null
-    ? background[selectedBackground].original
-    : ''});"
+  style="background-image: url({backgroundUrl})"
 >
   {#if !isSlide}
-    <EditableItem item={title} value={handleValue(title)} {isDeleted} />
+    <EditableItem {page} item={title} value={handleValue(title)} {isDeleted} />
   {/if}
   <!-- <button class="btn" on:click={addNewItem}>Add New Item</button>
   <button class="btn" on:click={resetGrid}>Reset Grid</button> -->
@@ -159,7 +165,7 @@ const handleCss = (e) => {
     collision="none"
     bind:controller={gridController}
   >
-    {#each items as item (item.id)}
+  {#each items as item (item.id)}
       <div transition:fade={{ duration: 300 }}>
         <GridItem
           class="grid-item item-editor"
@@ -192,12 +198,12 @@ const handleCss = (e) => {
             bind:offsetWidth={item.itemWidth}
             bind:offsetHeight={item.itemHeight}
           >
-            <EditableItem {item} value={handleValue(item)} />
+            <EditableItem {item} value={handleValue(item)}  />
           </div>
         </GridItem>
       </div>
     {/each}
-  </Grid>
+    </Grid>
 </div>
 
 <style>
@@ -292,6 +298,7 @@ const handleCss = (e) => {
 
   .slide-wrapper {
     background-size: cover;
+    background-position: center;
     height: 100%;
     max-height: 100%;
     display: flex;

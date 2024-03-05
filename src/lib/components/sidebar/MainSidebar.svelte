@@ -66,12 +66,6 @@
               {:else}
               <a href="/memo/{memo.slug}">{memo.title}</a>
               {/if}
-              {:else}
-              {#if memo.title.length > 15}
-                <a href="/slides/{memo.slug}">{memo.title.slice(0, 15)}...</a>
-              {:else}
-              <a href="/slides/{memo.slug}">{memo.title}</a>
-              {/if}
               {/if}
             </div>
           {/each}

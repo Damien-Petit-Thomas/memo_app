@@ -14,7 +14,7 @@
   let numberTotalMemo = 0;
   
   $: memoCategory = $fullmemos.filter(
-    (memo) => memo.category.id === selectedCategory?.id,
+    (memo) => memo.category.id === selectedCategory?.id && memo.type === "memo"
     );
   $: memoCategory.length > 0
     ? (numberTotalMemo = memoCategory.length)

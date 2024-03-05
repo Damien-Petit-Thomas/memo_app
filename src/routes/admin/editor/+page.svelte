@@ -62,7 +62,6 @@
         },
         type: {
           id: e.detail[i].id,
-          name: e.detail[i].name,
         },
       });
     }
@@ -126,12 +125,14 @@
     return layout;
   }
   let count = 0;
+  let copie = [];
+
   async function saveMemo() {
+    copie = JSON.parse(JSON.stringify($memoItems));
     const type = "memo";
     getLayout = true;
     const layout = JSON.stringify(layoutBackup());
     categoryId = categoryId !== undefined ? categoryId : memoCategory;
-
     const itemsToSave = $memoItems.map((item) => {
       return {
         content: item.content,
@@ -162,6 +163,7 @@
         userId,
         layout,
         type,
+        page : 1
       };
 
       const newMemo = await memos.mark(data);
@@ -181,6 +183,7 @@
         userId,
         layout,
         type,
+        page : 1
       };
 
       const newMemo = await memos.add(data);
@@ -192,6 +195,7 @@
         memotitle = newMemo.title;
       }
     }
+    memoItems.set(copie)
     await fullmemos.get(userId);
     itemsToSave.forEach((item) => {
       saveLinks(item.content, linkList, memoId, categoryId, userId);

@@ -8,7 +8,8 @@ export let memo = null;
 <div class="card">
   <slot/>
   {#if memo !== null}
-  <a href="/memo/{memo.slug}">{memo.title}</a>
+  
+  <a href="/{memo.type}/{memo.slug}">{memo.title}</a>
   {/if}
 </div>
 

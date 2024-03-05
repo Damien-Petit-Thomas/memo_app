@@ -21,7 +21,6 @@ let gridController;
   
   $: if (newItem.id) {
     addNewItem(newItem);
-    console.log("newItem", newItem);
   }
   let count = 0;
   $:  if ($currentMemo.layout && count === 0) {

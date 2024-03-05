@@ -71,7 +71,14 @@ $: if (isDeleted){
 </script>
 
 
-  {#if components[item.type.name]}
+  {#if item.name === "title"}
+    <svelte:component
+      this={components[item.name]}
+      value={content}
+      {css}
+      on:contentEdited={saveContent}
+    />
+  {:else if components[item.type.name]}
     <svelte:component
       this={components[item.type.name]}
       value={content}

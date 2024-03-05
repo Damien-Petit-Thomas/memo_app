@@ -5,7 +5,7 @@ const title = writable('');
 const reloadNeeded = writable(false);
 const memoItems = writable([]);
 const currentMemo = (writable({}));
-
+const currentSlide = writable([]);
 const fullmemos = (() => {
   const { subscribe, set, update } = writable([]);
 
@@ -38,6 +38,7 @@ const memos = new CoreStore('/api/memo');
 const link = new CoreStore('/api/link');
 
 export {
+  currentSlide,
   images,
   todos,
   categories,

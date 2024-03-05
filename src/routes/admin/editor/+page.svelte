@@ -58,10 +58,10 @@
         style: {
           id: e.detail[i].style_id,
           css: e.detail[i].style,
-          name: e.detail[i].name,
         },
         type: {
           id: e.detail[i].id,
+          name: e.detail[i].name,
         },
       });
     }
@@ -79,8 +79,12 @@
       if ($currentMemo.tags) {
         memotags = $currentMemo.tags.forEach((tag) => memotags.push(tag.id));
       }
-      $currentMemo.contents.forEach((item) => {});
-      currentMemo.set({});
+      // console.log($currentMemo)
+      // $currentMemo.contents.forEach((item) => {});
+      // console.log($currentMemo)
+      // currentMemo.set({});
+      // console.log($currentMemo)
+
     }
   });
   onMount(() => {

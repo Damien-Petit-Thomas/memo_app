@@ -16,16 +16,12 @@ export class MemoController extends CoreController {
 
     let newSlidId;
     if (type === 'slide') {
-      console.log('je suis dans le type slide');
       const { slideTitle } = data;
       const slug = createSlug(slideTitle);
       if (data.isNewSlide !== true) {
-        console.log('je suis dans le type slide et je suis dans le isNewSlide');
         newSlidId = await dataMappers.slide.create({ user_id: userId, title: slideTitle, slug });
       } else {
-        console.log('je suis dans le type slide et je suis dans le isNewSlide else');
         newSlidId = await dataMappers.slide.findBySlug(slug);
-        console.log('newSlidId', newSlidId);
       }
     }
 
@@ -103,7 +99,6 @@ export class MemoController extends CoreController {
   }
 
   async update(data, id) {
-    console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh');
     const {
       title, contents, categoryId, tagsIds, userId, layout, type, backgroundId, page,
     } = data;
@@ -117,7 +112,8 @@ export class MemoController extends CoreController {
       title, category_id: categoryId, id, tags: tagsIds, userId, layout,
     };
     const inputdata = {
-      title, category_id: categoryId, user_id: userId, layout,
+      title, category_id: categoryId, user_id: userId, layout, type, background_id: backgroundId, page,
+
     };
     inputdata.slug = createSlug(inputdata.title);
     try {

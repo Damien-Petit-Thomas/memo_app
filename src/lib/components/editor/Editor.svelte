@@ -9,7 +9,6 @@
   let items = [];
   export let getLayout = false;
 let gridController;
-  let done = false;
   let position = 0;
   let content;
   let showSubmenu = false;
@@ -17,15 +16,16 @@ let gridController;
   export let backUrlId;
   export let newItem = {};
   export let page = 1;
-
- $: console.log('back', backUrlId)
-
-
+  
+  
+  
   $: if (newItem.id) {
     addNewItem(newItem);
+    console.log("newItem", newItem);
   }
-
-    if ($currentMemo.layout) {
+  let count = 0;
+  $:  if ($currentMemo.layout && count === 0) {
+    count += 1;
     // on classe les par content.position de la plus petite à la plus grande
     $currentMemo.layout.sort((a, b) => a.position - b.position);
     $currentMemo.contents.sort((a, b) => a.position - b.position);
@@ -33,8 +33,11 @@ let gridController;
     for (let i = 0; i < $currentMemo.layout.length; i += 1) {
       items[i] = { ...$currentMemo.layout[i], ...$currentMemo.contents[i] };
     }
-    done = true;
+    memoItems.set(items);
   }
+  
+
+      
   
   let x;
   let y;
@@ -51,9 +54,6 @@ let gridController;
     return showSubmenu = !showSubmenu;
   };
 
-  $: if (done) {
-    memoItems.set(items);
-      }
   let itemWidth;
   let itemHeight;
   
@@ -62,10 +62,10 @@ let gridController;
     items = structuredClone(itemsBackup);
   }
   function remove(id) {
-    items = items.filter((i) => i.id !== id);
     memoItems.update((items) => items.filter((item) => item.id !== id));
+    items = items.filter((i) => i.id !== id);
   }
-
+$: console.log('je log items', items)
   $: title = {
     content: $currentMemo?.title || "titre",
     name: "title",
@@ -92,8 +92,8 @@ $: items.forEach((item) => {
       }
     }
   });
-  $: items = $memoItems;
   function addNewItem(item) {
+    console.log("addNewItem", items);
     const w = 40;
     const h = 2;
     const newPosition = gridController.getFirstAvailablePosition(w, h);
@@ -132,7 +132,6 @@ const handleCss = (e) => {
 
   
 }
-$: console.log('voici les items', items)
 
 $:  backgroundUrl = backUrlId !== undefined
     ? $images.filter((image) => image.id ===backUrlId)[0].original

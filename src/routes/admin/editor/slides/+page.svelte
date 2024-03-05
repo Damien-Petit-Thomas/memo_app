@@ -21,8 +21,7 @@
   let slideIds = new Array(100);
   let slideCategory;
   let slideTags;
-  import { images } from "$lib/stores/index.js";
-    import { slide } from "svelte/transition";
+  import { images, currentSlide } from "$lib/stores/index.js";
   let getLayout = false;
   let slideIsDeleted = false;
   let newItem = {};
@@ -45,16 +44,25 @@
     }
   }
 
+  $: backUrlId = selectedBackground[page];
 
+  onMount(() => {
+    console.log($currentSlide);
+    if ($currentSlide.length > 0) {
+      slideTitle = $currentSlide[0].slideTitle;
+      slideCategory = $currentSlide[0].category_id;
+      slideTags = $currentSlide[0].tags;
+      for (let slide of $currentSlide) {
+        pushToIndex(slideIds, slide.page, slide.id);
+      }
+    }
+  });
 
- $: backUrlId = selectedBackground[page]
- $: console.log("les backgrounds", backUrlId)
   onMount(() => {
     return () => {
       memoItems.set([]);
     };
   });
-
 
   const handleSavePage = (e) => {
     let page = e.detail;
@@ -114,33 +122,27 @@
       });
     }
   }
-const copieSaveArray = new Array(100);
+  const copieSaveArray = new Array(100);
   const handlePage = (e) => {
     const copie = JSON.parse(JSON.stringify($memoItems));
     pushToIndex(copieSaveArray, page, copie);
     page = e.detail;
-    if(copieSaveArray[page] !== undefined){
+    if (copieSaveArray[page] !== undefined) {
       $memoItems = copieSaveArray[page];
     } else {
       $memoItems = [];
     }
   };
 
-
-
-const pushToIndex = (arr, index, element) => {
-
-  if(index < arr.length){
-    arr.splice(index, 1, element);
-  } else {
-    arr.splice(index, 0, element);
-  }
-}
-
-
+  const pushToIndex = (arr, index, element) => {
+    if (index < arr.length) {
+      arr.splice(index, 1, element);
+    } else {
+      arr.splice(index, 0, element);
+    }
+  };
 
   const layoutBackup = () => {
-
     let layout = [];
 
     $memoItems.forEach((item) => {
@@ -158,16 +160,15 @@ const pushToIndex = (arr, index, element) => {
     });
     return layout;
   };
-  $: titreDeLaSlide = `${slideTitle}-slide-${page}`; 
+  $: titreDeLaSlide = `${slideTitle}-slide-${page}`;
   let copie = [];
 
-
-let isNewSlide = false;
+  let isNewSlide = false;
 
   const handleSaveSlide = async (e) => {
-  copie = JSON.parse(JSON.stringify($memoItems));
-  const type = "slide";
-  getLayout = true;
+    copie = JSON.parse(JSON.stringify($memoItems));
+    const type = "slide";
+    getLayout = true;
     const layout = JSON.stringify(layoutBackup());
     if (categoryId === undefined) categoryId = $categories[0].id;
 
@@ -229,7 +230,6 @@ let isNewSlide = false;
         return;
       }
 
-  
       const data = {
         isNewSlide,
         page: e.datail ? e.detail : 1,
@@ -255,15 +255,11 @@ let isNewSlide = false;
         slideCategory = newSlide.category_id;
         slideTags = newSlide.tags;
         slideTitle = slideTitle;
-        console.log("les id des slides", slideIds)
       }
     }
-      await fullmemos.get(userId);
-      reloadNeeded.set(true);
-    
+    await fullmemos.get(userId);
+    reloadNeeded.set(true);
   };
-  $: console.log("les id des slides", slideIds)
-
 
   const handleClick = (e) => {
     let index = imageGallery.getCurrentIndex();
@@ -355,8 +351,6 @@ let isNewSlide = false;
     left: 50%;
     transform: translate(-50%, -50%);
   }
-
-
 
   .container {
     display: grid;

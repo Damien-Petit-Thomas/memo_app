@@ -20,25 +20,7 @@
   import CustomAlert from "$lib/components/CustomAlert/Alert.svelte";
   let selectedCategory;
   let currentPage = 1;
-  let totalPage = 0;
-  let availableMemo = [];
-  let numberTotalMemo = 0;
-  $: memoCategory = $fullmemos.filter(
-    (memo) => memo.category.id === selectedCategory?.id,
-  );
-  $: memoCategory.length > 0
-    ? (numberTotalMemo = memoCategory.length)
-    : (numberTotalMemo = $fullmemos.length);
-  $: totalPage = Math.ceil(numberTotalMemo / 12);
-  $: if (selectedCategory) {
-    currentPage = 1;
-    availableMemo = memoCategory.slice(0, 12);
-  }
-  $: if ($fullmemos !== undefined) {
-    selectedCategory
-      ? (availableMemo = memoCategory.slice(0, 12))
-      : (availableMemo = $fullmemos.slice(0, 12));
-  }
+
   import {
     currentMemo,
     fullmemos,
@@ -59,7 +41,6 @@
       alertVisible = false;
     }, 2000);
   }
-  import NextBar from "$lib/components/nextBar/NextBar.svelte";
   let isEditable = false;
   let isLayout = false;
   let items = [];
@@ -128,7 +109,6 @@
     if ($fullmemos.length === 0) {
       await fullmemos.get(userId);
     }
-    // si il y a déjà un memo en cours on le vide
 
     pageSlug = $page.params.slug;
     memo = $fullmemos.find((m) => m.slug === pageSlug);
@@ -271,7 +251,6 @@
       s.style.color = color;
       s.style.opacity = "0.5";
     });
-    console.log(strong);
   });
 </script>
 
@@ -376,9 +355,7 @@
         {/if}
       {/if}
     </div>
-    <div class="container_nextbar">
-      <NextBar on:changePage={handleChanPage} {totalPage} {currentPage} />
-    </div>
+
   </div>
   <Toc title={copyMemo.title} doc={memo.contents} />
 </div>
@@ -458,15 +435,7 @@
     max-width: 100vw;
   }
 
-  .container_nextbar {
-    width: 100%;
-    padding: 1rem;
-    display: flex;
-    background-color: rgb(29, 32, 32);
 
-    justify-content: center;
-    border: 1px solid #818181;
-  }
   .container_main {
     display: flex;
     flex-direction: column;

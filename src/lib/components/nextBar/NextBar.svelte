@@ -1,5 +1,5 @@
 <script>
-  import { fade } from "svelte/transition";
+  import {  fade } from "svelte/transition";
   import { createEventDispatcher } from "svelte";
   import next from "$lib/assets/next.png";
   export let totalPage;
@@ -30,11 +30,7 @@
       <span>{currentPage -1}/{totalPage}</span>
     </div>
   {/if}
-  {#if totalPage > 1}
-    <div  class="container">
-      <span>{currentPage}/{totalPage}</span>
-    </div>
-  {/if}
+
 
   {#if currentPage < (totalPage )}
     <div  transition:fade class="container container-next">

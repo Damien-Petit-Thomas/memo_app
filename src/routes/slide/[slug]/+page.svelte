@@ -53,6 +53,7 @@
     totalPage = slides.length;
 
     if (slides) {
+      slides.sort((a, b)=> a.page -  b.page) 
       for (let i = 0; i < slides.length; i++) {
         console.log("slides[i]", slides[i])
         slides[i].contents.sort((a, b) => a.position - b.position);

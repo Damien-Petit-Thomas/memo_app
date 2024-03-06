@@ -175,6 +175,7 @@
   let isNewSlide = false;
 
   const handleSaveSlide = async (e) => {
+    console.log("page : ", e.detail)
     console.log("on sauvegarde ceci : ", $memoItems); 
     copie = JSON.parse(JSON.stringify($memoItems));
     const type = "slide";
@@ -207,7 +208,7 @@
       }
 
       const data = {
-        page: e.datail ? e.detail : 1,
+        page: e.datail,
         slideTitle,
         title: titreDeLaSlide,
         contents: itemsToSave,
@@ -242,7 +243,7 @@
 
       const data = {
         isNewSlide,
-        page: e.datail ? e.detail : 1,
+        page: e.detail,
         slideTitle,
         title: titreDeLaSlide,
         contents: itemsToSave,

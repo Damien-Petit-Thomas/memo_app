@@ -4,11 +4,17 @@
   import Grid, { GridItem } from "svelte-grid-extended";
   import Submenu from "$lib/components/submenu/Submenu.svelte";
   import EditableItem from "$lib/components/editor/EditorEditableItem.svelte";
-  import { memoItems, currentMemo, images, maj } from "$lib/stores/index.js";
+  import {
+    memoItems,
+    currentMemo,
+    images,
+    maj,
+    currentSlide,
+  } from "$lib/stores/index.js";
   export let isDeleted = false;
   let items = [];
   export let getLayout = false;
-let gridController;
+  let gridController;
   let position = 0;
   let content;
   let showSubmenu = false;
@@ -16,14 +22,13 @@ let gridController;
   export let backUrlId;
   export let newItem = {};
   export let page = 1;
-  
-  
-  
+
   $: if (newItem.id) {
     addNewItem(newItem);
   }
   let count = 0;
-  $:  if ($currentMemo?.layout && count === 0) {
+  $: if ($currentMemo?.layout && count === 0) {
+    console.log('currentMemo', $currentMemo)
     count += 1;
     // on classe les par content.position de la plus petite à la plus grande
     $currentMemo.layout.sort((a, b) => a.position - b.position);
@@ -34,33 +39,32 @@ let gridController;
     }
     memoItems.set(items);
   }
-  
-$: if ($maj){
-  console.log('maj', $maj)
-  items = $memoItems;
-  maj.set(false);
-  console.log($maj)
-}
-      
-  
+
+
+  $: if ($maj) {
+    console.log('maj', $maj)
+    items = $memoItems;
+    maj.set(false);
+  }
+
   let x;
   let y;
   let xo;
   let yo;
-  let currentId
+  let currentId;
   const submenu = (id, event) => {
     //  on veut la position de la souris par rapport à la fenêtre et par rapport à l'élément
-    x= event.target.getBoundingClientRect().left;
-    y= event.target.getBoundingClientRect().top;
+    x = event.target.getBoundingClientRect().left;
+    y = event.target.getBoundingClientRect().top;
     xo = event.clientX;
     yo = event.clientY;
     currentId = id;
-    return showSubmenu = !showSubmenu;
+    return (showSubmenu = !showSubmenu);
   };
 
   let itemWidth;
   let itemHeight;
-  
+
   const itemsBackup = structuredClone(items);
   function resetGrid() {
     items = structuredClone(itemsBackup);
@@ -73,11 +77,11 @@ $: if ($maj){
     content: $currentMemo?.title || "titre",
     name: "title",
   };
-  
+
   function handleValue(item) {
     return item.content !== undefined
-    ? item.content
-    : (item.content = item.name);
+      ? item.content
+      : (item.content = item.name);
   }
   $: if (getLayout) {
     memoItems.set(items);
@@ -95,6 +99,8 @@ $: items.forEach((item) => {
       }
     }
   });
+
+  
   function addNewItem(item) {
     const w = 40;
     const h = 2;
@@ -105,7 +111,7 @@ $: items.forEach((item) => {
           { x: newPosition.x, y: newPosition.y, w, h, position, ...item },
         ]
       : items;
-      memoItems.update((items) => [
+    memoItems.update((items) => [
       ...items,
       {
         x: newPosition.x,
@@ -119,34 +125,29 @@ $: items.forEach((item) => {
         ...item,
       },
     ]);
- 
-  position += 1;
-}
+
+    position += 1;
+  }
 
   let itemSize = { height: 20 };
 
-const handleCss = (e) => {
-  items = items.map((item) => {
-    if (item.id === currentId) {
-      item.style.css = e.detail.css;
-    }
-    return item;
-  });
+  const handleCss = (e) => {
+    items = items.map((item) => {
+      if (item.id === currentId) {
+        item.style.css = e.detail.css;
+      }
+      return item;
+    });
+  };
 
-  
-}
-
-$:  backgroundUrl = backUrlId !== undefined
-    ? $images.filter((image) => image.id ===backUrlId)[0].original
-    : '';
-
-    
+  $: backgroundUrl =
+    backUrlId !== undefined
+      ? $images.filter((image) => image.id === backUrlId)[0].original
+      : "";
 </script>
 
 {#if showSubmenu}
-  <Submenu 
-  on:css={handleCss}
-  {x} {y} />
+  <Submenu on:css={handleCss} {x} {y} />
 {/if}
 
 <div
@@ -167,7 +168,7 @@ $:  backgroundUrl = backUrlId !== undefined
     collision="none"
     bind:controller={gridController}
   >
-  {#each items as item (item.id)}
+    {#each items as item (item.id)}
       <div transition:fade={{ duration: 300 }}>
         <GridItem
           class="grid-item item-editor"
@@ -200,12 +201,12 @@ $:  backgroundUrl = backUrlId !== undefined
             bind:offsetWidth={item.itemWidth}
             bind:offsetHeight={item.itemHeight}
           >
-            <EditableItem {item} value={handleValue(item)}  />
+            <EditableItem {item} value={handleValue(item)} />
           </div>
         </GridItem>
       </div>
     {/each}
-    </Grid>
+  </Grid>
 </div>
 
 <style>
@@ -222,7 +223,7 @@ $:  backgroundUrl = backUrlId !== undefined
   :global(.preview-slide) {
     background-color: rgb(102, 85, 119) !important;
   }
-  
+
   :global(.preview) {
     background-color: rgb(102, 85, 119) !important;
   }
@@ -284,8 +285,6 @@ $:  backgroundUrl = backUrlId !== undefined
   .submenu:hover {
     color: #f00;
   }
-
-
 
   .wrapper {
     border-left: 1px solid #818181;

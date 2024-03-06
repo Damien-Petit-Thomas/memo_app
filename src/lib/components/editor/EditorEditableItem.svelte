@@ -66,7 +66,6 @@ $: if (isDeleted){
         return items;
         });
       }
-      console.log("maj de : " , $memoItems)
     }
   }
 </script>

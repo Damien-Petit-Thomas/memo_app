@@ -53,9 +53,9 @@
     totalPage = slides.length;
 
     if (slides) {
+      console.log("slides", slides);
       slides.sort((a, b)=> a.page -  b.page) 
       for (let i = 0; i < slides.length; i++) {
-        console.log("slides[i]", slides[i])
         slides[i].contents.sort((a, b) => a.position - b.position);
         slides[i].layout.sort((a, b) => a.position - b.position);
         items[i] = [];
@@ -64,6 +64,8 @@
             {
               ...slides[i].layout[j],
               ...slides[i].contents[j],
+              memoId: slides[i].id,
+              id: slides[i].contents[j].id,
               finalCSS:
                 slides[i].contents[j].css + slides[i].contents[j].style.css,
               slideTitle: title,
@@ -73,7 +75,6 @@
             };
 
         }
-        console.log("items", items[0])
       }
   currentSlide.set(items);
     }

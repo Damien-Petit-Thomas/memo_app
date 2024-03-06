@@ -12,7 +12,7 @@
   let currentItem;
   let showGalery = false;
   let showBlock = false;
-  let totalPage = 1;
+  export let totalPage = 1;
   let currentPage=1;
 
   export let items;

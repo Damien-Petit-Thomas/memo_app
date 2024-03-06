@@ -69,11 +69,9 @@
 
 onMount(() => {
     memoItems.set([]);
-    if($currentMemo === undefined)  console.log('currentMemo is undefined')
-    // on attend que $currentMemo soit défini
-    // on utilise setTimeout pour attendre que $currentMemo soit défini
+
   
-   else if ($currentMemo.contents && $currentMemo.contents.length > 0) {
+   if ($currentMemo.contents && $currentMemo.contents.length > 0) {
       memotitle = $currentMemo.title;
       memoId = $currentMemo.id;
       memoCategory = $currentMemo.category.id;

@@ -12,6 +12,8 @@
     reloadNeeded,
     maj,
     categories,
+    currentSlide,
+    images,
   } from "$lib/stores/index.js";
   import EditorSidebarTagNCategory from "$lib/components/editor/EditorSidebarTagNCategory.svelte";
 
@@ -23,13 +25,13 @@
   let slideIds = new Array(100);
   let slideCategory;
   let slideTags;
-  import { images, currentSlide } from "$lib/stores/index.js";
   let getLayout = false;
   let slideIsDeleted = false;
   let newItem = {};
   let slideHeight = 0;
   let slideWidth = 0;
   let showGallery = false;
+  let totalPage = 1;
   let imageGallery;
   let slideMargin = 0;
   let alertVisible = false;
@@ -46,21 +48,44 @@
     }
   }
 
+  $: console.log('currentSlide :' , $currentSlide)
+  $: if ($currentSlide.length > 0) {
+    slideTitle = $currentSlide[0][0].slideTitle;
+    slideCategory = $currentSlide[0][0].category;
+    slideTags = $currentSlide[0].tags;
+    for (let slide of $currentSlide) {
+      slideIds[slide[0].page] = slide[0].memoId;
+    }
+  }
   $: backUrlId = selectedBackground[page];
-
+  const copieSaveArray = new Array(100);
+  const handlePage = (e) => {
+    const copie = JSON.parse(JSON.stringify($memoItems));
+    pushToIndex(copieSaveArray, page, copie);
+    page = e.detail;
+    if (copieSaveArray[page] !== undefined) {
+      $memoItems = copieSaveArray[page];
+    } else {
+      $memoItems = [];
+    }
+    maj.set(true);
+  };
   onMount(() => {
-    console.log("currentSlide", $currentSlide);
     if ($currentSlide.length > 0) {
-      console.log("currentSlide", $currentSlide[0][0].category);
       slideTitle = $currentSlide[0][0].slideTitle;
       slideCategory = $currentSlide[0][0].category;
       slideTags = $currentSlide[0].tags;
+      totalPage = $currentSlide.length;
       for (let slide of $currentSlide) {
-        console.log("slide", slide[0].page);
-        console.log("slide", slide[0].id);
-        pushToIndex(slideIds, slide[0].page, slide[0].id);
-        console.log("slideIds", slideIds);
+        pushToIndex(slideIds, slide[0].page, slide[0].memoId);
       }
+      for(let slide of $currentSlide){
+        console.log('slide :', slide)
+        const copie = JSON.parse(JSON.stringify(slide));
+        pushToIndex(copieSaveArray, slide[0].page, copie);
+      }
+      $memoItems = copieSaveArray[1];
+      maj.set(true);
     }
   });
 
@@ -129,19 +154,7 @@
       });
     }
   }
-  const copieSaveArray = new Array(100);
-  const handlePage = (e) => {
-    console.log('e.detail', e.detail)
-    const copie = JSON.parse(JSON.stringify($memoItems));
-    pushToIndex(copieSaveArray, page, copie);
-    page = e.detail;
-    if (copieSaveArray[page] !== undefined) {
-      $memoItems = copieSaveArray[page];
-    } else {
-      $memoItems = [];
-    }
-    maj.set(true);
-  };
+
 
   const pushToIndex = (arr, index, element) => {
     if (index < arr.length) {
@@ -175,14 +188,12 @@
   let isNewSlide = false;
 
   const handleSaveSlide = async (e) => {
-    console.log("page : ", e.detail)
-    console.log("on sauvegarde ceci : ", $memoItems); 
     copie = JSON.parse(JSON.stringify($memoItems));
     const type = "slide";
     getLayout = true;
     const layout = JSON.stringify(layoutBackup());
     if (categoryId === undefined) categoryId = $categories[0].id;
-
+    console.log('$memoItems :', $memoItems)
     const itemsToSave = $memoItems.map((item) => {
       return {
         css: item.style.css,
@@ -192,11 +203,11 @@
         position: item.position,
       };
     });
-    console.log("itemsToSave", itemsToSave);
     if (itemsToSave.length === 0) {
       return showAlert("warn", "attention: ", "la slide est vide");
     }
     if (slideIds[page]) {
+      console.log('on fait une modification')
       if (categoryId === undefined) {
         categoryId = slideCategory;
       }
@@ -208,7 +219,7 @@
       }
 
       const data = {
-        page: e.datail,
+        page,
         slideTitle,
         title: titreDeLaSlide,
         contents: itemsToSave,
@@ -243,7 +254,7 @@
 
       const data = {
         isNewSlide,
-        page: e.detail,
+        page,
         slideTitle,
         title: titreDeLaSlide,
         contents: itemsToSave,
@@ -282,6 +293,19 @@
       "  un nouveau background a été selectionné",
     );
   };
+
+$: console.log('slideIds :' ,slideIds[page])
+$: console.log('page  :' , page)
+$: console.log('titre  :' , slideTitle)
+$: console.log('category  :' , slideCategory)
+$: console.log('tags  :' , slideTags)
+
+
+
+
+
+
+
 </script>
 
 {#if alertVisible}
@@ -290,6 +314,7 @@
 <div class="container">
   <div class="menu menu-left">
     <Sidemenu
+    {totalPage}
       on:page={handlePage}
       on:selectItem={handleSelectItem}
       {styles}

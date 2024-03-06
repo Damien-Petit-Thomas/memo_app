@@ -2,13 +2,16 @@
 	import { createEventDispatcher } from "svelte";
 	export let value;
 	export let isEditable = true;
-	let isSave = true;
+	let isSave = false;
+  let isNotSave = false;
 	export let css = null;
 const dispatch = createEventDispatcher();
 
 
 
 function handleKeyDown(e) {
+	isSave = false;
+  isNotSave = true;
   const trimmedInnerText = e.target.innerText.trim();
   const trimmedOriginal = "blockquote"
 
@@ -19,8 +22,10 @@ function handleKeyDown(e) {
   if (e.ctrlKey && e.key === ' ') {
     e.preventDefault();
     dispatch('contentEdited', trimmedInnerText);
-    isSave = true;
+		isSave = true;
+    isNotSave = false;
   } else {
+		isNotSave = true;
     isSave = false;
   }
 }
@@ -68,7 +73,7 @@ blockquote.isEditable {
 	height: fit-content;
 	border-radius: 0.4rem;
 	font-weight: bold !important;
-	color: var(--color-preview-qoute-body) !important;     
+	/* color: var(--color-preview-qoute-body) !important;      */
 	animation: notSave 3s infinite; 
 }
 

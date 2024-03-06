@@ -53,7 +53,6 @@
     totalPage = slides.length;
 
     if (slides) {
-      console.log("slides", slides);
       slides.sort((a, b)=> a.page -  b.page) 
       for (let i = 0; i < slides.length; i++) {
         slides[i].contents.sort((a, b) => a.position - b.position);
@@ -64,12 +63,13 @@
             {
               ...slides[i].layout[j],
               ...slides[i].contents[j],
-              memoId: slides[i].id,
               id: slides[i].contents[j].id,
               finalCSS:
-                slides[i].contents[j].css + slides[i].contents[j].style.css,
+              slides[i].contents[j].css + slides[i].contents[j].style.css,
               slideTitle: title,
+              memoId: slides[i].id,
               category: slides[i].category.id,
+              backgroundId: slides[i].backgroundId,
               tags : slides[i].tags,
               page: slides[i].page,
             };

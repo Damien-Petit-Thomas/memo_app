@@ -17,6 +17,7 @@
   let gridController;
   let position = 0;
   let content;
+  let backgroundUrl = "";
   let showSubmenu = false;
   export let isSlide = false;
   export let backUrlId;
@@ -28,7 +29,6 @@
   }
   let count = 0;
   $: if ($currentMemo?.layout && count === 0) {
-    console.log('currentMemo', $currentMemo)
     count += 1;
     // on classe les par content.position de la plus petite à la plus grande
     $currentMemo.layout.sort((a, b) => a.position - b.position);
@@ -42,7 +42,6 @@
 
 
   $: if ($maj) {
-    console.log('maj', $maj)
     items = $memoItems;
     maj.set(false);
   }
@@ -140,10 +139,18 @@ $: items.forEach((item) => {
     });
   };
 
-  $: backgroundUrl =
-    backUrlId !== undefined
-      ? $images.filter((image) => image.id === backUrlId)[0].original
-      : "";
+
+  $: if ( backUrlId !== undefined && backUrlId !== null) {
+    backgroundUrl = $images.filter((image) => image.id === backUrlId)[0].original;
+  }
+
+
+
+
+
+
+
+
 </script>
 
 {#if showSubmenu}

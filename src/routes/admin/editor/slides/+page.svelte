@@ -47,9 +47,8 @@
       slideMargin += 1;
     }
   }
-
-  $: console.log('currentSlide :' , $currentSlide)
   $: if ($currentSlide.length > 0) {
+    isNewSlide = false;
     slideTitle = $currentSlide[0][0].slideTitle;
     slideCategory = $currentSlide[0][0].category;
     slideTags = $currentSlide[0].tags;
@@ -58,6 +57,7 @@
     }
   }
   $: backUrlId = selectedBackground[page];
+ 
   const copieSaveArray = new Array(100);
   const handlePage = (e) => {
     const copie = JSON.parse(JSON.stringify($memoItems));
@@ -80,12 +80,15 @@
         pushToIndex(slideIds, slide[0].page, slide[0].memoId);
       }
       for(let slide of $currentSlide){
-        console.log('slide :', slide)
         const copie = JSON.parse(JSON.stringify(slide));
         pushToIndex(copieSaveArray, slide[0].page, copie);
+        pushToIndex(selectedBackground, slide[0].page, slide[0].backgroundId);
       }
       $memoItems = copieSaveArray[1];
       maj.set(true);
+      backUrlId = selectedBackground[page];
+      console.log(backUrlId)
+
     }
   });
 
@@ -185,7 +188,7 @@
   $: titreDeLaSlide = `${slideTitle}-slide-${page}`;
   let copie = [];
 
-  let isNewSlide = false;
+  let isNewSlide = true;
 
   const handleSaveSlide = async (e) => {
     copie = JSON.parse(JSON.stringify($memoItems));
@@ -193,21 +196,20 @@
     getLayout = true;
     const layout = JSON.stringify(layoutBackup());
     if (categoryId === undefined) categoryId = $categories[0].id;
-    console.log('$memoItems :', $memoItems)
     const itemsToSave = $memoItems.map((item) => {
       return {
         css: item.style.css,
         content: item.content,
-        type_id: item.type.id,
+        typeId: item.type.id,
         styleId: item.style.id,
         position: item.position,
       };
     });
+    console.log(itemsToSave)
     if (itemsToSave.length === 0) {
       return showAlert("warn", "attention: ", "la slide est vide");
     }
     if (slideIds[page]) {
-      console.log('on fait une modification')
       if (categoryId === undefined) {
         categoryId = slideCategory;
       }
@@ -267,7 +269,7 @@
       };
       const newSlide = await memos.add(data);
       if (newSlide) {
-        isNewSlide = true;
+        isNewSlide = false;
         showAlert(
           "success",
           "slide ajoutée",
@@ -294,11 +296,6 @@
     );
   };
 
-$: console.log('slideIds :' ,slideIds[page])
-$: console.log('page  :' , page)
-$: console.log('titre  :' , slideTitle)
-$: console.log('category  :' , slideCategory)
-$: console.log('tags  :' , slideTags)
 
 
 

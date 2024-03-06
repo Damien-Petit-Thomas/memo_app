@@ -18,7 +18,7 @@ export class MemoController extends CoreController {
     if (type === 'slide') {
       const { slideTitle } = data;
       const slug = createSlug(slideTitle);
-      if (data.isNewSlide !== true) {
+      if (data.isNewSlide === true) {
         newSlidId = await dataMappers.slide.create({ user_id: userId, title: slideTitle, slug });
       } else {
         newSlidId = await dataMappers.slide.findBySlug(slug);
@@ -60,7 +60,7 @@ export class MemoController extends CoreController {
         // eslint-disable-next-line no-await-in-loop
         await dataMappers.memoContent.create({
           // eslint-disable-next-line max-len
-          memo_id: newMemo.id, content: item.content, type_id: item.type_id, position: item.position, style_id: item.styleId, css: item.css || null,
+          memo_id: newMemo.id, content: item.content, type_id: item.typeId, position: item.position, style_id: item.styleId, css: item.css,
         });
       }
 
@@ -140,10 +140,11 @@ export class MemoController extends CoreController {
         for (let i = 0; i < contents.length; i += 1) {
           const item = contents[i];
           if (item.styleId === undefined) item.styleId = 3;
+          if (item.css === undefined || item.css === null) item.css = '';
 
           // eslint-disable-next-line no-await-in-loop
           await dataMappers.memoContent.create({
-            memo_id: findMemo.id, content: item.content, type_id: item.type_id, position: item.position, style_id: item.styleId,
+            memo_id: findMemo.id, content: item.content, type_id: item.typeId, position: item.position, style_id: item.styleId, css: item.css,
           });
         }
         return json(newMemo);

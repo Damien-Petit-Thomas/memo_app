@@ -304,25 +304,25 @@ table tr:nth-child(even) td {
 
 @keyframes notSave {
 	0% {
-	border-left: 4px solid var(--color-orange);
+	border-left: 1px solid var(--color-orange);
 	}
 	50% {
-	border-left: 4px solid rgb(116, 26, 26);
+	border-left: 1px solid rgb(116, 26, 26);
 	}
 	100% {
-	border-left: 4px solid var(--color-orange);
+	border-left: 1px solid var(--color-orange);
 	}
 }
 
 @keyframes save {
 	0% {
-	border-left: 4px solid var(--color-orange);
+	border-left: 1px solid var(--color-orange);
 	}
 	50% {
-	border-left: 4px solid rgb(26, 116, 26);
+	border-left: 1px solid rgb(26, 116, 26);
 	}
 	100% {
-	border-left: 4px solid var(--color-orange);
+	border-left: 1px solid var(--color-orange);
 	}
 }
 

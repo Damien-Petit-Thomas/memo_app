@@ -57,10 +57,7 @@
   const dispatch = createEventDispatcher();
 
  $:  css = `font-family: ${fontfamily}; font-size: ${size}px; color: ${color}`;
-  // quand css change on dispatch un event
-  // const handleValidation = () => {
-  //   dispatch("css", { css });
-  // };
+
 
 $: dispatch('css', { css });
 

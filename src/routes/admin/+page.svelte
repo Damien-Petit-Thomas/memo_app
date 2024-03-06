@@ -1,7 +1,7 @@
 <script>
 	import { todos , categories, tags} from '$lib/stores/index.js';
 	import {onMount} from 'svelte';
-	import {currentMemo} from '$lib/stores/index.js';
+	import {currentMemo, currentSlide, memoItems} from '$lib/stores/index.js';
 	export let data;
 	import { goto } from '$app/navigation';
 const userId = data?.user?.id;
@@ -39,6 +39,8 @@ const handleClick = () =>{
 		goto('/auth/login')
 	}
 	currentMemo.set({})
+	currentSlide.set({})
+	memoItems.set([])
 	goto('/admin/editor')
 }
 
@@ -46,6 +48,8 @@ const handleClickSLides = () =>{
 	if (!isConnect) {
 		goto('/auth/login')
 	}
+	memoItems.set([])
+	currentSlide.set({})
 	currentMemo.set({})
 	goto('/admin/editor/slides')
 }

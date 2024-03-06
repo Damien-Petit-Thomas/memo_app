@@ -140,8 +140,10 @@ $: items.forEach((item) => {
   };
 
 
-  $: if ( backUrlId !== undefined && backUrlId !== null) {
+  $: if ( backUrlId !== undefined && backUrlId !== null && backUrlId !== "") {
     backgroundUrl = $images.filter((image) => image.id === backUrlId)[0].original;
+  }else{
+    backgroundUrl = "";
   }
 
 
@@ -154,7 +156,11 @@ $: items.forEach((item) => {
 </script>
 
 {#if showSubmenu}
-  <Submenu on:css={handleCss} {x} {y} />
+  <Submenu 
+  on:transition = {(e) => console.log(e.detail)}
+  on:remove={() => {remove(currentId), showSubmenu = false}}
+  on:close={() => (showSubmenu = false)}
+  on:css={handleCss} {x} {y} />
 {/if}
 
 <div
@@ -176,7 +182,7 @@ $: items.forEach((item) => {
     bind:controller={gridController}
   >
     {#each items as item (item.id)}
-      <div transition:fade={{ duration: 300 }}>
+      <div>
         <GridItem
           class="grid-item item-editor"
           activeClass={isSlide ? "active-slide" : "active"}

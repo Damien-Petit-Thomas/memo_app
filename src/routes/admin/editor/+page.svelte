@@ -131,7 +131,7 @@ onMount(() => {
     const itemsToSave = $memoItems.map((item) => {
       return {
         content: item.content,
-        type_id: item.type.id,
+        typeId: item.type.id,
         styleId: item.style.id,
         position : item.position,
       };

@@ -87,7 +87,6 @@
       $memoItems = copieSaveArray[1];
       maj.set(true);
       backUrlId = selectedBackground[page];
-      console.log(backUrlId)
 
     }
   });
@@ -205,7 +204,6 @@
         position: item.position,
       };
     });
-    console.log(itemsToSave)
     if (itemsToSave.length === 0) {
       return showAlert("warn", "attention: ", "la slide est vide");
     }
@@ -285,7 +283,7 @@
     reloadNeeded.set(true);
   };
 
-  const handleClick = (e) => {
+  const handleClick = () => {
     let index = imageGallery.getCurrentIndex();
     pushToIndex(selectedBackground, page, $images[index].id);
     backUrlId = selectedBackground[page];
@@ -295,6 +293,18 @@
       "  un nouveau background a été selectionné",
     );
   };
+const handleRemove = ()=> {
+// on supprime le contenu de selectedBackground à l'index page
+selectedBackground.splice(page, 1);
+backUrlId = selectedBackground[page];
+
+showAlert(
+  "warn",
+  `Background :  `,
+  "  le background a été supprimé",
+);
+}
+
 
 
 
@@ -317,6 +327,7 @@
       {styles}
       items={contentTypeElem}
       on:saveSlide={handleSaveSlide}
+      on:remove={handleRemove}
       on:showGalery={handleShowGalery}
     />
   </div>

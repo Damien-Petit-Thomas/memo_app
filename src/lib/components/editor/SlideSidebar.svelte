@@ -133,7 +133,7 @@
     {/if}
   </div>
 </div>
-<button  on:click={() => dispatch("saveSlide")}>
+<button  on:click={() => dispatch("saveSlide", currentPage)}>
   Sauvegarder</button
 >
 <div>

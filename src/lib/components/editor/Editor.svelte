@@ -4,7 +4,7 @@
   import Grid, { GridItem } from "svelte-grid-extended";
   import Submenu from "$lib/components/submenu/Submenu.svelte";
   import EditableItem from "$lib/components/editor/EditorEditableItem.svelte";
-  import { memoItems, currentMemo, images } from "$lib/stores/index.js";
+  import { memoItems, currentMemo, images, maj } from "$lib/stores/index.js";
   export let isDeleted = false;
   let items = [];
   export let getLayout = false;
@@ -23,7 +23,7 @@ let gridController;
     addNewItem(newItem);
   }
   let count = 0;
-  $:  if ($currentMemo.layout && count === 0) {
+  $:  if ($currentMemo?.layout && count === 0) {
     count += 1;
     // on classe les par content.position de la plus petite à la plus grande
     $currentMemo.layout.sort((a, b) => a.position - b.position);
@@ -35,7 +35,12 @@ let gridController;
     memoItems.set(items);
   }
   
-
+$: if ($maj){
+  console.log('maj', $maj)
+  items = $memoItems;
+  maj.set(false);
+  console.log($maj)
+}
       
   
   let x;
@@ -64,7 +69,6 @@ let gridController;
     memoItems.update((items) => items.filter((item) => item.id !== id));
     items = items.filter((i) => i.id !== id);
   }
-$: console.log('je log items', items)
   $: title = {
     content: $currentMemo?.title || "titre",
     name: "title",
@@ -92,7 +96,6 @@ $: items.forEach((item) => {
     }
   });
   function addNewItem(item) {
-    console.log("addNewItem", items);
     const w = 40;
     const h = 2;
     const newPosition = gridController.getFirstAvailablePosition(w, h);
@@ -116,6 +119,7 @@ $: items.forEach((item) => {
         ...item,
       },
     ]);
+ 
   position += 1;
 }
 

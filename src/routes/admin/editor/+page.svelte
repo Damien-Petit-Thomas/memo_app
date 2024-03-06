@@ -67,7 +67,8 @@
     }
   }
 
-  onMount(() => {
+onMount(() => {
+    memoItems.set([]);
     if($currentMemo === undefined)  console.log('currentMemo is undefined')
     // on attend que $currentMemo soit défini
     // on utilise setTimeout pour attendre que $currentMemo soit défini
@@ -79,19 +80,11 @@
       if ($currentMemo.tags) {
         memotags = $currentMemo.tags.forEach((tag) => memotags.push(tag.id));
       }
-      // console.log($currentMemo)
-      // $currentMemo.contents.forEach((item) => {});
-      // console.log($currentMemo)
-      // currentMemo.set({});
-      // console.log($currentMemo)
+
 
     }
   });
-  onMount(() => {
-    return () => {
-      memoItems.set([]);
-    };
-  });
+
 
   const contentTypeElem = data.contents;
   const styles = data.styles;

@@ -141,6 +141,7 @@
           itemsBackup = structuredClone(items);
         }
       }
+      currentMemo.set(memo);
     } else {
       return;
     }
@@ -237,7 +238,6 @@
 
   // on attend que le dom soit chargé pour initialiser le grid
 
-  $: currentMemo.set(memo);
   let showLayout = false;
   function showLayoutMenu() {
     showLayout = !showLayout;
@@ -246,15 +246,13 @@
 
   afterUpdate(() => {
     let strong = document.querySelectorAll("strong");
-     // Remplacez "votre_couleur" par la couleur souhaitée
+    // Remplacez "votre_couleur" par la couleur souhaitée
     strong.forEach((s) => {
       s.style.color = color;
       s.style.opacity = "0.5";
     });
   });
 </script>
-
-
 
 {#if alertVisible}
   <CustomAlert title={titleAlert} type={typeAlert} message={messageAlert} />
@@ -355,7 +353,6 @@
         {/if}
       {/if}
     </div>
-
   </div>
   <Toc title={copyMemo.title} doc={memo.contents} />
 </div>
@@ -434,7 +431,6 @@
     height: 100vh;
     max-width: 100vw;
   }
-
 
   .container_main {
     display: flex;

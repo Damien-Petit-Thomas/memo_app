@@ -5,10 +5,12 @@
   import ImageGallery from "@react2svelte/image-gallery";
   import Sidemenu from "$lib/components/editor/SlideSidebar.svelte";
   import {
+    currentMemo,
     memoItems,
     memos,
     fullmemos,
     reloadNeeded,
+    maj,
     categories,
   } from "$lib/stores/index.js";
   import EditorSidebarTagNCategory from "$lib/components/editor/EditorSidebarTagNCategory.svelte";
@@ -47,19 +49,24 @@
   $: backUrlId = selectedBackground[page];
 
   onMount(() => {
-    console.log($currentSlide);
+    console.log("currentSlide", $currentSlide);
     if ($currentSlide.length > 0) {
-      slideTitle = $currentSlide[0].slideTitle;
-      slideCategory = $currentSlide[0].category_id;
+      console.log("currentSlide", $currentSlide[0][0].category);
+      slideTitle = $currentSlide[0][0].slideTitle;
+      slideCategory = $currentSlide[0][0].category;
       slideTags = $currentSlide[0].tags;
       for (let slide of $currentSlide) {
-        pushToIndex(slideIds, slide.page, slide.id);
+        console.log("slide", slide[0].page);
+        console.log("slide", slide[0].id);
+        pushToIndex(slideIds, slide[0].page, slide[0].id);
+        console.log("slideIds", slideIds);
       }
     }
   });
 
   onMount(() => {
     return () => {
+      currentMemo.set({});
       memoItems.set([]);
     };
   });
@@ -124,6 +131,7 @@
   }
   const copieSaveArray = new Array(100);
   const handlePage = (e) => {
+    console.log('e.detail', e.detail)
     const copie = JSON.parse(JSON.stringify($memoItems));
     pushToIndex(copieSaveArray, page, copie);
     page = e.detail;
@@ -132,6 +140,7 @@
     } else {
       $memoItems = [];
     }
+    maj.set(true);
   };
 
   const pushToIndex = (arr, index, element) => {
@@ -166,6 +175,7 @@
   let isNewSlide = false;
 
   const handleSaveSlide = async (e) => {
+    console.log("on sauvegarde ceci : ", $memoItems); 
     copie = JSON.parse(JSON.stringify($memoItems));
     const type = "slide";
     getLayout = true;
@@ -181,7 +191,7 @@
         position: item.position,
       };
     });
-
+    console.log("itemsToSave", itemsToSave);
     if (itemsToSave.length === 0) {
       return showAlert("warn", "attention: ", "la slide est vide");
     }

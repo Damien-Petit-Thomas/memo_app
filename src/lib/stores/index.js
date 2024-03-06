@@ -6,6 +6,7 @@ const reloadNeeded = writable(false);
 const memoItems = writable([]);
 const currentMemo = (writable({}));
 const currentSlide = writable([]);
+const maj = writable(false);
 const fullmemos = (() => {
   const { subscribe, set, update } = writable([]);
 
@@ -51,4 +52,5 @@ export {
   memoItems,
   currentMemo,
   fullmemos,
+  maj,
 };

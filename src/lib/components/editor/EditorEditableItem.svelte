@@ -35,7 +35,7 @@ $: if (isDeleted){
     code: Code,
   };
 
-  onMount(() => {
+ onMount(() => {
     original = value;
   });
 
@@ -66,6 +66,7 @@ $: if (isDeleted){
         return items;
         });
       }
+      console.log("maj de : " , $memoItems)
     }
   }
 </script>

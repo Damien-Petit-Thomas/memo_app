@@ -21,7 +21,7 @@
     images,
   } from "$lib/stores/index.js";
   export let data;
-  const slides = data.userSlide;
+  const userSlides = data.userSlide;
 
   let userId = data.user.id;
   const components = {
@@ -39,7 +39,7 @@
   });
   let items = [];
   let mainSlide;
-  let slide = [];
+  let slides = [];
   let pageSlug;
 
   const unsubscribe = page.subscribe(async ($page) => {
@@ -47,33 +47,40 @@
       fullmemos.get(userId);
     }
     pageSlug = $page.params.slug;
-    mainSlide = await slides.find((s) => s.slug === pageSlug);
+    mainSlide = await userSlides.find((s) => s.slug === pageSlug);
     title = mainSlide.title;
-    slide = await $fullmemos.filter((s) => s.slideId === mainSlide.id);
-    totalPage = slide.length;
+    slides = await $fullmemos.filter((s) => s.slideId === mainSlide.id);
+    totalPage = slides.length;
 
-    if (slide) {
-      for (let i = 0; i < slide.length; i++) {
-        slide[i].contents.sort((a, b) => a.position - b.position);
-        slide[i].layout.sort((a, b) => a.position - b.position);
-        for (let j = 0; j < slide[i].layout.length; j++) {
-          items[i] = [
+    if (slides) {
+      for (let i = 0; i < slides.length; i++) {
+        console.log("slides[i]", slides[i])
+        slides[i].contents.sort((a, b) => a.position - b.position);
+        slides[i].layout.sort((a, b) => a.position - b.position);
+        items[i] = [];
+        for (let j = 0; j < slides[i].contents.length; j++) {
+          items[i][j] = 
             {
-              ...slide[i].layout[j],
-              ...slide[i].contents[j],
+              ...slides[i].layout[j],
+              ...slides[i].contents[j],
               finalCSS:
-                slide[i].contents[j].css + slide[i].contents[j].style.css,
+                slides[i].contents[j].css + slides[i].contents[j].style.css,
               slideTitle: title,
-            },
-          ];
+              category: slides[i].category.id,
+              tags : slides[i].tags,
+              page: slides[i].page,
+            };
+
         }
+        console.log("items", items[0])
       }
+  currentSlide.set(items);
     }
   });
   let backgroundURL = "";
-  $: if (slide[currentPage - 1] && slide[currentPage - 1].backgroundId) {
+  $: if (slides[currentPage - 1] && slides[currentPage - 1].backgroundId) {
     backgroundURL = $images.filter(
-      (img) => img.id === slide[currentPage - 1].backgroundId,
+      (img) => img.id === slides[currentPage - 1].backgroundId,
     )[0].original;
   }
 
@@ -94,7 +101,6 @@
   }
 
 
-  $: currentSlide.set(slide);
 
 
 

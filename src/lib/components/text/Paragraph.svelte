@@ -68,6 +68,7 @@ class:isEditable={isEditable}
 <style>
 
   pre {
+    animation: var(--animate, none);
     border-left: 1px solid transparent;
     font-size: 17px;
     white-space: pre-wrap;

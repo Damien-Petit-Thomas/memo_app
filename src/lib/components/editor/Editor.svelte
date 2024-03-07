@@ -1,6 +1,5 @@
 <script>
   import option from "$lib/assets/parametre.png";
-  import { fade } from "svelte/transition";
   import Grid, { GridItem } from "svelte-grid-extended";
   import Submenu from "$lib/components/submenu/Submenu.svelte";
   import EditableItem from "$lib/components/editor/EditorEditableItem.svelte";
@@ -13,6 +12,7 @@
   } from "$lib/stores/index.js";
   export let isDeleted = false;
   let items = [];
+  import {slide} from "svelte/transition";
   export let getLayout = false;
   let gridController;
   let position = 0;
@@ -39,7 +39,6 @@
     }
     memoItems.set(items);
   }
-
 
   $: if ($maj) {
     items = $memoItems;
@@ -85,8 +84,8 @@
   $: if (getLayout) {
     memoItems.set(items);
   }
-  
-$: items.forEach((item) => {
+
+  $: items.forEach((item) => {
     if (item.itemHeight / item.h > 18) {
       while (item.itemHeight / item.h > 18) {
         item.h += 1;
@@ -99,7 +98,6 @@ $: items.forEach((item) => {
     }
   });
 
-  
   function addNewItem(item) {
     const w = 40;
     const h = 2;
@@ -121,6 +119,7 @@ $: items.forEach((item) => {
         position,
         itemHeight,
         itemWidth,
+        customTransition: "",
         ...item,
       },
     ]);
@@ -139,28 +138,87 @@ $: items.forEach((item) => {
     });
   };
 
+  const handleTransition = (e) => {
+console.log(e.detail)
+    items.map((item) => {
+      if (item.id === currentId) {
+        item.transition =  e.detail.transition,
+        item.duration = e.detail.duration,
+        item.delay = e.detail.delay;
+      }
+      return item;
+    });
+  };
 
-  $: if ( backUrlId !== undefined && backUrlId !== null && backUrlId !== "") {
-    backgroundUrl = $images.filter((image) => image.id === backUrlId)[0].original;
-  }else{
-    backgroundUrl = "";
+  function animate(
+    node,
+    { transition, delay = 0, duration = 15000, x = -200, y = 0 },
+  ) {
+    switch (transition) {
+      case "aucune":
+        return;
+      case "":
+        return;
+      case "fade":
+        return fadeTransition(node, { delay, duration });
+      case "slide":
+        return slideTransition(node, { delay, duration, x, y });
+      // case "scale":
+      //   return scaleTransition(node, {delay, duration});
+      // case "blur":
+      //   return blurTransition(node, {delay, duration});
+      default:
+        break;
+    }
   }
 
+  function fadeTransition(node, { delay, duration }) {
+    const o = +getComputedStyle(node).opacity;
+    return {
+      delay,
+      duration,
+      css: (t) => `opacity: ${t * o}`,
+    };
+  }
+// Fonction d'interpolation (éasing) cubic bézier
+function easeInOutCubic(t) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+function slideTransition(node, { delay, duration }) {
+  const initialOpacity = 0;
+  const finalOpacity = 1;
+  const eased = (t) => easeInOutCubic(t);
+  return {
+    delay,
+    duration,
+    css: (t) => `
+      transform: translateX(${(1 - (t)) * 100}%);
+      opacity: ${t * finalOpacity + (1 - t) * initialOpacity};
+    `,
+  };
+}
 
 
-
-
-
-
-
+  $: if (backUrlId !== undefined && backUrlId !== null && backUrlId !== "") {
+    backgroundUrl = $images.filter((image) => image.id === backUrlId)[0]
+      .original;
+  } else {
+    backgroundUrl = "";
+  }
 </script>
 
 {#if showSubmenu}
-  <Submenu 
-  on:transition = {(e) => console.log(e.detail)}
-  on:remove={() => {remove(currentId), showSubmenu = false}}
-  on:close={() => (showSubmenu = false)}
-  on:css={handleCss} {x} {y} />
+  <Submenu
+    on:transition={handleTransition}
+    on:remove={() => {
+      remove(currentId), (showSubmenu = false);
+    }}
+    on:close={() => (showSubmenu = false)}
+    on:css={handleCss}
+    {x}
+    {y}
+  />
 {/if}
 
 <div
@@ -210,6 +268,7 @@ $: items.forEach((item) => {
             >
           {/if}
           <div
+            in:animate={{ transition: item.transition,  duration: item.duration, delay: item.delay }}
             class="item"
             bind:offsetWidth={item.itemWidth}
             bind:offsetHeight={item.itemHeight}
@@ -223,6 +282,38 @@ $: items.forEach((item) => {
 </div>
 
 <style>
+
+
+@keyframes slide-right {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+
+  .slide-right {
+    animation: slide-right 1.5s;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   .item {
     background-color: rgba(0, 0, 0, 0.133);
     border: 1px solid transparent;

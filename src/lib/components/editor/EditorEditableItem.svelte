@@ -24,7 +24,6 @@ $: if (isDeleted){
 
   $: css = item.style?.css !== undefined ? item.style.css : "";
   let content = item.content !== undefined ? item.content : item.name;
-
   const components = {
     image: Img,
     noteCard: NoteCard,

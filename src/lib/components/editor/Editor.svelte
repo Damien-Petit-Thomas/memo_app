@@ -12,6 +12,7 @@
     currentSlide,
   } from "$lib/stores/index.js";
   export let isDeleted = false;
+  let itemSize = { height: 20 };
   let items = [];
   import {slide} from "svelte/transition";
   export let getLayout = false;
@@ -98,12 +99,17 @@
       }
     }
   });
-
+let countr = 0;
   function addNewItem(item) {
+    countr += 1;
+    console.log("addNewItem", countr);
     const w = 40;
     const h = 2;
     const newPosition = gridController.getFirstAvailablePosition(w, h);
-    items = newPosition
+    if(newPosition === null) {
+      return console.log("no space available for new item", countr)
+    }
+    items = newPosition 
       ? [
           ...items,
           { x: newPosition.x, y: newPosition.y, w, h, position, ...item },
@@ -128,8 +134,8 @@
     position += 1;
   }
 
-  let itemSize = { height: 20 };
-
+  // let itemSize = { height: 20 };
+$: console.log(itemSize)
   const handleCss = (e) => {
     items = items.map((item) => {
       if (item.id === currentId) {
@@ -138,6 +144,22 @@
       return item;
     });
   };
+
+
+
+
+
+  $: if(document.fullscreenElement === null){
+  console.log(document)
+  console.log('fullscreen is offffffffffff')
+}else{
+  console.log('fullscreen is onnnnnnnnnnnnnnnnn')
+}
+
+$: console.log(document.fullscreenElement)
+
+
+
 
   const handleTransition = (e) => {
     const customTransition = [e.detail.transition, e.detail.duration, e.detail.delay];
@@ -227,6 +249,16 @@ function slideTransition(node, { delay, duration }) {
   };
 }
 
+document.addEventListener('fullscreenchange', function () {
+    if (document.fullscreenElement) {
+      itemSize= { height : 38 }
+        console.log('En mode plein écran');
+    } else {
+        console.log('Hors du mode plein écran');
+        itemSize = { height : 20 }
+    }
+});
+
 
   $: if (backUrlId !== undefined && backUrlId !== null && backUrlId !== "") {
     backgroundUrl = $images.filter((image) => image.id === backUrlId)[0]
@@ -235,7 +267,7 @@ function slideTransition(node, { delay, duration }) {
     backgroundUrl = "";
   }
 </script>
-
+<svelte:document />
 {#if showSubmenu}
   <Submenu
     on:transition={handleTransition}
@@ -263,7 +295,7 @@ function slideTransition(node, { delay, duration }) {
     {itemSize}
     gap={2}
     cols={40}
-    rows={0}
+    rows={25}
     collision="none"
     bind:controller={gridController}
   >
@@ -437,6 +469,5 @@ function slideTransition(node, { delay, duration }) {
     display: flex;
     flex-direction: column;
     min-width: 70%;
-    padding-bottom: 1rem;
   }
 </style>

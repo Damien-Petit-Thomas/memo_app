@@ -101,8 +101,23 @@ $: if(isDefined === true){
   }
 
 
+let slideWidth = 100000;
+let slideHeight = 5624561561456;
+let slideMargin = 0;
+  $: if (slideWidth / slideHeight > 1.77 || slideWidth / slideHeight < 1.76) {
+    if (slideWidth / slideHeight > 1.77) {
+      slideMargin -= 1;
+    } else {
+      slideMargin += 1;
+    }
+  }
 
-
+  
+  const handleFulscreen = () => {
+const slide = document.querySelector(".slide");
+slide.requestFullscreen();
+  
+  };
 
 
 
@@ -113,11 +128,15 @@ $: if(isDefined === true){
 
   let itemSize = { height: 20 };
 
+  document.addEventListener('fullscreenchange', function () {
+    if (document.fullscreenElement) {
+      itemSize= { height : 38 }
+    } else {
+        itemSize = { height : 20 }
+    }
+});
 
-
-
-
-
+  
 
 
 
@@ -127,7 +146,6 @@ $: if(isDefined === true){
     node,
     { transition, delay = 0, duration = 15000, x = -200, y = 0 },
   ) {
-    console.log("animate");
     switch (transition) {
       case "aucune":
         return;
@@ -207,12 +225,13 @@ $: if(isDefined === true){
     <div class="option-container">
       <a href="/admin/editor/slides"><button>éditer</button></a>
       <button
-        on:click={() => {
-          const elem = document.querySelector(".slide");
-        }}>plein écran</button
+        on:click={handleFulscreen}>plein écran</button
       >
     </div>
-    <div class="slide" style="background-image: url({backgroundURL});">
+    <div 
+    bind:offsetHeight={slideHeight}
+    bind:offsetWidth={slideWidth}
+    class="slide" style="background-image: url({backgroundURL});">
       <div class="slide-wrapper">
         <Grid
           readOnly={true}
@@ -314,4 +333,8 @@ $: if(isDefined === true){
     border: 1px solid #000;
     border-radius: 2px;
   }
+
+
+
+  
 </style>

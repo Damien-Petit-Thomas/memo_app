@@ -4,6 +4,8 @@
   import { onMount } from "svelte";
   import ImageGallery from "@react2svelte/image-gallery";
   import Sidemenu from "$lib/components/editor/SlideSidebar.svelte";
+  let itemSize = {heigt: 20 }
+  let fullscreen = false;
   import {
     currentMemo,
     memoItems,
@@ -58,6 +60,14 @@
   }
   $: backUrlId = selectedBackground[page];
  
+
+
+
+
+
+
+
+
   const copieSaveArray = new Array(100);
   const handlePage = (e) => {
     const copie = JSON.parse(JSON.stringify($memoItems));
@@ -191,7 +201,6 @@
 
   const handleSaveSlide = async (e) => {
     copie = JSON.parse(JSON.stringify($memoItems));
-    const type = "slide";
     getLayout = true;
     const layout = JSON.stringify(layoutBackup());
     if (categoryId === undefined) categoryId = $categories[0].id;
@@ -362,6 +371,13 @@ showAlert(
       id=""
       placeholder="titre principal"
     />
+    <button
+    on:click={()=> {
+      const slide = document.querySelector('.show');
+      slide.requestFullscreen();
+      fullscreen = true;
+    }}
+    >fullscreen</button>
   </div>
   <div class="menu menu-right">
     <input

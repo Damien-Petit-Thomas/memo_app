@@ -3,7 +3,7 @@
   import { onDestroy } from "svelte";
   import Grid, { GridItem } from "svelte-grid-extended";
   import NextBar from "$lib/components/nextBar/NextBar.svelte";
-
+import { elasticOut } from "svelte/easing";
   import Code from "$lib/components/text/Code.svelte";
   import Paragraphe from "$lib/components/text/Paragraph.svelte";
   import Blockquote from "$lib/components/text/Blockquote.svelte";
@@ -36,6 +36,9 @@
     if ($images.length === 0 && userId) {
       await images.get(userId);
     }
+    return () => {
+      currentSlide.set([]);
+    };
   });
   let items = [];
   let mainSlide;
@@ -67,6 +70,10 @@
               finalCSS:
               slides[i].contents[j].css + slides[i].contents[j].style.css,
               slideTitle: title,
+              transition: slides[i].contents[j].customTransition[0],
+              duration: slides[i].contents[j].customTransition[1],
+              delay: slides[i].contents[j].customTransition[2],
+              customTransition: slides[i].contents[j].customTransition,
               memoId: slides[i].id,
               category: slides[i].category.id,
               backgroundId: slides[i].backgroundId,
@@ -78,7 +85,14 @@
       }
   currentSlide.set(items);
     }
+    setTimeout(()=> {
+      animate();
+    },1000)
   });
+
+  $:console.log('items',items)
+
+
   let backgroundURL = "";
   $: if (slides[currentPage - 1] && slides[currentPage - 1].backgroundId) {
     backgroundURL = $images.filter(
@@ -103,6 +117,82 @@
   }
 
 
+
+  function animate(
+    node,
+    { transition, delay = 0, duration = 15000, x = -200, y = 0 },
+    ) {
+    console.log('animate')
+    switch (transition) {
+      case "aucune":
+        return;
+      case "":
+        return;
+      case "fade":
+        return fadeTransition(node, { delay, duration });
+      case "slide":
+        return slideTransition(node, { delay, duration, x, y });
+      case "scale":
+        return scaleTransition(node, {delay, duration});
+      case "blur":
+        return blurTransition(node, {delay, duration});
+      default:
+        break;
+    }
+  }
+
+
+  function blurTransition(node, { delay, duration }) {
+    const initialBlur = 0;
+    const finalBlur = 5;
+    const eased = (t) => (t);
+    return {
+      delay,
+      duration,
+      css: (t) => `filter: blur(${eased(t) * finalBlur + (1 - eased(t)) * initialBlur}px)`,
+    };
+  }
+
+
+  function scaleTransition(node, { delay, duration }) {
+    const initialScale = 0;
+    const finalScale = 1;
+    const eased = (t) => elasticOut(t);
+    return {
+      delay,
+      duration,
+      css: (t) => `transform: scale(${eased(t) * finalScale + (1 - eased(t)) * initialScale})`,
+    };
+  }
+
+
+  function fadeTransition(node, { delay, duration }) {
+    const o = +getComputedStyle(node).opacity;
+    return {
+      delay,
+      duration,
+      css: (t) => `opacity: ${t * o}`,
+    };
+  }
+// Fonction d'interpolation (éasing) cubic bézier
+function easeInOutCubic(t) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+function slideTransition(node, { delay, duration }) {
+  const initialOpacity = 0;
+  const finalOpacity = 1;
+  // const eased = (t) => easeInOutCubic(t);
+  const eased = (t) => elasticOut(t);
+  return {
+    delay,
+    duration,
+    css: (t) => `
+      transform: translateX(${(1 - eased(t)) * 100}%);
+      opacity: ${t * finalOpacity + (1 - t) * initialOpacity};
+    `,
+  };
+}
 
 
 
@@ -137,7 +227,9 @@
               bind:w={item.w}
               bind:h={item.h}
             >
-              <div
+              <div 
+              transition=slide
+              in:animate={{ transition: item.transition,  duration: item.duration, delay: item.delay }}
                 class="item"
                 bind:offsetWidth={item.itemWidth}
                 bind:offsetHeight={item.itemHeight}

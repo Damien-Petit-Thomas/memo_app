@@ -11,7 +11,6 @@
 		isConnect = true;
 	}
 	let linkList = [];
-	$: console.log('isConnect', isConnect)
 
 	onMount(() => {
 		fullmemos.set(data.fullmemos);

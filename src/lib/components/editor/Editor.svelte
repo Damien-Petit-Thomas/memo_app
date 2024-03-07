@@ -3,6 +3,7 @@
   import Grid, { GridItem } from "svelte-grid-extended";
   import Submenu from "$lib/components/submenu/Submenu.svelte";
   import EditableItem from "$lib/components/editor/EditorEditableItem.svelte";
+  import { elasticOut } from 'svelte/easing';
   import {
     memoItems,
     currentMemo,
@@ -139,12 +140,13 @@
   };
 
   const handleTransition = (e) => {
-console.log(e.detail)
+    const customTransition = [e.detail.transition, e.detail.duration, e.detail.delay];
     items.map((item) => {
       if (item.id === currentId) {
         item.transition =  e.detail.transition,
         item.duration = e.detail.duration,
         item.delay = e.detail.delay;
+        item.customTransition = customTransition;
       }
       return item;
     });
@@ -163,14 +165,39 @@ console.log(e.detail)
         return fadeTransition(node, { delay, duration });
       case "slide":
         return slideTransition(node, { delay, duration, x, y });
-      // case "scale":
-      //   return scaleTransition(node, {delay, duration});
-      // case "blur":
-      //   return blurTransition(node, {delay, duration});
+      case "scale":
+        return scaleTransition(node, {delay, duration});
+      case "blur":
+        return blurTransition(node, {delay, duration});
       default:
         break;
     }
   }
+
+
+  function blurTransition(node, { delay, duration }) {
+    const initialBlur = 0;
+    const finalBlur = 5;
+    const eased = (t) => (t);
+    return {
+      delay,
+      duration,
+      css: (t) => `filter: blur(${eased(t) * finalBlur + (1 - eased(t)) * initialBlur}px)`,
+    };
+  }
+
+
+  function scaleTransition(node, { delay, duration }) {
+    const initialScale = 0;
+    const finalScale = 1;
+    const eased = (t) => elasticOut(t);
+    return {
+      delay,
+      duration,
+      css: (t) => `transform: scale(${eased(t) * finalScale + (1 - eased(t)) * initialScale})`,
+    };
+  }
+
 
   function fadeTransition(node, { delay, duration }) {
     const o = +getComputedStyle(node).opacity;
@@ -188,12 +215,13 @@ function easeInOutCubic(t) {
 function slideTransition(node, { delay, duration }) {
   const initialOpacity = 0;
   const finalOpacity = 1;
-  const eased = (t) => easeInOutCubic(t);
+  // const eased = (t) => easeInOutCubic(t);
+  const eased = (t) => elasticOut(t);
   return {
     delay,
     duration,
     css: (t) => `
-      transform: translateX(${(1 - (t)) * 100}%);
+      transform: translateX(${(1 - eased(t)) * 100}%);
       opacity: ${t * finalOpacity + (1 - t) * initialOpacity};
     `,
   };

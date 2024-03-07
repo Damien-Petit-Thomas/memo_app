@@ -197,6 +197,7 @@
     if (categoryId === undefined) categoryId = $categories[0].id;
     const itemsToSave = $memoItems.map((item) => {
       return {
+        animation: item.customTransition ? JSON.stringify(item.customTransition) : [],
         css: item.style.css,
         content: item.content,
         typeId: item.type.id,
@@ -229,7 +230,7 @@
         backgroundId: selectedBackground[page],
         userId,
         layout,
-        type,
+        type : "slide",
       };
 
       const newSlide = await memos.mark(data);
@@ -266,7 +267,7 @@
         type: "slide",
       };
       const newSlide = await memos.add(data);
-      if (newSlide) {
+      if (newSlide.id) {
         isNewSlide = false;
         showAlert(
           "success",

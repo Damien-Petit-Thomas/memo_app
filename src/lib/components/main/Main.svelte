@@ -37,7 +37,6 @@
     }
 
   };
-console.log('isConnect', isConnect)
 </script>
 
 <div class="container">

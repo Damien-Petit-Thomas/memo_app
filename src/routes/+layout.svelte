@@ -33,6 +33,7 @@ onNavigate((navigation) => {
 
 <style>
   main {
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     height: 100vh;

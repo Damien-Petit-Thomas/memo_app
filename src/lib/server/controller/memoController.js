@@ -60,7 +60,7 @@ export class MemoController extends CoreController {
         // eslint-disable-next-line no-await-in-loop
         await dataMappers.memoContent.create({
           // eslint-disable-next-line max-len
-          memo_id: newMemo.id, content: item.content, type_id: item.typeId, position: item.position, style_id: item.styleId, css: item.css,
+          memo_id: newMemo.id, content: item.content, type_id: item.typeId, position: item.position, style_id: item.styleId, css: item.css, animation: item.animation,
         });
       }
 
@@ -144,7 +144,7 @@ export class MemoController extends CoreController {
 
           // eslint-disable-next-line no-await-in-loop
           await dataMappers.memoContent.create({
-            memo_id: findMemo.id, content: item.content, type_id: item.typeId, position: item.position, style_id: item.styleId, css: item.css,
+            memo_id: findMemo.id, content: item.content, type_id: item.typeId, position: item.position, style_id: item.styleId, css: item.css, animation: item.animation,
           });
         }
         return json(newMemo);

@@ -3,7 +3,7 @@
   import { onDestroy } from "svelte";
   import Grid, { GridItem } from "svelte-grid-extended";
   import NextBar from "$lib/components/nextBar/NextBar.svelte";
-import { elasticOut } from "svelte/easing";
+  import { elasticOut } from "svelte/easing";
   import Code from "$lib/components/text/Code.svelte";
   import Paragraphe from "$lib/components/text/Paragraph.svelte";
   import Blockquote from "$lib/components/text/Blockquote.svelte";
@@ -15,11 +15,7 @@ import { elasticOut } from "svelte/easing";
   let currentPage = 1;
   let totalPage = 1;
   let title = "";
-  import {
-    currentSlide,
-    fullmemos,
-    images,
-  } from "$lib/stores/index.js";
+  import { currentSlide, fullmemos, images } from "$lib/stores/index.js";
   export let data;
   const userSlides = data.userSlide;
 
@@ -45,6 +41,7 @@ import { elasticOut } from "svelte/easing";
   let slides = [];
   let pageSlug;
 
+  let urls = []
   const unsubscribe = page.subscribe(async ($page) => {
     if ($fullmemos.length === 0) {
       fullmemos.get(userId);
@@ -54,75 +51,83 @@ import { elasticOut } from "svelte/easing";
     title = mainSlide.title;
     slides = await $fullmemos.filter((s) => s.slideId === mainSlide.id);
     totalPage = slides.length;
-
     if (slides) {
-      slides.sort((a, b)=> a.page -  b.page) 
+      slides.sort((a, b) => a.page - b.page);
       for (let i = 0; i < slides.length; i++) {
         slides[i].contents.sort((a, b) => a.position - b.position);
         slides[i].layout.sort((a, b) => a.position - b.position);
         items[i] = [];
+        urls[i] = slides[i].backgroundId ? slides[i].backgroundId : '';
         for (let j = 0; j < slides[i].contents.length; j++) {
-          items[i][j] = 
-            {
-              ...slides[i].layout[j],
-              ...slides[i].contents[j],
-              id: slides[i].contents[j].id,
-              finalCSS:
+          // on push les  url des images dans un tableau
+      
+          items[i][j] = {
+            ...slides[i].layout[j],
+            ...slides[i].contents[j],
+            id: slides[i].contents[j].id,
+            finalCSS:
               slides[i].contents[j].css + slides[i].contents[j].style.css,
-              slideTitle: title,
-              transition: slides[i].contents[j].customTransition[0],
-              duration: slides[i].contents[j].customTransition[1],
-              delay: slides[i].contents[j].customTransition[2],
-              customTransition: slides[i].contents[j].customTransition,
-              memoId: slides[i].id,
-              category: slides[i].category.id,
-              backgroundId: slides[i].backgroundId,
-              tags : slides[i].tags,
-              page: slides[i].page,
-            };
-
+            slideTitle: title,
+            transition: slides[i].contents[j].customTransition[0],
+            duration: slides[i].contents[j].customTransition[1],
+            delay: slides[i].contents[j].customTransition[2],
+            customTransition: slides[i].contents[j].customTransition,
+            memoId: slides[i].id,
+            category: slides[i].category.id,
+            backgroundId: slides[i].backgroundId,
+            tags: slides[i].tags,
+            page: slides[i].page,
+          };
         }
       }
-  currentSlide.set(items);
+      currentSlide.set(items);
+      // backgroundURL = items[currentPage - 1][0].backgroundId;
     }
-    setTimeout(()=> {
-      animate();
-    },1000)
   });
 
-  $:console.log('items',items)
+  onDestroy(() => {
+    unsubscribe();
+  });
 
 
-  let backgroundURL = "";
-  $: if (slides[currentPage - 1] && slides[currentPage - 1].backgroundId) {
-    backgroundURL = $images.filter(
-      (img) => img.id === slides[currentPage - 1].backgroundId,
-    )[0].original;
+$: isDefined = $images.filter((img) => img.id === urls[currentPage - 1])[0] !== undefined ? true : false;
+let backgroundURL = "";
+$: if(isDefined === true){
+
+      backgroundURL = $images.filter((img) => img.id === urls[currentPage - 1])[0].original;
+  }
+  else{
+    backgroundURL = "";
   }
 
-  onDestroy(unsubscribe);
+
+
+
+
+
+
+
+
 
 
 
   let itemSize = { height: 20 };
-  let slideHeight = 0;
-  let slideWidth = 0;
-  let slideMargin = 0;
-  $: if (slideWidth / slideHeight > 1.77 || slideWidth / slideHeight < 1.76) {
-    if (slideWidth / slideHeight > 1.77) {
-      slideMargin -= 1;
-    } else {
-      slideMargin += 1;
-    }
-  }
+
+
+
+
+
+
+
+
 
 
 
   function animate(
     node,
     { transition, delay = 0, duration = 15000, x = -200, y = 0 },
-    ) {
-    console.log('animate')
+  ) {
+    console.log("animate");
     switch (transition) {
       case "aucune":
         return;
@@ -133,26 +138,25 @@ import { elasticOut } from "svelte/easing";
       case "slide":
         return slideTransition(node, { delay, duration, x, y });
       case "scale":
-        return scaleTransition(node, {delay, duration});
+        return scaleTransition(node, { delay, duration });
       case "blur":
-        return blurTransition(node, {delay, duration});
+        return blurTransition(node, { delay, duration });
       default:
         break;
     }
   }
 
-
   function blurTransition(node, { delay, duration }) {
     const initialBlur = 0;
     const finalBlur = 5;
-    const eased = (t) => (t);
+    const eased = (t) => t;
     return {
       delay,
       duration,
-      css: (t) => `filter: blur(${eased(t) * finalBlur + (1 - eased(t)) * initialBlur}px)`,
+      css: (t) =>
+        `filter: blur(${eased(t) * finalBlur + (1 - eased(t)) * initialBlur}px)`,
     };
   }
-
 
   function scaleTransition(node, { delay, duration }) {
     const initialScale = 0;
@@ -161,10 +165,10 @@ import { elasticOut } from "svelte/easing";
     return {
       delay,
       duration,
-      css: (t) => `transform: scale(${eased(t) * finalScale + (1 - eased(t)) * initialScale})`,
+      css: (t) =>
+        `transform: scale(${eased(t) * finalScale + (1 - eased(t)) * initialScale})`,
     };
   }
-
 
   function fadeTransition(node, { delay, duration }) {
     const o = +getComputedStyle(node).opacity;
@@ -174,28 +178,25 @@ import { elasticOut } from "svelte/easing";
       css: (t) => `opacity: ${t * o}`,
     };
   }
-// Fonction d'interpolation (éasing) cubic bézier
-function easeInOutCubic(t) {
-  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-}
+  // Fonction d'interpolation (éasing) cubic bézier
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
 
-function slideTransition(node, { delay, duration }) {
-  const initialOpacity = 0;
-  const finalOpacity = 1;
-  // const eased = (t) => easeInOutCubic(t);
-  const eased = (t) => elasticOut(t);
-  return {
-    delay,
-    duration,
-    css: (t) => `
+  function slideTransition(node, { delay, duration }) {
+    const initialOpacity = 0;
+    const finalOpacity = 1;
+    // const eased = (t) => easeInOutCubic(t);
+    const eased = (t) => elasticOut(t);
+    return {
+      delay,
+      duration,
+      css: (t) => `
       transform: translateX(${(1 - eased(t)) * 100}%);
       opacity: ${t * finalOpacity + (1 - t) * initialOpacity};
     `,
-  };
-}
-
-
-
+    };
+  }
 </script>
 
 <div class="slide-container">
@@ -203,8 +204,14 @@ function slideTransition(node, { delay, duration }) {
     {title}
   </div>
   <div class="main-container">
-    <a href="/admin/editor/slides"><button>éditer</button></a>
-
+    <div class="option-container">
+      <a href="/admin/editor/slides"><button>éditer</button></a>
+      <button
+        on:click={() => {
+          const elem = document.querySelector(".slide");
+        }}>plein écran</button
+      >
+    </div>
     <div class="slide" style="background-image: url({backgroundURL});">
       <div class="slide-wrapper">
         <Grid
@@ -227,9 +234,13 @@ function slideTransition(node, { delay, duration }) {
               bind:w={item.w}
               bind:h={item.h}
             >
-              <div 
-              transition=slide
-              in:animate={{ transition: item.transition,  duration: item.duration, delay: item.delay }}
+              <div
+                transition="slide"
+                in:animate={{
+                  transition: item.transition,
+                  duration: item.duration,
+                  delay: item.delay,
+                }}
                 class="item"
                 bind:offsetWidth={item.itemWidth}
                 bind:offsetHeight={item.itemHeight}
@@ -253,7 +264,9 @@ function slideTransition(node, { delay, duration }) {
   </div>
   <div class="next-container">
     <NextBar
-      on:changePage={(e) => (currentPage = e.detail)}
+      on:changePage={(e) => {
+        currentPage = e.detail;
+      }}
       {totalPage}
       {currentPage}
     />
@@ -261,6 +274,11 @@ function slideTransition(node, { delay, duration }) {
 </div>
 
 <style>
+  .option-container {
+    display: flex;
+    justify-content: space-between;
+  }
+
   .next-container {
     margin-bottom: 3rem;
     width: 20%;

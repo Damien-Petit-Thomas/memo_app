@@ -11,7 +11,7 @@
 		isConnect = true;
 	}
 	let linkList = [];
-
+	$: console.log('isConnect', isConnect)
 
 	onMount(() => {
 		fullmemos.set(data.fullmemos);
@@ -58,10 +58,10 @@
 
 
 	.container {
-		overflow: scroll;
+		overflow: auto;
 		display: flex;
-		width: 100vw;
-		height: 92vh;
+		width: 100%;
+		height: 100%;
 	}
 
 	

@@ -37,7 +37,7 @@
     }
 
   };
-
+console.log('isConnect', isConnect)
 </script>
 
 <div class="container">
@@ -301,7 +301,6 @@
 
   .container {
     display: flex;
-    overflow: scroll;
     flex-direction: column;
     justify-content: space-between;
   }

@@ -6,7 +6,7 @@
   import { memos, categories} from '$lib/stores/index.js';
   export let data;
   let type='memo'
-  const userId = data?.user.id;
+  const userId = data?.user?.id;
   let categoryStates = {};
   const dispatch = new createEventDispatcher();
   onMount(async () => {
@@ -85,7 +85,6 @@
 <style>
   .wrapper {
   background: #1b1f2a;
-    overflow: scroll;
     min-width: 15%;
     display: flex;
     flex-direction: column;

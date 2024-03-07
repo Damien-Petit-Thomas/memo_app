@@ -130,6 +130,9 @@ slide.requestFullscreen();
 
   document.addEventListener('fullscreenchange', function () {
     if (document.fullscreenElement) {
+      document.addEventListener('click', function () {
+        currentPage < totalPage ? (currentPage = currentPage + 1) : (currentPage = 1);
+      });
       itemSize= { height : 38 }
     } else {
         itemSize = { height : 20 }
@@ -239,7 +242,7 @@ slide.requestFullscreen();
           {itemSize}
           gap={2}
           cols={40}
-          rows={0}
+          rows={25}
           collision="none"
         >
           {#each items[currentPage - 1] as item (item.id)}

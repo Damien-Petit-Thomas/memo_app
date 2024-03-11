@@ -43,13 +43,12 @@ userslide.set(userSlides);
   let urls = [];
   let mainSlide;
   const unsubscribe = page.subscribe(async ($page) => {
-    mainSlideId.set(null);
     if ($fullmemos.length === 0) {
       fullmemos.get(userId);
     }
     pageSlug = $page.params.slug;
     mainSlide = await userSlides.find((s) => s.slug === pageSlug);
-    mainSlideId.set(mainSlide.id);
+    $mainSlideId = mainSlide.id;
     title = mainSlide.title;
     slides = await $fullmemos.filter((s) => s.slideId === mainSlide.id);
     totalPage = slides.length;

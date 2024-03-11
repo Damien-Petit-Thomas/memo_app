@@ -205,25 +205,23 @@ let copieSaveArray = new Array(100);
       selectedBackground = new Array(100);
       totalPage = 1;
       $memoItems = [];
-      $mainSlideId = null;
       slideTitle = "";
       maj.set(true);
-    
-    if($mainSlideId){
+    console.log("coucouc", $mainSlideId)
+    if($mainSlideId !== null){
       console.log($mainSlideId);
     const deleted =  userslide.remove($mainSlideId)
       if(deleted){
         showAlert("success", "action réussie", `la slide ${deleted.title} a été bien été supprimée`);
         mainSlideId.set(null);
+        $mainSlideId = null;
     }
-    if(!isNewSlide && $mainSlideId === null){
-      showAlert("warn", "attention", "erreur lors de la suppression de la slide");
-    }
+  
   
   }
   };
 
-
+$: console.log($mainSlideId)
 
 
   const handleDeletSlide = async () => {

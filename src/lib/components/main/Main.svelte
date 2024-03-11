@@ -12,23 +12,23 @@
   let totalPage = 0;
   let availableMemo = [];
   let numberTotalMemo = 0;
-  let allMememos = [];
+  let allMemos = [];
 
-allMememos = $fullmemos.filter((memo) => memo.type === "memo");
+$: allMemos = $fullmemos.filter((memo) => memo.type === "memo");
 
   $: memoCategory = $fullmemos.filter(
     (memo) => memo.category.id === selectedCategory?.id && memo.type === "memo"
     );
   $: memoCategory.length > 0
     ? (numberTotalMemo = memoCategory.length)
-    : (numberTotalMemo = allMememos.length);
+    : (numberTotalMemo = allMemos.length);
   $: totalPage = Math.ceil(numberTotalMemo / 12);
   $: if (selectedCategory) {
     currentPage = 1;
     availableMemo = memoCategory.slice(0, 12);
   }
   $: if ($fullmemos !== undefined) {
-    selectedCategory ? (availableMemo = memoCategory.slice(0, 12)) : (availableMemo = allMememos.slice(0, 12));
+    selectedCategory ? (availableMemo = memoCategory.slice(0, 12)) : (availableMemo = allMemos.slice(0, 12));
   }
 
   const handleChanPage = (event) => {

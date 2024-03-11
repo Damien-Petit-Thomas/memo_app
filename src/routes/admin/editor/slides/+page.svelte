@@ -4,7 +4,7 @@
   import { onMount } from "svelte";
   import ImageGallery from "@react2svelte/image-gallery";
   import Sidemenu from "$lib/components/editor/SlideSidebar.svelte";
-  let itemSize = {heigt: 20 }
+  let itemSize = { heigt: 20 };
   let fullscreen = false;
   import {
     currentMemo,
@@ -59,14 +59,6 @@
     }
   }
   $: backUrlId = selectedBackground[page];
- 
-
-
-
-
-
-
-
 
   const copieSaveArray = new Array(100);
   const handlePage = (e) => {
@@ -95,7 +87,6 @@
       $memoItems = copieSaveArray[1];
       maj.set(true);
       backUrlId = selectedBackground[page];
-
     }
   });
 
@@ -150,7 +141,7 @@
 
       return (newItem = {
         page,
-        css :"",
+        css: "",
         customCss: {},
         content: e.detail[i].name,
         id: countId,
@@ -166,7 +157,6 @@
       });
     }
   }
-
 
   const pushToIndex = (arr, index, element) => {
     if (index < arr.length) {
@@ -198,6 +188,52 @@
   let copie = [];
 
   let isNewSlide = true;
+
+  const handleDeletSlide = async () => {
+    const userConfirm = confirm("voulez-vous vraiment supprimer cette slide ?");
+    if (!userConfirm) return;
+    if (slideIds[page]) {
+      const deletedSlide = await memos.remove(slideIds[page]);
+      if (deletedSlide) {
+        showAlert(
+          "success",
+          "action réussie",
+          `la slide ${deletedSlide.title} a été bien été supprimée`,
+        );
+      }
+    }
+    slideIds.splice(page, 1);
+    selectedBackground.splice(page, 1);
+    copieSaveArray.splice(page, 1);
+    totalPage = totalPage - 1;
+    for (let i = page; i < 100; i++) {
+      //  il faut modifier les pages des slides suivantes dans copySaveArray
+      if (copieSaveArray[i] !== undefined) {
+        console.log(copieSaveArray[i][0].page);
+        copieSaveArray[i][0].page = i - 1;
+      }
+      $memoItems = copieSaveArray[page];
+      maj.set(true);
+    }
+    saveAllSlide();
+  };
+
+  const saveAllSlide = async () => {
+    const backup = $memoItems;
+    for (let i = 0; i < 100; i++) {
+      if (copieSaveArray[i] !== undefined) {
+        if (i === page) {
+          $memoItems = backup;
+          await handleSaveSlide();
+        } else {
+          $memoItems = copieSaveArray[i];
+          page = i;
+          await handleSaveSlide();
+        }
+      }
+    }
+  };
+
   const handleSaveSlide = async (e) => {
     copie = JSON.parse(JSON.stringify($memoItems));
     getLayout = true;
@@ -212,7 +248,7 @@
         opacity: item.customCss.opacity,
         color: item.customCss.color,
         delay: item.customCss.delay,
-        repeat: item.customCss.repeat,        
+        repeat: item.customCss.repeat,
         fontsize: item.customCss.fontsize,
         duration: item.customCss.duration,
         fontfamily: item.customCss.fontfamily,
@@ -246,7 +282,7 @@
         backgroundId: selectedBackground[page],
         userId,
         layout,
-        type : "slide",
+        type: "slide",
       };
 
       const newSlide = await memos.mark(data);
@@ -259,12 +295,8 @@
         );
       }
     } else {
-      if(slideTitle === "") {
-        showAlert(
-          "warn",
-          "attention: ",
-          `le titre de la slide est vide`,
-        );
+      if (slideTitle === "") {
+        showAlert("warn", "attention: ", `le titre de la slide est vide`);
         return;
       }
       let titles = $memos.map((memo) => memo.title);
@@ -318,26 +350,13 @@
       "  un nouveau background a été selectionné",
     );
   };
-const handleRemove = ()=> {
-// on supprime le contenu de selectedBackground à l'index page
-selectedBackground.splice(page, 1);
-backUrlId = selectedBackground[page];
+  const handleRemove = () => {
+    // on supprime le contenu de selectedBackground à l'index page
+    selectedBackground.splice(page, 1);
+    backUrlId = selectedBackground[page];
 
-showAlert(
-  "warn",
-  `Background :  `,
-  "  le background a été supprimé",
-);
-}
-
-
-
-
-
-
-
-
-
+    showAlert("warn", `Background :  `, "  le background a été supprimé");
+  };
 </script>
 
 {#if alertVisible}
@@ -346,7 +365,8 @@ showAlert(
 <div class="container">
   <div class="menu menu-left">
     <Sidemenu
-    {totalPage}
+      {totalPage}
+      on:addPage={()=> totalPage += 1}
       on:page={handlePage}
       on:selectItem={handleSelectItem}
       {styles}
@@ -387,12 +407,12 @@ showAlert(
       placeholder="titre principal"
     />
     <button
-    on:click={()=> {
-      const slide = document.querySelector('.show');
-      slide.requestFullscreen();
-      fullscreen = true;
-    }}
-    >fullscreen</button>
+      on:click={() => {
+        const slide = document.querySelector(".show");
+        slide.requestFullscreen();
+        fullscreen = true;
+      }}>fullscreen</button
+    >
   </div>
   <div class="menu menu-right">
     <input
@@ -407,6 +427,8 @@ showAlert(
       on:selectedCategory={handleSelectCategory}
       on:selectedTags={handleTags}
     />
+
+    <button on:click={handleDeletSlide}>supprimer</button>
   </div>
 </div>
 

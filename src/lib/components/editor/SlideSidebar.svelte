@@ -41,6 +41,7 @@
         break;
       case "addPage":
         totalPage += 1;
+        dispatch("addPage");
         break;
       case "retour":
         showBlock = false;

@@ -42,7 +42,6 @@ function handleBlur(e) {
 
 
 </script>
-
 <pre><blockquote 
 	style={css} 
 	contenteditable={isEditable}
@@ -65,6 +64,7 @@ pre {
 
 
 blockquote.isEditable {
+	outline:none;
 	background: rgb(53, 48, 48);
 	border-left: 4px solid var(--color-orange);
 	border-right: 4px solid var(--color-orange);

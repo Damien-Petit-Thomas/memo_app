@@ -67,7 +67,7 @@
   function handleStyleClick(e) {
     currentItem.style = e.css;
     currentItem.style_id = e.id;
-
+    currentItem.style_name = e.name;
     dispatch("selectItem", [currentItem]);
     showStylesSelection = false;
   }

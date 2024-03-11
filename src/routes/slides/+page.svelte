@@ -13,3 +13,16 @@
     <Card {memo} />
   {/each}
 </div>
+
+<style>
+  div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  @media (max-width: 768px) {
+    div {
+      flex-direction: column;
+    }
+  }
+</style>

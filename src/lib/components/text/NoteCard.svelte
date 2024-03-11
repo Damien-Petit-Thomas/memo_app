@@ -68,7 +68,6 @@
     display:flex ;
     align-items: center;
     justify-content: flex-start;
-    color:white;
     background: #09273d;
     border: 1px solid #696969;
     border-left: 4px solid #5E9EFF;
@@ -82,6 +81,7 @@
   }
   
   .note-text {
+    outline : none;
     display:flex;
     margin-left: 1rem;
     max-width: 95%;

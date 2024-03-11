@@ -3,9 +3,11 @@
   // <a href="https://www.flaticon.com/fr/icones-gratuites/italique" title="italique icônes">Italique icônes créées par Freepik - Flaticon</a>
   // <a href="https://www.flaticon.com/free-icons/bold" title="bold icons">Bold icons created by Freepik - Flaticon</a>
   import underline from "$lib/assets/underline.png";
+  import { onDestroy } from "svelte";
   import italic from "$lib/assets/texte-en-italique.png";
   import bold from "$lib/assets/bold.png";
-
+  export let currentItem;
+  import { memoItems } from "$lib/stores/index";
   import { createEventDispatcher } from "svelte";
   import { fly, slide } from "svelte/transition";
   import remove from "$lib/assets/remove.svg";
@@ -16,19 +18,19 @@
   let size = 17;
   let color = "#ffffff";
   let fontfamily = "Arial";
-  let transition;
+  let animation = "aucune";
   let delay = 0;
   let repeat = 1;
-  let duration = 400;
+  let duration = 1400;
   let showTransition = false;
   let showOptions = false;
   let showBackground = false;
   let showFont = false;
-  let background = "#00d0ff";
+  let background;
   let opacity = 1;
   let weight = 400;
+  let easeFunction = "linear";
   let decoration = "none";
-  let animation = "regular";
   let axe = "left-to-right";
 
   const fonts = [
@@ -73,31 +75,35 @@
     "Walbaum",
   ];
 
-  const transitions = [
+  const animations = [
     "aucune",
-    "fly",
-    "slide",
     "fade",
-    "blur",
-    "scale",
-    "crossfade",
-    "flip",
+    "Float",
+    "slide-bottom",
+    "slide-left",
+    "slide-right",
+    "slideTop",
+    "Zoom",
   ];
 
-  const animations = ["regular", "elastic", "cubic-bezier"];
+  const eases = ["linear", "elastic", "cubic-bezier"];
   const axes = [
-   {
-    id: 1, axe: "left-to-right"
-   },
     {
-      id: 2, axe: "right-to-left"
+      id: 1,
+      axe: "left-to-right",
     },
     {
-      id: 3, axe: "top-to-bottom"
+      id: 2,
+      axe: "right-to-left",
     },
     {
-      id: 4, axe: "bottom-to-top"
-    }
+      id: 3,
+      axe: "top-to-bottom",
+    },
+    {
+      id: 4,
+      axe: "bottom-to-top",
+    },
   ];
 
   const handleAxe = () => {
@@ -126,9 +132,75 @@
   };
   const dispatch = createEventDispatcher();
 
-  $: css = `font-family: ${fontfamily}; font-size: ${size}px; color: ${color}`;
+  $: css = `
+  font-family: ${fontfamily};
+  font-size: ${size}px;
+  color: ${color};
+  background: ${background};
+  opacity: ${opacity};
+  animation: ${animation} ${duration}ms ${delay}ms ${easeFunction} ${repeat};
+  `;
+
 
   $: dispatch("css", { css });
+
+  const repeats = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "infinite"];
+
+  $: if (Object.keys(currentItem?.customCss).length === 0) {
+    count += 1;
+    currentItem.customCss = baseCss;
+  }
+
+  let count = 0;
+
+  $: if (count < 1 && Object.keys(currentItem.customCss).length > 0) {
+    count += 1;
+    repeat = currentItem.customCss.repeat;
+    size = currentItem.customCss.fontsize;
+    color = currentItem.customCss.color;
+    fontfamily = currentItem.customCss.fontfamily;
+    background = currentItem.customCss.background;
+    opacity = currentItem.customCss.opacity;
+    weight = currentItem.customCss.fontWeight;
+    animation = currentItem.customCss.animation;
+    duration = currentItem.customCss.duration;
+    delay = currentItem.customCss.delay;
+    easeFunction = currentItem.customCss.easefonction;
+  }
+  onDestroy(() => {
+    currentItem.customCss = {
+      fontfamily: fontfamily,
+      fontsize: size,
+      color: color,
+      background: background,
+      opacity: opacity,
+      animation: animation,
+      duration: duration || 1400,
+      delay: delay || 0,
+      easefonction: easeFunction || "linear",
+      repeat: repeat || 1,
+    };
+    // il ne faut pas directement ajouter currentItem à memoItems
+    //  cela va creer des doublons
+    // il faut plutot modifier l'item dans memoItems
+
+    const index = $memoItems.findIndex((item) => item.id === currentItem.id);
+    $memoItems[index] = currentItem;
+  });
+
+  const baseCss = {
+    fontfamily: fontfamily,
+    fontsize: size,
+    color: color,
+    background: background,
+    opacity: opacity,
+    fontWeight: weight,
+    animation: animation,
+    duration: duration,
+    delay: delay,
+    easefunction: easeFunction,
+    repeat: repeat,
+  };
 </script>
 
 <svelte:document />
@@ -144,7 +216,12 @@ left: {finalx}px;"
     <button class="remove" on:click={() => dispatch("remove")}
       ><img src={remove} alt="remove button" /></button
     >
-    <button class="close" on:click={() => dispatch("close")}>X</button>
+    <button
+      class="close"
+      on:click={() => {
+        dispatch("close");
+      }}>X</button
+    >
   </div>
   <div class="color-size">
     <div class="size">
@@ -155,7 +232,6 @@ left: {finalx}px;"
     <input type="color" bind:value={color} />
   </div>
   <select name="font" id="font" bind:value={fontfamily}>
-    <option value="fontFamily">police</option>
     {#each fonts as font}
       <option value={font}>{font}</option>
     {/each}
@@ -164,27 +240,32 @@ left: {finalx}px;"
   {#if showOptions}
     <div transition:slide class="options">
       <button on:click={() => (showTransition = !showTransition)}
-        >transition</button
+        >animation</button
       >
       {#if showTransition}
         <div transition:slide class="transition-container">
           <div class="transition-section">
-            <select name="transition" id="transition" bind:value={transition}>
-              {#each transitions as transition}
-                <option value={transition}>{transition}</option>
+            <label for="transition">nom</label>
+            <select
+              name="transition"
+              id="transition"
+              bind:value={animation}
+            >
+              {#each animations as animation}
+                <option value={animation}>{animation}</option>
               {/each}
             </select>
-            <button
+            <!-- <button
               on:click={() =>
                 dispatch("transition", {
-                  transition,
+                  animation,
                   duration,
                   delay,
                   animation,
                   axe,
                 })}
               class="transition-btn">valider</button
-            >
+            > -->
           </div>
           <div class="transition-section">
             <label for="time">temps en ms </label>
@@ -195,22 +276,27 @@ left: {finalx}px;"
             <input type="number" bind:value={delay} />
           </div>
           <div class="transition-section">
-            <select name="animation" id="animation" bind:value={animation}>
-              {#each animations as animation}
-                <option value={animation}>{animation}</option>
+            <label for="repeat">répétitions</label>
+            <select name="animation" id="animation" bind:value={repeat}>
+              {#each repeats as repeat}
+                <option value={repeat}>{repeat}</option>
               {/each}
             </select>
           </div>
-          {#if transition === "fly" || transition === "slide"}
+          <div class="transition-section">
+            <label for="animation"> timing function </label>
+            <select name="animation" id="animation" bind:value={easeFunction}>
+              {#each eases as ease}
+                <option value={ease}>{ease}</option>
+              {/each}
+            </select>
+          </div>
+          {#if animation === "fly" || animation === "slide"}
             <div transition:slide class="transition">
               orientation
               <button id="axe-btn" on:click={handleAxe}> ▶ </button>
             </div>
           {/if}
-          <!-- <div class="transition-section">
-        <label for="repeat">répétitions</label>
-       <input type="number" bind:value={repeat}>
-      </div> -->
         </div>
       {/if}
       <button on:click={() => (showBackground = !showBackground)}

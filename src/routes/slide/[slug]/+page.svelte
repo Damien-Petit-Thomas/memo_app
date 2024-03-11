@@ -41,7 +41,7 @@
   let slides = [];
   let pageSlug;
 
-  let urls = []
+  let urls = [];
   const unsubscribe = page.subscribe(async ($page) => {
     if ($fullmemos.length === 0) {
       fullmemos.get(userId);
@@ -57,21 +57,25 @@
         slides[i].contents.sort((a, b) => a.position - b.position);
         slides[i].layout.sort((a, b) => a.position - b.position);
         items[i] = [];
-        urls[i] = slides[i].backgroundId ? slides[i].backgroundId : '';
+        urls[i] = slides[i].backgroundId ? slides[i].backgroundId : "";
         for (let j = 0; j < slides[i].contents.length; j++) {
           // on push les  url des images dans un tableau
-      
+          const customcss= `
+              font-family: ${slides[i].contents[j].customCss.fontfamily};
+              font-size: ${slides[i].contents[j].customCss.fontsize}px;
+              color: ${slides[i].contents[j].customCss.color};
+              opacity: ${slides[i].contents[j].customCss.opacity};
+              background: ${slides[i].contents[j].customCss.backgroundcolor};
+              animation: ${slides[i].contents[j].customCss.animation} ${slides[i].contents[j].customCss.duration}ms  ${slides[i].contents[j].customCss.easefonction} ${slides[i].contents[j].customCss.delay}ms ${slides[i].contents[j].customCss.repeat};
+            `
+
           items[i][j] = {
             ...slides[i].layout[j],
             ...slides[i].contents[j],
             id: slides[i].contents[j].id,
-            finalCSS:
-              slides[i].contents[j].css + slides[i].contents[j].style.css,
+            customCssString: customcss,
+            finalCSS: slides[i].contents[j].style.css ?  slides[i].contents[j].style.css +  customcss : customcss,
             slideTitle: title,
-            transition: slides[i].contents[j].customTransition[0],
-            duration: slides[i].contents[j].customTransition[1],
-            delay: slides[i].contents[j].customTransition[2],
-            customTransition: slides[i].contents[j].customTransition,
             memoId: slides[i].id,
             category: slides[i].category.id,
             backgroundId: slides[i].backgroundId,
@@ -89,21 +93,21 @@
     unsubscribe();
   });
 
-
-$: isDefined = $images.filter((img) => img.id === urls[currentPage - 1])[0] !== undefined ? true : false;
-let backgroundURL = "";
-$: if(isDefined === true){
-
-      backgroundURL = $images.filter((img) => img.id === urls[currentPage - 1])[0].original;
-  }
-  else{
+  $: isDefined =
+    $images.filter((img) => img.id === urls[currentPage - 1])[0] !== undefined
+      ? true
+      : false;
+  let backgroundURL = "";
+  $: if (isDefined === true) {
+    backgroundURL = $images.filter((img) => img.id === urls[currentPage - 1])[0]
+      .original;
+  } else {
     backgroundURL = "";
   }
 
-
-let slideWidth = 100000;
-let slideHeight = 5624561561456;
-let slideMargin = 0;
+  let slideWidth = 100000;
+  let slideHeight = 5624561561456;
+  let slideMargin = 0;
   $: if (slideWidth / slideHeight > 1.77 || slideWidth / slideHeight < 1.76) {
     if (slideWidth / slideHeight > 1.77) {
       slideMargin -= 1;
@@ -112,38 +116,25 @@ let slideMargin = 0;
     }
   }
 
-  
   const handleFulscreen = () => {
-const slide = document.querySelector(".slide");
-slide.requestFullscreen();
-  
+    const slide = document.querySelector(".slide");
+    slide.requestFullscreen();
   };
-
-
-
-
-
-
-
 
   let itemSize = { height: 20 };
 
-  document.addEventListener('fullscreenchange', function () {
+  document.addEventListener("fullscreenchange", function () {
     if (document.fullscreenElement) {
-      document.addEventListener('click', function () {
-        currentPage < totalPage ? (currentPage = currentPage + 1) : (currentPage = 1);
+      document.addEventListener("click", function () {
+        currentPage < totalPage
+          ? (currentPage = currentPage + 1)
+          : (currentPage = 1);
       });
-      itemSize= { height : 38 }
+      itemSize = { height: 38 };
     } else {
-        itemSize = { height : 20 }
+      itemSize = { height: 20 };
     }
-});
-
-  
-
-
-
-
+  });
 
   function animate(
     node,
@@ -227,14 +218,14 @@ slide.requestFullscreen();
   <div class="main-container">
     <div class="option-container">
       <a href="/admin/editor/slides"><button>éditer</button></a>
-      <button
-        on:click={handleFulscreen}>plein écran</button
-      >
+      <button on:click={handleFulscreen}>plein écran</button>
     </div>
-    <div 
-    bind:offsetHeight={slideHeight}
-    bind:offsetWidth={slideWidth}
-    class="slide" style="background-image: url({backgroundURL});">
+    <div
+      bind:offsetHeight={slideHeight}
+      bind:offsetWidth={slideWidth}
+      class="slide"
+      style="background-image: url({backgroundURL});"
+    >
       <div class="slide-wrapper">
         <Grid
           readOnly={true}
@@ -336,8 +327,4 @@ slide.requestFullscreen();
     border: 1px solid #000;
     border-radius: 2px;
   }
-
-
-
-  
 </style>

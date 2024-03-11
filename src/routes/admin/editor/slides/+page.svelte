@@ -88,8 +88,6 @@
       totalPage = $currentSlide.length;
       for (let slide of $currentSlide) {
         pushToIndex(slideIds, slide[0].page, slide[0].memoId);
-      }
-      for(let slide of $currentSlide){
         const copie = JSON.parse(JSON.stringify(slide));
         pushToIndex(copieSaveArray, slide[0].page, copie);
         pushToIndex(selectedBackground, slide[0].page, slide[0].backgroundId);
@@ -152,12 +150,14 @@
 
       return (newItem = {
         page,
+        css :"",
+        customCss: {},
         content: e.detail[i].name,
         id: countId,
         style: {
           id: e.detail[i].style_id,
           css: e.detail[i].style,
-          name: e.detail[i].name,
+          name: e.detail[i].style_name || e.detail[i].name,
         },
         type: {
           id: e.detail[i].id,
@@ -198,20 +198,27 @@
   let copie = [];
 
   let isNewSlide = true;
-
   const handleSaveSlide = async (e) => {
     copie = JSON.parse(JSON.stringify($memoItems));
     getLayout = true;
     const layout = JSON.stringify(layoutBackup());
     if (categoryId === undefined) categoryId = $categories[0].id;
-    const itemsToSave = $memoItems.map((item) => {
+    const itemsToSave = await $memoItems.map((item) => {
       return {
-        animation: item.customTransition ? JSON.stringify(item.customTransition) : [],
-        css: item.style.css,
-        content: item.content,
         typeId: item.type.id,
+        content: item.content,
         styleId: item.style.id,
         position: item.position,
+        opacity: item.customCss.opacity,
+        color: item.customCss.color,
+        delay: item.customCss.delay,
+        repeat: item.customCss.repeat,        
+        fontsize: item.customCss.fontsize,
+        duration: item.customCss.duration,
+        fontfamily: item.customCss.fontfamily,
+        background: item.customCss.background,
+        animation: item.customCss.animation,
+        easefonction: item.customCss.easefonction,
       };
     });
     if (itemsToSave.length === 0) {
@@ -252,6 +259,14 @@
         );
       }
     } else {
+      if(slideTitle === "") {
+        showAlert(
+          "warn",
+          "attention: ",
+          `le titre de la slide est vide`,
+        );
+        return;
+      }
       let titles = $memos.map((memo) => memo.title);
       if (titles.includes(slideTitle)) {
         showAlert(

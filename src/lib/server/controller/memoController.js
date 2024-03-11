@@ -58,10 +58,33 @@ export class MemoController extends CoreController {
         const item = contents[i];
         if (item.styleId === undefined) item.styleId = 3;
         // eslint-disable-next-line no-await-in-loop
-        await dataMappers.memoContent.create({
+        const result = await dataMappers.memoContent.create({
           // eslint-disable-next-line max-len
-          memo_id: newMemo.id, content: item.content, type_id: item.typeId, position: item.position, style_id: item.styleId, css: item.css, animation: item.animation,
+          color: item.color,
+          delay: item.delay,
+          repeat: item.repeat,
+          memo_id: newMemo.id,
+          type_id: item.typeId,
+          content: item.content,
+          style_id: item.styleId,
+          position: item.position,
+          fontsize: item.fontsize,
+          duration: item.duration,
+          fontfamily: item.fontfamily,
+          background: item.background,
+          animation: item.animation,
+          easefonction: item.easefonction,
+          opacity: item.opacity,
         });
+        if (!result) {
+          // eslint-disable-next-line no-await-in-loop
+          await this.datamapper.delete(newMemoId);
+          if (newSlidId) {
+            // eslint-disable-next-line no-await-in-loop
+            await dataMappers.slide.delete(newSlidId.id);
+          }
+          throw new Error('MemoContent not found', { statusCode: 404 });
+        }
       }
 
       return (newMemo);
@@ -70,7 +93,6 @@ export class MemoController extends CoreController {
       if (newMemoId) {
         await this.datamapper.delete(newMemoId);
       }
-      console.error(error);
       return json(null, { status: 500 });
     }
   }
@@ -140,11 +162,25 @@ export class MemoController extends CoreController {
         for (let i = 0; i < contents.length; i += 1) {
           const item = contents[i];
           if (item.styleId === undefined) item.styleId = 3;
-          if (item.css === undefined || item.css === null) item.css = '';
+          // if (item.css === undefined || item.css === null) item.css = '';
 
           // eslint-disable-next-line no-await-in-loop
           await dataMappers.memoContent.create({
-            memo_id: findMemo.id, content: item.content, type_id: item.typeId, position: item.position, style_id: item.styleId, css: item.css, animation: item.animation,
+            memo_id: findMemo.id,
+            content: item.content,
+            type_id: item.typeId,
+            position: item.position,
+            style_id: item.styleId,
+            fontsize: item.fontsize,
+            duration: item.duration,
+            fontfamily: item.fontfamily,
+            background: item.background,
+            easefonction: item.easefonction,
+            animation: item.animation,
+            opacity: item.opacity,
+            color: item.color,
+            delay: item.delay,
+            repeat: item.repeat,
           });
         }
         return json(newMemo);

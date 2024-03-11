@@ -31,7 +31,6 @@ function handleKeyDown(e) {
   }
 }
 
-
 function handleBlur(e) {
   const trimmedInnerText = e.target.innerText.trim();
   const trimmedOriginal = 'paragraphe'

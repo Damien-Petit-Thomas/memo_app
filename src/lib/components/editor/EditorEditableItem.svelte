@@ -22,7 +22,8 @@ $: if (isDeleted){
   window.location.reload()
 }
 
-  $: css = item.style?.css !== undefined ? item.style.css : "";
+
+  $: css = item.style?.css +';' + item.finalCSS; ;
   let content = item.content !== undefined ? item.content : item.name;
   const components = {
     image: Img,
@@ -61,7 +62,6 @@ $: if (isDeleted){
           };
           items[index] = updatedItem;
         }
-
         return items;
         });
       }

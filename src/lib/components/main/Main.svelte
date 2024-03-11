@@ -119,8 +119,8 @@
         {/if}
       </div>
     {/if}
+    <NextBar on:changePage={handleChanPage} {totalPage} {currentPage} />
   </div>
-  <NextBar on:changePage={handleChanPage} {totalPage} {currentPage} />
 </div>
 
 <style>
@@ -168,78 +168,6 @@
     animation: slide-right 1.5s ease forwards;
   }
 
-  @keyframes slide-right {
-    from {
-      transform: translateX(100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
-
-  @keyframes slide-bottom {
-    from {
-      transform: translateY(100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-
-  @keyframes fade {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  @keyframes slide-left {
-    from {
-      transform: translateX(-100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
-  @keyframes slideTop {
-    0% {
-      transform: translateY(-100%);
-      opacity: 0;
-    }
-    100% {
-      transform: translateY(0%);
-      opacity: 1;
-    }
-  }
-  @keyframes Zoom {
-    0% {
-      scale: 0;
-      opacity: 0;
-    }
-    100% {
-      scale: 1;
-      opacity: 1;
-    }
-  }
-  @keyframes Float {
-    0% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-15px);
-    }
-    100% {
-      transform: translateY(0);
-    }
-  }
   .strong {
     font-weight: 700;
   }
@@ -299,6 +227,7 @@
   }
 
   .container {
+    height: 92vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

@@ -42,6 +42,7 @@
     memoItems.set(items);
   }
 
+
   $: if ($maj) {
     items = $memoItems;
     maj.set(false);
@@ -52,13 +53,15 @@
   let xo;
   let yo;
   let currentId;
-  const submenu = (id, event) => {
+  let currentItem;
+  const submenu = (item, event) => {
     //  on veut la position de la souris par rapport à la fenêtre et par rapport à l'élément
     x = event.target.getBoundingClientRect().left;
     y = event.target.getBoundingClientRect().top;
     xo = event.clientX;
     yo = event.clientY;
-    currentId = id;
+    currentItem = item;
+    currentId = item.id;
     return (showSubmenu = !showSubmenu);
   };
 
@@ -99,15 +102,12 @@
       }
     }
   });
-let countr = 0;
   function addNewItem(item) {
-    countr += 1;
-    console.log("addNewItem", countr);
     const w = 40;
     const h = 2;
     const newPosition = gridController.getFirstAvailablePosition(w, h);
     if(newPosition === null) {
-      return console.log("no space available for new item", countr)
+      return 
     }
     items = newPosition 
       ? [
@@ -126,7 +126,6 @@ let countr = 0;
         position,
         itemHeight,
         itemWidth,
-        customTransition: "",
         ...item,
       },
     ]);
@@ -134,12 +133,10 @@ let countr = 0;
     position += 1;
   }
 
-  // let itemSize = { height: 20 };
-$: console.log(itemSize)
   const handleCss = (e) => {
     items = items.map((item) => {
       if (item.id === currentId) {
-        item.style.css = e.detail.css;
+        item.finalCSS = e.detail.css;
       }
       return item;
     });
@@ -149,26 +146,18 @@ $: console.log(itemSize)
 
 
 
-  $: if(document.fullscreenElement === null){
-  console.log(document)
-  console.log('fullscreen is offffffffffff')
-}else{
-  console.log('fullscreen is onnnnnnnnnnnnnnnnn')
-}
-
-$: console.log(document.fullscreenElement)
 
 
 
 
   const handleTransition = (e) => {
-    const customTransition = [e.detail.transition, e.detail.duration, e.detail.delay];
+    const customAnimation = [e.detail.transition, e.detail.duration, e.detail.delay];
     items.map((item) => {
       if (item.id === currentId) {
         item.transition =  e.detail.transition,
         item.duration = e.detail.duration,
         item.delay = e.detail.delay;
-        item.customTransition = customTransition;
+        item.customAnimation = customAnimation;
       }
       return item;
     });
@@ -176,15 +165,15 @@ $: console.log(document.fullscreenElement)
 
   function animate(
     node,
-    { transition, delay = 0, duration = 15000, x = -200, y = 0 },
+    { animation, delay = 0, duration = 15000, x = -200, y = 0 , repeat = 1, easing = elasticOut},
   ) {
-    switch (transition) {
+    switch (animation) {
       case "aucune":
         return;
       case "":
         return;
       case "fade":
-        return fadeTransition(node, { delay, duration });
+        return fadeTransition(node, { delay, duration, repeat });
       case "slide":
         return slideTransition(node, { delay, duration, x, y });
       case "scale":
@@ -221,11 +210,13 @@ $: console.log(document.fullscreenElement)
   }
 
 
-  function fadeTransition(node, { delay, duration }) {
+  function fadeTransition(node, { delay, duration, repeat = 1}) {
     const o = +getComputedStyle(node).opacity;
     return {
       delay,
       duration,
+      repeat,
+
       css: (t) => `opacity: ${t * o}`,
     };
   }
@@ -252,9 +243,7 @@ function slideTransition(node, { delay, duration }) {
 document.addEventListener('fullscreenchange', function () {
     if (document.fullscreenElement) {
       itemSize= { height : 38 }
-        console.log('En mode plein écran');
     } else {
-        console.log('Hors du mode plein écran');
         itemSize = { height : 20 }
     }
 });
@@ -278,6 +267,7 @@ document.addEventListener('fullscreenchange', function () {
     on:css={handleCss}
     {x}
     {y}
+    {currentItem}
   />
 {/if}
 
@@ -323,12 +313,11 @@ document.addEventListener('fullscreenchange', function () {
           {:else}
             <button
               on:pointerdown={(e) => e.stopPropagation()}
-              on:click={(e) => submenu(item.id, e)}
+              on:click={(e) => submenu(item, e)}
               class="submenu"><img src={option} alt="sub-menu" /></button
             >
           {/if}
           <div
-            in:animate={{ transition: item.transition,  duration: item.duration, delay: item.delay }}
             class="item"
             bind:offsetWidth={item.itemWidth}
             bind:offsetHeight={item.itemHeight}

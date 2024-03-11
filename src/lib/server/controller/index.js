@@ -15,6 +15,7 @@ const apiController = {
 
 export const controllers = {
   apiController,
+  slideController: new CoreController(dataMappers.slide),
   memoController: new MemoController(dataMappers.memo),
   userController: new UserController(dataMappers.user),
   linkController: new LinkController(dataMappers.link),

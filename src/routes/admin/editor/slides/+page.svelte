@@ -3,6 +3,7 @@
   import CustomAlert from "$lib/components/CustomAlert/Alert.svelte";
   import { onMount } from "svelte";
   import ImageGallery from "@react2svelte/image-gallery";
+
   import Sidemenu from "$lib/components/editor/SlideSidebar.svelte";
   let itemSize = { heigt: 20 };
   let fullscreen = false;
@@ -16,8 +17,11 @@
     categories,
     currentSlide,
     images,
+    mainSlideId,
+    userslide,
   } from "$lib/stores/index.js";
   import EditorSidebarTagNCategory from "$lib/components/editor/EditorSidebarTagNCategory.svelte";
+    import { slide } from "svelte/transition";
 
   let page = 1;
   let categoryId;
@@ -60,7 +64,8 @@
   }
   $: backUrlId = selectedBackground[page];
 
-  const copieSaveArray = new Array(100);
+let copieSaveArray = new Array(100);
+  const originalCopy = new Array(100);
   const handlePage = (e) => {
     const copie = JSON.parse(JSON.stringify($memoItems));
     pushToIndex(copieSaveArray, page, copie);
@@ -82,6 +87,7 @@
         pushToIndex(slideIds, slide[0].page, slide[0].memoId);
         const copie = JSON.parse(JSON.stringify(slide));
         pushToIndex(copieSaveArray, slide[0].page, copie);
+        pushToIndex(originalCopy, slide[0].page, copie);
         pushToIndex(selectedBackground, slide[0].page, slide[0].backgroundId);
       }
       $memoItems = copieSaveArray[1];
@@ -189,6 +195,37 @@
 
   let isNewSlide = true;
 
+
+  const handleDeletAllSlide = async () => {
+    const userConfirm = confirm("voulez-vous vraiment supprimer toutes les slides ?");
+    if (!userConfirm) return;
+  
+      copieSaveArray = new Array(100);
+      slideIds = new Array(100);
+      selectedBackground = new Array(100);
+      totalPage = 1;
+      $memoItems = [];
+      $mainSlideId = null;
+      slideTitle = "";
+      maj.set(true);
+    
+    if($mainSlideId){
+      console.log($mainSlideId);
+    const deleted =  userslide.remove($mainSlideId)
+      if(deleted){
+        showAlert("success", "action réussie", `la slide ${deleted.title} a été bien été supprimée`);
+        mainSlideId.set(null);
+    }
+    if(!isNewSlide && $mainSlideId === null){
+      showAlert("warn", "attention", "erreur lors de la suppression de la slide");
+    }
+  
+  }
+  };
+
+
+
+
   const handleDeletSlide = async () => {
     const userConfirm = confirm("voulez-vous vraiment supprimer cette slide ?");
     if (!userConfirm) return;
@@ -223,15 +260,18 @@
     for (let i = 0; i < 100; i++) {
       if (copieSaveArray[i] !== undefined) {
         if (i === page) {
-          $memoItems = backup;
-          await handleSaveSlide();
+          if(backup !== originalCopy[i]){
+            await handleSaveSlide();
+          }
         } else {
+        if(copieSaveArray[i] !== originalCopy[i]){
           $memoItems = copieSaveArray[i];
           page = i;
           await handleSaveSlide();
         }
       }
     }
+  }
   };
 
   const handleSaveSlide = async (e) => {
@@ -331,9 +371,11 @@
           `la slide ${newSlide.title} a été bien été ajoutée`,
         );
         pushToIndex(slideIds, page, newSlide.id);
+        
         slideCategory = newSlide.category_id;
         slideTags = newSlide.tags;
         slideTitle = slideTitle;
+        mainSlideId.set(newSlide.slide_id);
       }
     }
     await fullmemos.get(userId);
@@ -406,6 +448,7 @@
       id=""
       placeholder="titre principal"
     />
+    <div class="option-container">
     <button
       on:click={() => {
         const slide = document.querySelector(".show");
@@ -413,6 +456,13 @@
         fullscreen = true;
       }}>fullscreen</button
     >
+      <button
+      on:click={saveAllSlide}
+      >tout sauvegarder</button>
+      <button
+      on:click={handleDeletAllSlide}
+      >tout supprimer</button>
+    </div>
   </div>
   <div class="menu menu-right">
     <input
@@ -433,6 +483,14 @@
 </div>
 
 <style>
+
+  .option-container {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+  }
+
   input[type="text"] {
     color: #00d0ff;
 
@@ -445,6 +503,7 @@
 
   .main-title {
     position: absolute;
+    width: 50%;
     top: 6rem;
     left: 50%;
     transform: translate(-50%, -50%);

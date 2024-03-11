@@ -6,6 +6,7 @@ const reloadNeeded = writable(false);
 const memoItems = writable([]);
 const currentMemo = (writable({}));
 const currentSlide = writable([]);
+const mainSlideId = writable({});
 const maj = writable(false);
 const fullmemos = (() => {
   const { subscribe, set, update } = writable([]);
@@ -30,6 +31,7 @@ const fullmemos = (() => {
   };
 })();
 
+const userslide = new CoreStore('/api/slide');
 const images = new CoreStore('/api/image');
 const todos = new CoreStore('/api/todo');
 const categories = new CoreStore('/api/category');
@@ -39,6 +41,7 @@ const memos = new CoreStore('/api/memo');
 const link = new CoreStore('/api/link');
 
 export {
+  userslide,
   currentSlide,
   images,
   todos,
@@ -52,5 +55,6 @@ export {
   memoItems,
   currentMemo,
   fullmemos,
+  mainSlideId,
   maj,
 };

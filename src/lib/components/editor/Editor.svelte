@@ -14,7 +14,6 @@
   export let isDeleted = false;
   let itemSize = { height: 20 };
   let items = [];
-  import {slide} from "svelte/transition";
   export let getLayout = false;
   let gridController;
   let position = 0;

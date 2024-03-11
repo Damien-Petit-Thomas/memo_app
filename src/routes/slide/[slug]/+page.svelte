@@ -15,10 +15,10 @@
   let currentPage = 1;
   let totalPage = 1;
   let title = "";
-  import { currentSlide, fullmemos, images } from "$lib/stores/index.js";
+  import { currentSlide, fullmemos, images, userslide, mainSlideId } from "$lib/stores/index.js";
   export let data;
   const userSlides = data.userSlide;
-
+userslide.set(userSlides);
   let userId = data.user.id;
   const components = {
     image: Img,
@@ -37,17 +37,19 @@
     };
   });
   let items = [];
-  let mainSlide;
   let slides = [];
   let pageSlug;
 
   let urls = [];
+  let mainSlide;
   const unsubscribe = page.subscribe(async ($page) => {
+    mainSlideId.set(null);
     if ($fullmemos.length === 0) {
       fullmemos.get(userId);
     }
     pageSlug = $page.params.slug;
     mainSlide = await userSlides.find((s) => s.slug === pageSlug);
+    mainSlideId.set(mainSlide.id);
     title = mainSlide.title;
     slides = await $fullmemos.filter((s) => s.slideId === mainSlide.id);
     totalPage = slides.length;

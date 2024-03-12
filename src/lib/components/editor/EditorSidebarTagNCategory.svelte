@@ -36,8 +36,7 @@
 
 
   function  handleCategoryChange(e) {
-    selectedCategoryId = e.target.value;
-      dispatch('selectedCategory', e.target.value);
+      dispatch('selectedCategory', selectedCategoryId);
     }
 
 
@@ -64,7 +63,8 @@
     <summary>choisir une catégorie</summary>
     <select name="categories"
     id="categories"
-    on:change={handleCategoryChange}
+    bind:value={selectedCategoryId}
+    on:click={handleCategoryChange}
     >
       {#each $categories as item (item.id)}
       <option

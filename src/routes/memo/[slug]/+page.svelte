@@ -100,6 +100,7 @@
   let isDataReady = false;
   let itemWidth;
   let itemHeight;
+
   page.subscribe(async ($page) => {
     isDataReady = false;
     if (copyMemo) {

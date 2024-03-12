@@ -110,6 +110,8 @@ let copieSaveArray = new Array(100);
   function handleSelectCategory(e) {
     categoryId = e.detail;
   }
+
+
   function handleTags(e) {
     tagsIds = e.detail;
   }
@@ -131,7 +133,6 @@ let copieSaveArray = new Array(100);
   function handleShowGalery() {
     showGallery = !showGallery;
   }
-
   function showAlert(type, title, msg) {
     typeAlert = type;
     titleAlert = title;
@@ -207,9 +208,7 @@ let copieSaveArray = new Array(100);
       $memoItems = [];
       slideTitle = "";
       maj.set(true);
-    console.log("coucouc", $mainSlideId)
     if($mainSlideId !== null){
-      console.log($mainSlideId);
     const deleted =  userslide.remove($mainSlideId)
       if(deleted){
         showAlert("success", "action réussie", `la slide ${deleted.title} a été bien été supprimée`);
@@ -221,7 +220,6 @@ let copieSaveArray = new Array(100);
   }
   };
 
-$: console.log($mainSlideId)
 
 
   const handleDeletSlide = async () => {
@@ -244,7 +242,6 @@ $: console.log($mainSlideId)
     for (let i = page; i < 100; i++) {
       //  il faut modifier les pages des slides suivantes dans copySaveArray
       if (copieSaveArray[i] !== undefined) {
-        console.log(copieSaveArray[i][0].page);
         copieSaveArray[i][0].page = i - 1;
       }
       $memoItems = copieSaveArray[page];
@@ -276,7 +273,17 @@ $: console.log($mainSlideId)
     copie = JSON.parse(JSON.stringify($memoItems));
     getLayout = true;
     const layout = JSON.stringify(layoutBackup());
-    if (categoryId === undefined) categoryId = $categories[0].id;
+    if (categoryId === undefined) {
+      if ($categories[0] !== undefined) {
+
+        return  showAlert("warn", "attention: ", "la slide n'a pas de catégorie");
+      }else{
+    return  showAlert("warn", "attention: ", "il n'existe pas de catégorie");
+    }
+    }
+    
+    
+
     const itemsToSave = await $memoItems.map((item) => {
       return {
         typeId: item.type.id,

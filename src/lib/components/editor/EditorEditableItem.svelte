@@ -15,12 +15,6 @@
 
 const dispatch = createEventDispatcher()
 
-$: if (isDeleted){
-
-  isDeleted = false
-  // on recharge la page
-  window.location.reload()
-}
 
 
   $: css = item.style?.css +';' + item.finalCSS; ;
@@ -69,7 +63,8 @@ $: if (isDeleted){
   }
 </script>
 
-
+{#if !isDeleted}
+{JSON.stringify(isDeleted)}
   {#if item.name === "title"}
     <svelte:component
       this={components[item.name]}
@@ -87,7 +82,7 @@ $: if (isDeleted){
   {:else}
     <p>{content}</p>
 {/if}
-
+{/if}
 
 <style>
   p {

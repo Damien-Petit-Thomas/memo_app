@@ -1,4 +1,5 @@
 <script>
+  import { goto } from '$app/navigation';
   import {
     memos,
     link,
@@ -8,6 +9,7 @@
     currentMemo,
     title,
     categories,
+    maj,
   } from "$lib/stores/index.js";
   import CustomAlert from "$lib/components/CustomAlert/Alert.svelte";
   import Lexicon from "$lib/components/editor/Lexicon.svelte";
@@ -103,12 +105,21 @@ onMount(() => {
         showAlert("success","action réussie", `le memo ${deletedMemo.title} a été bien été supprimé`);
       }
     }
+    console.log("delete memo")
     memoItems.set([]);
-    memoId = undefined;
+    maj.set(true);
+    memoId = null;
     memotags = [];
+    memoCategory = null;
+    memotitle = "";
     memoIsDeleted = true;
     reloadNeeded.set(true);
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 2000);
   }
+
+
   function layoutBackup() {
     let layout = [];
     $memoItems.forEach((item) => {

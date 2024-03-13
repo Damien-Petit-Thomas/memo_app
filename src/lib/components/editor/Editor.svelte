@@ -269,11 +269,11 @@ document.addEventListener('fullscreenchange', function () {
     {currentItem}
   />
 {/if}
-
 <div
-  class={isSlide ? "slide-wrapper" : "wrapper"}
-  style="background-image: url({backgroundUrl})"
+class={isSlide ? "slide-wrapper" : "wrapper"}
+style="background-image: url({backgroundUrl})"
 >
+{#if isDeleted === false}
   {#if !isSlide}
     <EditableItem {page} item={title} value={handleValue(title)} {isDeleted} />
   {/if}
@@ -327,8 +327,8 @@ document.addEventListener('fullscreenchange', function () {
       </div>
     {/each}
   </Grid>
+  {/if}
 </div>
-
 <style>
 
 

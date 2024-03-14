@@ -35,8 +35,6 @@
 
   const fonts = [
     "Arial",
-    "Arial Black",
-    "Avant Garde Gothic",
     "Baskerville",
     "Bodoni",
     "Brush Script",

@@ -64,7 +64,6 @@ const dispatch = createEventDispatcher()
 </script>
 
 {#if !isDeleted}
-{JSON.stringify(isDeleted)}
   {#if item.name === "title"}
     <svelte:component
       this={components[item.name]}

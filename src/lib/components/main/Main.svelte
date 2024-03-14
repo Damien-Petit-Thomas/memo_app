@@ -1,24 +1,34 @@
 <script>
   import { fly, fade } from "svelte/transition";
-  import { fullmemos } from "$lib/stores/index.js";
+  import { fullmemos, kind } from "$lib/stores/index.js";
   import NextBar from "../nextBar/NextBar.svelte";
   import Card from "$lib/components/card/Card.svelte";
   import email from "$lib/assets/email.svg";
   import github from "$lib/assets/github.svg";
   import linkedin from "$lib/assets/linkedin.svg";
   export let isConnect = false;
+  export let data;
   export let selectedCategory;
   let currentPage = 1;
   let totalPage = 0;
   let availableMemo = [];
   let numberTotalMemo = 0;
   let allMemos = [];
+  let memoCategory = [];
+$: if($kind === "memo") {
+  allMemos = $fullmemos.filter((memo) => memo.type === $kind);
+  memoCategory = allMemos.filter(
+    (memo) => memo.category.id === selectedCategory?.id && memo.type === $kind
+  );
+} else {
+  allMemos = data.userSlide[0].getallslidesforuser;
+  memoCategory = allMemos.filter(
+    (memo) => memo.category.id === selectedCategory?.id 
+  );
+}
 
-$: allMemos = $fullmemos.filter((memo) => memo.type === "memo");
 
-  $: memoCategory = $fullmemos.filter(
-    (memo) => memo.category.id === selectedCategory?.id && memo.type === "memo"
-    );
+
   $: memoCategory.length > 0
     ? (numberTotalMemo = memoCategory.length)
     : (numberTotalMemo = allMemos.length);
@@ -36,7 +46,7 @@ $: allMemos = $fullmemos.filter((memo) => memo.type === "memo");
     if (selectedCategory) {
       availableMemo = memoCategory.slice((currentPage - 1) * 12, currentPage * 12);
     } else {
-      availableMemo = allMememos.slice((currentPage - 1) * 12, currentPage * 12);
+      availableMemo = allMemos.slice((currentPage - 1) * 12, currentPage * 12);
     }
 
   };
@@ -114,7 +124,7 @@ $: allMemos = $fullmemos.filter((memo) => memo.type === "memo");
       </div>
       <div class="container_main-main">
         {#if memoCategory.length === 0}
-          <p>pas de memo dans cette catégorie</p>
+          <p>pas de {$kind} dans cette catégorie</p>
         {:else}
           {#each availableMemo as memo}
             <Card {memo} --color={memo.category.color} />

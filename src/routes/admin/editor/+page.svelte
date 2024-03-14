@@ -105,7 +105,6 @@ onMount(() => {
         showAlert("success","action réussie", `le memo ${deletedMemo.title} a été bien été supprimé`);
       }
     }
-    console.log("delete memo")
     memoItems.set([]);
     maj.set(true);
     memoId = null;

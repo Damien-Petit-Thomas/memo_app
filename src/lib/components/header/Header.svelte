@@ -3,6 +3,7 @@
     import { fly } from "svelte/transition";
     import { reloadNeeded } from "$lib/stores/index.js";
     import hackEffect from "$lib/utils/hackEffect.js";
+    import { kind } from '$lib/stores/index.js';
     import { onMount } from "svelte";
     export let data;
 
@@ -44,7 +45,15 @@
         </h1>
     </div>
     <nav class="header-right">
-        <a href="/slides">Slides</a>        
+        {#if $kind === "memo"}
+            <a 
+            on:click={()=> kind.set("slide")}
+            href="/">slides</a>
+        {:else}
+            <a
+            on:click={()=> kind.set("memo")}
+            href="/">memos</a>
+        {/if}
         <a href="/lexicon">lexique</a>
         <a href="/links">liens utiles</a>
         <a href="/favorite">Favoris</a>

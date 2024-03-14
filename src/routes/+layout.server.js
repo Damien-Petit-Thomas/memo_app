@@ -27,6 +27,7 @@ export async function load({ locals }) {
       links,
       styles,
       fullmemosResult,
+      userSlide,
     ] = await Promise.all([
       db.query('SELECT * FROM todo WHERE user_id = $1', [userId]).then((res) => res.rows),
       db.query('SELECT * FROM category WHERE user_id = $1', [userId]).then((res) => res.rows),
@@ -36,6 +37,7 @@ export async function load({ locals }) {
       db.query('SELECT * FROM link WHERE user_id = $1', [userId]).then((res) => res.rows),
       db.query('SELECT * FROM style').then((res) => res.rows),
       db.query('SELECT * FROM getAllMemosForUser($1)', [user.id]).then((res) => res.rows),
+      db.query('SELECT * FROM getallslidesforuser($1)', [user.id]).then((res) => res.rows),
     ]);
 
     if (fullmemosResult[0].getallmemosforuser?.length > 0) {
@@ -60,6 +62,7 @@ export async function load({ locals }) {
       lexicon,
       links,
       styles,
+      userSlide,
     };
   } catch (error) {
     console.error('Erreur lors de la récupération des données :', error.message);

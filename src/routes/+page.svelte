@@ -46,7 +46,7 @@
 
 <div class="container">
 		<Sidebar {data} on:showMemos={showMemos}/>
-		<Main on:scroll {isConnect} {selectedCategory}/>
+		<Main on:scroll {isConnect} {data} {selectedCategory}/>
 </div>
 
 

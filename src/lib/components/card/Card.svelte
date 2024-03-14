@@ -1,6 +1,6 @@
 <script>
 export let memo = null;
-
+import { kind } from '$lib/stores/index.js';
 </script>
 
 
@@ -9,7 +9,7 @@ export let memo = null;
   <slot/>
   {#if memo !== null}
   
-  <a href="/{memo.type}/{memo.slug}">{memo.title}</a>
+  <a href="/{$kind}/{memo.slug}">{memo.title}</a>
   {/if}
 </div>
 

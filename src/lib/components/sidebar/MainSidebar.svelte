@@ -3,7 +3,7 @@
 <script>
   import { slide } from 'svelte/transition';
   import { createEventDispatcher, onMount } from 'svelte';
-  import { memos, categories} from '$lib/stores/index.js';
+  import { memos, categories, kind} from '$lib/stores/index.js';
   export let data;
   let type='memo'
   const userId = data?.user?.id;
@@ -21,7 +21,12 @@
       categoryStates[category.id] = false;
     });
   });
-  
+  let currentMemo = [];
+  $: if ($kind === "memo") {
+    currentMemo = $memos.filter((memo) => memo.type === "memo");
+  } else {
+    currentMemo = data.userSlide[0].getallslidesforuser;
+  }
   
  
   const getMemos = async () => {
@@ -58,14 +63,12 @@
         </h2>
         {#if categoryStates[category.id]}
         <div transition:slide class="memo" class:expanded={categoryStates[category.id]}  >
-          {#each $memos.filter(memo => memo.category_id === category.id) as memo}
+          {#each currentMemo.filter(memo => memo.category_id === category.id) as memo}
             <div>
-              {#if memo.type === 'memo' }
               {#if memo.title.length > 15}
-                <a href="/memo/{memo.slug}">{memo.title.slice(0, 15)}...</a>
+                <a href="/{$kind}/{memo.slug}">{memo.title.slice(0, 15)}...</a>
               {:else}
-              <a href="/memo/{memo.slug}">{memo.title}</a>
-              {/if}
+              <a href="/{$kind}/{memo.slug}">{memo.title}</a>
               {/if}
             </div>
           {/each}

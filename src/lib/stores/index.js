@@ -8,6 +8,7 @@ const currentMemo = (writable({}));
 const currentSlide = writable([]);
 const mainSlideId = writable({});
 const maj = writable(false);
+const kind = writable('memo');
 const fullmemos = (() => {
   const { subscribe, set, update } = writable([]);
 
@@ -41,6 +42,7 @@ const memos = new CoreStore('/api/memo');
 const link = new CoreStore('/api/link');
 
 export {
+  kind,
   userslide,
   currentSlide,
   images,

@@ -41,6 +41,13 @@
     memoItems.set(items);
   }
 
+let rawnbr = 500;
+  $: if(isSlide){
+    rawnbr = 25;
+  }else{
+    rawnbr = 500;
+  }
+
 
   $: if ($maj) {
     items = $memoItems;
@@ -284,7 +291,7 @@ style="background-image: url({backgroundUrl})"
     {itemSize}
     gap={2}
     cols={40}
-    rows={25}
+    rows={rawnbr}
     collision="none"
     bind:controller={gridController}
   >
@@ -445,6 +452,7 @@ style="background-image: url({backgroundUrl})"
     display: flex;
     flex-direction: column;
     min-width: 70%;
+    overflow: scroll;
     /* background-color: rgb(29, 32, 32); */
     padding-bottom: 1rem;
   }

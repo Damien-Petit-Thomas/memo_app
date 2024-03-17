@@ -64,7 +64,7 @@
     "Rachana",
     "Ubuntu",
     "Uroob",
-    "URW Gothic"
+    "URW Gothic",
   ];
 
   const animations = [
@@ -78,7 +78,16 @@
     "Zoom",
   ];
 
-  const eases = ["linear", "elastic", "cubic-bezier"];
+  const eases = [
+    "linear",
+    "ease-in",
+    "ease-out",
+    "ease-in-out",
+    "step-start",
+    "step-end",
+    "steps",
+    "cubic-bezier(0.1, -0.6, 0.2, 0)",
+  ];
   const axes = [
     {
       id: 1,
@@ -130,9 +139,8 @@
   color: ${color};
   background: ${background};
   opacity: ${opacity};
-  animation: ${animation} ${duration}ms ${delay}ms ${easeFunction} ${repeat};
+  animation:  ${duration}ms ${easeFunction} ${delay}ms  ${repeat} ${animation};
   `;
-
 
   $: dispatch("css", { css });
 
@@ -238,11 +246,7 @@ left: {finalx}px;"
         <div transition:slide class="transition-container">
           <div class="transition-section">
             <label for="transition">nom</label>
-            <select
-              name="transition"
-              id="transition"
-              bind:value={animation}
-            >
+            <select name="transition" id="transition" bind:value={animation}>
               {#each animations as animation}
                 <option value={animation}>{animation}</option>
               {/each}
@@ -419,7 +423,7 @@ left: {finalx}px;"
   }
 
   .container {
-    width: 300px;
+    width: 350px;
     background-color: #1b1f2a;
     border: 1px solid #565656;
     color: #00d0ff;

@@ -243,6 +243,7 @@ onMount(() => {
 
 <style>
   .container {
+    overflow: auto;
     display: grid;
     grid-template-columns: 1fr 4fr 1fr;
     height: 100vh;

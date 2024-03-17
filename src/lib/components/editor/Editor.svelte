@@ -458,7 +458,6 @@ style="background-image: url({backgroundUrl})"
     flex-direction: column;
     min-width: 70%;
     overflow: scroll;
-    /* background-color: rgb(29, 32, 32); */
     padding-bottom: 1rem;
   }
 

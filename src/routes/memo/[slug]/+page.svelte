@@ -427,26 +427,29 @@
   }
 
   .container {
+    overflow: auto;
     display: grid;
     grid-template-columns: 1fr 4fr 1fr;
-    height: 100vh;
+    height: fit-content;
     max-width: 100vw;
   }
 
   .container_main {
+    overflow: auto;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     min-width: 65%;
     height: fit-content;
+    padding-bottom: 10rem;
     background-color: var(--color-primary-2);
+    border-left: 1px solid #94d2bd;
+    border-right: 1px solid #94d2bd;
   }
 
   .content {
     padding: 0 3rem 0 3rem;
-    border-left: 1px solid #94d2bd;
-    border-right: 1px solid #94d2bd;
     display: flex;
     color: var(--color-primary-5);
     flex-direction: column;

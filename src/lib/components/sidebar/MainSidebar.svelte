@@ -87,7 +87,6 @@
 
 <style>
   .wrapper {
-  background: #1b1f2a;
     min-width: 15%;
     display: flex;
     flex-direction: column;
@@ -95,6 +94,7 @@
   }
   .sidebar {
     width:15vw;
+    position:fixed;
     display: flex;
     flex-direction: column;
     padding-top: 20px;

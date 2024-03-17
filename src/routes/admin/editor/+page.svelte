@@ -70,7 +70,6 @@
   }
 
 onMount(() => {
-    memoItems.set([]);
 
   
    if ($currentMemo.contents && $currentMemo.contents.length > 0) {

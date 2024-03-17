@@ -41,6 +41,11 @@
     memoItems.set(items);
   }
 
+
+$: console.log('memoItems', $memoItems)
+
+
+
 let rawnbr = 500;
   $: if(isSlide){
     rawnbr = 25;

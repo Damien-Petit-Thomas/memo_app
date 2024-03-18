@@ -75,8 +75,7 @@ class CoreStore {
         });
         if (response.ok) {
           update((items) => items.map((i) => (i.id === id ? { ...i, ...data } : i)));
-          const updatedItem = await response.json();
-          return updatedItem;
+          return true;
         }
         console.error(`Error updating item: ${response.status}`);
       } catch (error) {

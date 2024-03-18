@@ -155,7 +155,7 @@ export class MemoController extends CoreController {
         await Promise.all(tagsToAdd.map((tag) => dataMappers.memoTag.insert(findMemo.id, tag)));
       }
 
-      if (contents && JSON.stringify(contents) !== JSON.stringify(findMemo.contents)) {
+      if (!data.updateLayout && contents && JSON.stringify(contents) !== JSON.stringify(findMemo.contents)) {
         // on supprime tous les memo_content du memo
         await dataMappers.memoContent.deleteByMemoId(id);
 

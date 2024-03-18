@@ -177,6 +177,7 @@
       };
     });
     const data = {
+      updateLayout: true,
       title: newMemo.title,
       contents: itemsToSave,
       categoryId: newMemo.category.id,
@@ -184,8 +185,11 @@
       userId,
       id: newMemo.id,
       layout: JSON.stringify(newMemo.layout),
+      type: "memo",
+      page: 1,
     };
     const updatedMemo = await memos.mark(data);
+    console.log(updatedMemo);
     if (updatedMemo) {
       reloadNeeded.set(true);
       currentMemo.set({});

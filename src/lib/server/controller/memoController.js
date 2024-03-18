@@ -19,7 +19,9 @@ export class MemoController extends CoreController {
       const { slideTitle } = data;
       const slug = createSlug(slideTitle);
       if (data.isNewSlide === true) {
-        newSlidId = await dataMappers.slide.create({ user_id: userId, title: slideTitle, slug });
+        newSlidId = await dataMappers.slide.create({
+          user_id: userId, title: slideTitle, slug, category_id: categoryId,
+        });
       } else {
         newSlidId = await dataMappers.slide.findBySlug(slug);
       }

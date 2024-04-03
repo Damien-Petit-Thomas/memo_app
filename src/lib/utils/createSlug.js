@@ -1,3 +1,6 @@
 export function createSlug(data) {
-  return data.trim().replace(/\s+/g, '-').toLowerCase();
+  const slug = data.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9 ]/g, '-').replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .toLowerCase();
+  return slug;
 }
